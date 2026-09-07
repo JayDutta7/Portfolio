@@ -413,6 +413,16 @@ class ProfileData {
       period: '2016 – 2017',
       isCertification: true,
     ),
+    EducationItem(
+      title: 'Higher Secondary (12th)',
+      institution: 'Serampore High School',
+      period: '2006 – 2008',
+    ),
+    EducationItem(
+      title: 'Madhyamik (10th)',
+      institution: 'Serampore Union Institution',
+      period: '2006',
+    ),
   ];
 
   // ---- Architecture pipeline visualizations --------------------------
