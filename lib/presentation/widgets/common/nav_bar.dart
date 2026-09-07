@@ -39,7 +39,7 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
       child: Row(
         children: [
           Text(
-            'JD.',
+            'Resume',
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w800,
               color: theme.colorScheme.primary,
