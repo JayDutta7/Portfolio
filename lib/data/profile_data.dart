@@ -21,8 +21,8 @@ class ProfileData {
   static const String email = 'jayajit1989@gmail.com';
 
   // TODO: Replace with your real profile URLs.
-  static const String linkedInUrl = 'https://www.linkedin.com/in/REPLACE_ME';
-  static const String githubUrl = 'https://github.com/REPLACE_ME';
+  static const String linkedInUrl = 'www.linkedin.com/in/jayajit-dutta-7124b9125';
+  static const String githubUrl = 'https://github.com/JayDutta7';
 
   static const String heroIntro =
       'Results-driven Senior Mobile Application Developer with 9+ years of '
