@@ -73,6 +73,8 @@ class ProfileData {
         'Coroutines',
         'Flow',
         'MVVM',
+        'MVP',
+        'MVC',
         'Clean Architecture',
         'Dagger-Hilt',
         'Koin',
@@ -439,7 +441,9 @@ class ProfileData {
 
   static const List<String> androidArchitecturePipeline = [
     'Jetpack Compose UI',
-    'MVVM / MVP / MVC',
+    'MVVM',
+    'MVP',
+    'MVC',
     'Clean Architecture',
     'Dependency Injection (Hilt / Koin)',
     'Coroutines & Flow',
