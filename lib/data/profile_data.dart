@@ -429,7 +429,8 @@ class ProfileData {
 
   static const List<String> androidArchitecturePipeline = [
     'Jetpack Compose UI',
-    'MVVM / Clean Architecture',
+    'MVVM / MVP / MVC',
+    'Clean Architecture',
     'Dependency Injection (Hilt / Koin)',
     'Coroutines & Flow',
     'Repository Layer',
