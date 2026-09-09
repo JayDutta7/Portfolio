@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/utils/launch_helper.dart';
 import '../../../core/utils/resume_download/resume_download.dart';
-import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
-import '../common/app_buttons.dart';
-import '../common/hover_card.dart';
 import '../common/section_wrapper.dart';
 
 class ContactSection extends StatelessWidget {
@@ -14,124 +11,159 @@ class ContactSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = Responsive.isMobile(context);
+    final theme = Theme.of(context);
 
     return SectionWrapper(
       sectionKey: sectionKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SectionHeading(
-            eyebrow: 'Contact',
-            title: 'Let\'s build something reliable together',
-            description:
-                'Open to Senior Android / Flutter roles and impactful '
-                'mobile engineering opportunities.',
-          ),
-          Wrap(
-            spacing: 20,
-            runSpacing: 20,
-            children: [
-              SizedBox(
-                width: isMobile ? double.infinity : 320,
-                child: _ContactCard(
-                  icon: Icons.mail_outline_rounded,
-                  label: 'Email',
-                  value: profile.email,
-                  onTap: () => LaunchHelper.sendEmail(profile.email),
+      verticalPadding: 160,
+      child: Center(
+        child: Column(
+          children: [
+            Text(
+              'Let\'s build something\nworth shipping.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.displayMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+                letterSpacing: -2.0,
+                height: 1.1,
+              ),
+            ),
+            const SizedBox(height: 32),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Text(
+                'Open to interesting mobile, Flutter and product engineering opportunities.',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
-              SizedBox(
-                width: isMobile ? double.infinity : 320,
-                child: _ContactCard(
-                  icon: Icons.business_center_outlined,
-                  label: 'LinkedIn',
-                  value: 'Connect with me',
-                  onTap: () => LaunchHelper.openUrl(profile.linkedInUrl),
+            ),
+            const SizedBox(height: 64),
+            Wrap(
+              spacing: 24,
+              runSpacing: 24,
+              alignment: WrapAlignment.center,
+              children: [
+                _BigButton(
+                  label: 'Let\'s Connect',
+                  onPressed: () => LaunchHelper.sendEmail(profile.email),
+                  primary: true,
                 ),
-              ),
-              SizedBox(
-                width: isMobile ? double.infinity : 320,
-                child: _ContactCard(
-                  icon: Icons.code_rounded,
+                _BigButton(
+                  label: 'Download Resume',
+                  onPressed: () async {
+                    try {
+                      await downloadResume(
+                        profile.resumeAssetPath,
+                        profile.resumeDownloadFileName,
+                      );
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Download failed: ${e.toString()}')),
+                        );
+                      }
+                    }
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 48),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _SocialLink(
                   label: 'GitHub',
-                  value: 'View my repositories',
                   onTap: () => LaunchHelper.openUrl(profile.githubUrl),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 36),
-          GradientButton(
-            label: 'Download Resume (PDF)',
-            icon: Icons.download_rounded,
-            onPressed: () async {
-              try {
-                await downloadResume(
-                  profile.resumeAssetPath,
-                  profile.resumeDownloadFileName,
-                );
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Download failed: ${e.toString()}')),
-                  );
-                }
-              }
-            },
-          ),
-        ],
+                _Dot(),
+                _SocialLink(
+                  label: 'LinkedIn',
+                  onTap: () => LaunchHelper.openUrl(profile.linkedInUrl),
+                ),
+                _Dot(),
+                _SocialLink(
+                  label: 'Email',
+                  onTap: () => LaunchHelper.sendEmail(profile.email),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _ContactCard extends StatelessWidget {
-  final IconData icon;
+class _BigButton extends StatelessWidget {
   final String label;
-  final String value;
-  final VoidCallback onTap;
+  final VoidCallback onPressed;
+  final bool primary;
 
-  const _ContactCard({
-    required this.icon,
+  const _BigButton({
     required this.label,
-    required this.value,
-    required this.onTap,
+    required this.onPressed,
+    this.primary = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return HoverCard(
-      onTap: onTap,
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: theme.colorScheme.primary),
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: primary ? theme.colorScheme.primary : theme.colorScheme.surface,
+        foregroundColor: primary ? Colors.white : theme.colorScheme.onSurface,
+        padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 28),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: primary ? BorderSide.none : BorderSide(color: theme.dividerColor, width: 1.5),
+        ),
+        elevation: 0,
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+      ),
+    );
+  }
+}
+
+class _SocialLink extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+  const _SocialLink({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Text(
+          label,
+          style: theme.textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: theme.textTheme.labelLarge),
-                const SizedBox(height: 3),
-                Text(
-                  value,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Dot extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 4,
+      height: 4,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).dividerColor,
+        shape: BoxShape.circle,
       ),
     );
   }

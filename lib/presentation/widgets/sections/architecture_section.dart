@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
 import '../common/section_wrapper.dart';
 
@@ -10,39 +9,60 @@ class ArchitectureSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = Responsive.isMobile(context);
-
     return SectionWrapper(
       sectionKey: sectionKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SectionHeading(
-            eyebrow: 'Architecture & Technical Expertise',
-            title: 'How I structure production applications',
+            eyebrow: 'System Design',
+            title: 'Clean Architecture Layering',
+            alignment: CrossAxisAlignment.center,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          const SizedBox(height: 48),
+          _ArchitectureLayer(
+            title: 'UI Layer',
+            subtitle: 'Jetpack Compose / Flutter UI',
+            description: 'Stateless components reacting to ViewState.',
+            color: const Color(0xFF6366F1),
+          ),
+          const _Arrow(),
+          _ArchitectureLayer(
+            title: 'ViewModel / State Management',
+            subtitle: 'ViewModel + StateFlow / Riverpod',
+            description: 'Managing UI state and processing user intents.',
+            color: const Color(0xFF818CF8),
+          ),
+          const _Arrow(),
+          _ArchitectureLayer(
+            title: 'Domain Layer (Use Cases)',
+            subtitle: 'Pure Business Logic',
+            description: 'Reusable business rules and domain entities.',
+            color: const Color(0xFF94A3B8),
+          ),
+          const _Arrow(),
+          _ArchitectureLayer(
+            title: 'Data Layer (Repository)',
+            subtitle: 'Repository Pattern',
+            description: 'Single source of truth for data operations.',
+            color: const Color(0xFF14B8A6),
+          ),
+          const _Arrow(),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: _PipelineCard(
-                  title: 'Flutter Stack',
-                  steps: profile.flutterArchitecturePipeline,
-                  isMobile: isMobile,
-                ),
+              _ArchitectureLayer(
+                title: 'Remote Source',
+                subtitle: 'Retrofit / Dio',
+                width: 200,
+                color: Color(0xFF2DD4BF),
               ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: _PipelineCard(
-                  title: 'Android Stack',
-                  steps: profile.androidArchitecturePipeline,
-                  isMobile: isMobile,
-                ),
+              SizedBox(width: 24),
+              _ArchitectureLayer(
+                title: 'Local Source',
+                subtitle: 'Room / SQLite',
+                width: 200,
+                color: Color(0xFF5EEAD4),
               ),
             ],
           ),
@@ -52,115 +72,98 @@ class ArchitectureSection extends StatelessWidget {
   }
 }
 
-class _PipelineCard extends StatelessWidget {
+class _ArchitectureLayer extends StatefulWidget {
   final String title;
-  final List<String> steps;
-  final bool isMobile;
+  final String subtitle;
+  final String? description;
+  final Color color;
+  final double? width;
 
-  const _PipelineCard({
+  const _ArchitectureLayer({
     required this.title,
-    required this.steps,
-    required this.isMobile,
+    required this.subtitle,
+    this.description,
+    required this.color,
+    this.width,
+    super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.dividerColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: theme.textTheme.titleLarge),
-          const SizedBox(height: 22),
-          isMobile
-              ? Column(
-                  children: [
-                    for (int i = 0; i < steps.length; i++)
-                      _PipelineStep(
-                        label: steps[i],
-                        isLast: i == steps.length - 1,
-                        vertical: true,
-                      ),
-                  ],
-                )
-              : Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    for (int i = 0; i < steps.length; i++)
-                      _PipelineStep(
-                        label: steps[i],
-                        isLast: i == steps.length - 1,
-                        vertical: false,
-                      ),
-                  ],
-                ),
-        ],
-      ),
-    );
-  }
+  State<_ArchitectureLayer> createState() => _ArchitectureLayerState();
 }
 
-class _PipelineStep extends StatelessWidget {
-  final String label;
-  final bool isLast;
-  final bool vertical;
-
-  const _PipelineStep({
-    required this.label,
-    required this.isLast,
-    required this.vertical,
-  });
+class _ArchitectureLayerState extends State<_ArchitectureLayer> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final chip = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.25)),
-      ),
-      child: Text(
-        label,
-        style: theme.textTheme.bodyMedium?.copyWith(
-          color: theme.colorScheme.primary,
-          fontWeight: FontWeight.w600,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: widget.width ?? 500,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: _isHovered ? widget.color : theme.dividerColor,
+            width: _isHovered ? 2 : 1,
+          ),
+          boxShadow: _isHovered
+              ? [
+                  BoxShadow(
+                    color: widget.color.withValues(alpha: 0.1),
+                    blurRadius: 20,
+                    spreadRadius: 5,
+                  )
+                ]
+              : [],
+        ),
+        child: Column(
+          children: [
+            Text(
+              widget.title,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: _isHovered ? widget.color : null,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.subtitle,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            if (widget.description != null && _isHovered) ...[
+              const SizedBox(height: 12),
+              Text(
+                widget.description!,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall,
+              ),
+            ],
+          ],
         ),
       ),
     );
+  }
+}
 
-    final arrow = Icon(
-      vertical ? Icons.arrow_downward_rounded : Icons.arrow_forward_rounded,
-      size: 18,
-      color: theme.dividerColor,
-    );
+class _Arrow extends StatelessWidget {
+  const _Arrow({super.key});
 
-    if (vertical) {
-      return Column(
-        children: [
-          chip,
-          if (!isLast) Padding(padding: const EdgeInsets.symmetric(vertical: 6), child: arrow),
-        ],
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(right: 10, bottom: 10),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          chip,
-          if (!isLast) Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: arrow),
-        ],
-      ),
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 32,
+      width: 2,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      color: Theme.of(context).dividerColor,
     );
   }
 }

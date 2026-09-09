@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
 import '../common/hover_card.dart';
@@ -18,12 +17,14 @@ class ExperienceSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SectionHeading(
-            eyebrow: 'Experience',
-            title: '9+ years across four engineering teams',
+            eyebrow: 'Career Timeline',
+            title: '9+ Years of Professional Engineering',
           ),
+          const SizedBox(height: 24),
           for (int i = 0; i < profile.experience.length; i++)
-            _TimelineTile(
+            _ExperienceCard(
               item: profile.experience[i],
+              isFirst: i == 0,
               isLast: i == profile.experience.length - 1,
             ),
         ],
@@ -32,114 +33,169 @@ class ExperienceSection extends StatelessWidget {
   }
 }
 
-class _TimelineTile extends StatelessWidget {
+class _ExperienceCard extends StatelessWidget {
   final ExperienceItem item;
+  final bool isFirst;
   final bool isLast;
 
-  const _TimelineTile({required this.item, required this.isLast});
+  const _ExperienceCard({
+    required this.item,
+    required this.isFirst,
+    required this.isLast,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isMobile = Responsive.isMobile(context);
-    const double dotSize = 16.0;
-    const double linePadding = 4.0;
-    final double bottomSpace = isLast ? 0 : 28;
+    final isDesktop = Responsive.isDesktopOrWider(context);
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: bottomSpace),
-      child: Stack(
-        clipBehavior: Clip.none,
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (!isLast)
-            Positioned(
-              left: (dotSize / 2) - 1, // Center the 2px line under the 16px dot
-              top: dotSize + linePadding,
-              bottom: -bottomSpace,
-              child: Container(
-                width: 2,
-                color: theme.dividerColor,
-              ),
-            ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Dot
-              Container(
-                width: dotSize,
-                height: dotSize,
-                margin: const EdgeInsets.only(top: 6), // Align with first line of text
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: item.isCurrent ? AppColors.primary : Colors.transparent,
-                  border: Border.all(color: AppColors.primary, width: 2.5),
-                ),
-              ),
-              // Card
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: isMobile ? 16 : 24),
-                  child: HoverCard(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 12,
-                          runSpacing: 6,
-                          children: [
-                            Text(item.role, style: theme.textTheme.titleLarge),
-                            if (item.isCurrent)
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: AppColors.success.withValues(alpha: 0.14),
-                                  borderRadius: BorderRadius.circular(999),
-                                ),
-                                child: Text(
-                                  'Current',
-                                  style: theme.textTheme.labelLarge
-                                      ?.copyWith(color: AppColors.success),
-                                ),
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${item.company} · ${item.period}',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-                        for (final h in item.highlights)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 7),
-                                  child: Icon(Icons.circle, size: 5),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Text(h, style: theme.textTheme.bodyMedium),
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
+          if (isDesktop) ...[
+            SizedBox(
+              width: 140,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 24),
+                child: Text(
+                  item.period,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
+            ),
+            const SizedBox(width: 24),
+          ],
+          Column(
+            children: [
+              Container(
+                width: 12,
+                height: 12,
+                margin: const EdgeInsets.only(top: 28),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: item.isCurrent ? theme.colorScheme.primary : Colors.transparent,
+                  border: Border.all(
+                    color: item.isCurrent
+                        ? theme.colorScheme.primary
+                        : theme.dividerColor,
+                    width: 2,
+                  ),
+                ),
+              ),
+              if (!isLast)
+                Expanded(
+                  child: Container(
+                    width: 1.5,
+                    color: theme.dividerColor,
+                  ),
+                ),
             ],
           ),
+          const SizedBox(width: 32),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 48),
+              child: HoverCard(
+                borderRadius: 16,
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (!isDesktop) ...[
+                      Text(
+                        item.period,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item.role,
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                        ),
+                        if (item.isCurrent)
+                          const _StatusBadge(label: 'Present'),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      item.company,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    for (final highlight in item.highlights)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Icon(
+                                Icons.arrow_forward_rounded,
+                                size: 14,
+                                color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                highlight,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _StatusBadge extends StatelessWidget {
+  final String label;
+  const _StatusBadge({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Text(
+        label.toUpperCase(),
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: theme.colorScheme.primary,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 1.2,
+        ),
       ),
     );
   }

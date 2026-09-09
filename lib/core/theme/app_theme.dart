@@ -10,60 +10,63 @@ class AppTheme {
     return base
         .copyWith(
           displayLarge: GoogleFonts.plusJakartaSans(
-            fontSize: 56,
+            fontSize: 72,
             fontWeight: FontWeight.w800,
-            height: 1.08,
-            letterSpacing: -1.2,
+            height: 1.05,
+            letterSpacing: -2.5,
             color: primaryText,
           ),
           displayMedium: GoogleFonts.plusJakartaSans(
-            fontSize: 40,
+            fontSize: 48,
             fontWeight: FontWeight.w800,
-            height: 1.12,
-            letterSpacing: -0.8,
+            height: 1.1,
+            letterSpacing: -1.5,
             color: primaryText,
           ),
           displaySmall: GoogleFonts.plusJakartaSans(
-            fontSize: 32,
+            fontSize: 36,
             fontWeight: FontWeight.w800,
             height: 1.15,
-            letterSpacing: -0.5,
+            letterSpacing: -1.0,
             color: primaryText,
           ),
           headlineLarge: GoogleFonts.plusJakartaSans(
             fontSize: 32,
             fontWeight: FontWeight.w700,
-            letterSpacing: -0.4,
+            letterSpacing: -0.8,
             color: primaryText,
           ),
           headlineMedium: GoogleFonts.plusJakartaSans(
             fontSize: 24,
             fontWeight: FontWeight.w700,
+            letterSpacing: -0.5,
             color: primaryText,
           ),
-          titleLarge: GoogleFonts.inter(
+          titleLarge: GoogleFonts.plusJakartaSans(
             fontSize: 20,
             fontWeight: FontWeight.w600,
             color: primaryText,
           ),
           titleMedium: GoogleFonts.inter(
             fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.1,
             color: primaryText,
           ),
           bodyLarge: GoogleFonts.inter(
-            fontSize: 16,
-            height: 1.6,
+            fontSize: 18,
+            height: 1.7,
             color: secondaryText,
           ),
           bodyMedium: GoogleFonts.inter(
-            fontSize: 14,
-            height: 1.6,
+            fontSize: 16,
+            height: 1.7,
             color: secondaryText,
           ),
           labelLarge: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
             color: primaryText,
           ),
         )
@@ -90,7 +93,10 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppColors.lightBorder, width: 1),
+        ),
         color: AppColors.lightSurface,
       ),
       dividerColor: AppColors.lightBorder,
@@ -125,7 +131,10 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppColors.darkBorder, width: 1),
+        ),
         color: AppColors.darkSurface,
       ),
       dividerColor: AppColors.darkBorder,

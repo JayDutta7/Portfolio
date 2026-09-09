@@ -13,98 +13,156 @@ class AboutSection extends StatelessWidget {
     final theme = Theme.of(context);
     final isDesktop = Responsive.isDesktopOrWider(context);
 
-    final textBlock = ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 720),
-      child: Text(
-        profile.aboutMe,
-        style: theme.textTheme.bodyLarge?.copyWith(height: 1.75),
-      ),
-    );
-
-    final quickFacts = _QuickFacts(profile: profile);
-
     return SectionWrapper(
       sectionKey: sectionKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionHeading(
-            eyebrow: 'About Me',
-            title: 'Building reliable mobile products for 9+ years',
-          ),
-          isDesktop
-              ? Row(
+          Flex(
+            direction: isDesktop ? Axis.horizontal : Axis.vertical,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!isDesktop) ...[
+                _AboutPicture(imagePath: profile.profilePicture),
+                const SizedBox(height: 32),
+              ],
+              _maybeExpanded(
+                expand: isDesktop,
+                flex: 2,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(flex: 3, child: textBlock),
-                    const SizedBox(width: 48),
-                    Expanded(flex: 2, child: quickFacts),
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    textBlock,
-                    const SizedBox(height: 32),
-                    quickFacts,
+                    Text(
+                      'Engineer.\nBuilder.\nProblem Solver.',
+                      style: theme.textTheme.displayMedium?.copyWith(
+                        height: 1.1,
+                        letterSpacing: -2.0,
+                      ),
+                    ),
+                    if (isDesktop) ...[
+                      const SizedBox(height: 48),
+                      _AboutPicture(imagePath: profile.profilePicture),
+                    ],
                   ],
                 ),
+              ),
+              if (!isDesktop) const SizedBox(height: 32),
+              _maybeExpanded(
+                expand: isDesktop,
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      profile.aboutMe,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontSize: 18,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 80),
+          const _TechnicalTimeline(),
         ],
       ),
     );
   }
 }
 
-class _QuickFacts extends StatelessWidget {
-  final Profile profile;
-  const _QuickFacts({required this.profile});
+Widget _maybeExpanded({
+  required bool expand,
+  required int flex,
+  required Widget child,
+}) {
+  if (expand) {
+    return Expanded(flex: flex, child: child);
+  }
+  return child;
+}
+
+class _AboutPicture extends StatelessWidget {
+  final String imagePath;
+  const _AboutPicture({required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final facts = <_Fact>[
-      const _Fact(Icons.badge_outlined, 'Role', 'Senior Mobile App Developer'),
-      const _Fact(Icons.timeline_outlined, 'Experience', '9+ years'),
-      const _Fact(Icons.architecture_outlined, 'Architecture', 'Clean Architecture · MVVM'),
-      _Fact(Icons.location_on_outlined, 'Location', profile.location),
-    ];
-
     return Container(
-      padding: const EdgeInsets.all(28),
+      width: 240,
+      height: 300,
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.dividerColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (int i = 0; i < facts.length; i++) ...[
-            _factRow(theme, facts[i]),
-            if (i != facts.length - 1) ...[
-              const SizedBox(height: 18),
-              Divider(color: theme.dividerColor, height: 1),
-              const SizedBox(height: 18),
-            ],
-          ],
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: theme.dividerColor, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 30,
+            offset: const Offset(0, 15),
+          ),
         ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Center(
+            child: Icon(
+              Icons.person_rounded,
+              size: 80,
+              color: theme.colorScheme.primary.withValues(alpha: 0.5),
+            ),
+          );
+        },
       ),
     );
   }
+}
 
-  Widget _factRow(ThemeData theme, _Fact fact) {
-    return Row(
+class _TechnicalTimeline extends StatelessWidget {
+  const _TechnicalTimeline();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final milestones = [
+      {'year': '2017', 'title': 'Android Development'},
+      {'year': '2019', 'title': 'Product Development'},
+      {'year': '2020', 'title': 'Flutter'},
+      {'year': '2022', 'title': 'Jetpack Compose'},
+      {'year': '2024', 'title': 'Modern Architecture'},
+      {'year': '2026', 'title': 'Senior Expert'},
+    ];
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(fact.icon, size: 20, color: theme.colorScheme.primary),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        Text(
+          'TECHNICAL EVOLUTION',
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: theme.colorScheme.primary,
+            letterSpacing: 2,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: 32),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
             children: [
-              Text(fact.label, style: theme.textTheme.labelLarge),
-              const SizedBox(height: 3),
-              Text(fact.value, style: theme.textTheme.bodyMedium),
+              for (int i = milestones.length - 1; i >= 0; i--) ...[
+                _TimelineItem(
+                  year: milestones[i]['year']!,
+                  title: milestones[i]['title']!,
+                  isLast: i == 0,
+                ),
+              ],
             ],
           ),
         ),
@@ -113,9 +171,49 @@ class _QuickFacts extends StatelessWidget {
   }
 }
 
-class _Fact {
-  final IconData icon;
-  final String label;
-  final String value;
-  const _Fact(this.icon, this.label, this.value);
+class _TimelineItem extends StatelessWidget {
+  final String year;
+  final String title;
+  final bool isLast;
+
+  const _TimelineItem({
+    required this.year,
+    required this.title,
+    this.isLast = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              year,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        if (!isLast)
+          Container(
+            width: 60,
+            height: 1,
+            margin: const EdgeInsets.symmetric(horizontal: 24),
+            color: theme.dividerColor,
+          ),
+      ],
+    );
+  }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
 import '../common/section_wrapper.dart';
@@ -12,51 +11,66 @@ class StatsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final columns = Responsive.gridColumns(context, max: 4);
+    final isDesktop = Responsive.isDesktopOrWider(context);
 
     return SectionWrapper(
       sectionKey: sectionKey,
-      background: theme.brightness == Brightness.dark
-          ? theme.colorScheme.surface.withValues(alpha: 0.4)
-          : theme.colorScheme.primary.withValues(alpha: 0.04),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          const spacing = 20.0;
-          final cardWidth =
-              (constraints.maxWidth - spacing * (columns - 1)) / columns;
-          return Wrap(
-            spacing: spacing,
-            runSpacing: spacing,
-            children: [
-              for (final stat in profile.stats)
-                SizedBox(
-                  width: cardWidth,
-                  child: Column(
-                    children: [
-                      ShaderMask(
-                        shaderCallback: (rect) => const LinearGradient(
-                          colors: AppColors.accentGradient,
-                        ).createShader(rect),
-                        child: Text(
-                          stat.value,
-                          style: theme.textTheme.displayMedium?.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        stat.label,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          );
-        },
-      ),
+      verticalPadding: 80,
+      background: theme.colorScheme.surface,
+      child: isDesktop
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                for (final stat in profile.stats)
+                  _StatItem(stat: stat),
+              ],
+            )
+          : GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+                childAspectRatio: 1.5,
+              ),
+              itemCount: profile.stats.length,
+              itemBuilder: (context, index) {
+                return _StatItem(stat: profile.stats[index]);
+              },
+            ),
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  final StatItem stat;
+  const _StatItem({required this.stat});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          stat.value,
+          style: theme.textTheme.displayMedium?.copyWith(
+            fontWeight: FontWeight.w900,
+            color: theme.colorScheme.primary,
+            letterSpacing: -1.0,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          stat.label.toUpperCase(),
+          style: theme.textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.2,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+          ),
+        ),
+      ],
     );
   }
 }

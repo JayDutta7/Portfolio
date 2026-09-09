@@ -7,6 +7,7 @@ import '../widgets/sections/architecture_section.dart';
 import '../widgets/sections/contact_section.dart';
 import '../widgets/sections/education_section.dart';
 import '../widgets/sections/experience_section.dart';
+import '../widgets/sections/engineering_principles.dart';
 import '../widgets/sections/footer_section.dart';
 import '../widgets/sections/hero_section.dart';
 import '../widgets/sections/projects_section.dart';
@@ -71,6 +72,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               AboutSection(profile: profile, sectionKey: _aboutKey),
               SkillsSection(profile: profile, sectionKey: _skillsKey),
               ExperienceSection(profile: profile, sectionKey: _experienceKey),
+              const EngineeringPrinciples(),
               ProjectsSection(profile: profile, sectionKey: _projectsKey),
               ArchitectureSection(profile: profile),
               StatsSection(profile: profile),
