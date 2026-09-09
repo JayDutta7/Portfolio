@@ -391,7 +391,7 @@ class ProfileData {
   static const List<StatItem> stats = [
     StatItem(value: '9+', label: 'Years Experience'),
     StatItem(value: '2', label: 'Platforms — Android + Flutter'),
-    StatItem(value: '8', label: 'Enterprise Applications'),
+    StatItem(value: '10', label: 'Enterprise Applications'),
     StatItem(value: '4', label: 'Companies'),
   ];
 
@@ -430,8 +430,8 @@ class ProfileData {
   // ---- Architecture pipeline visualizations --------------------------
   static const List<String> flutterArchitecturePipeline = [
     'Flutter UI',
-    'MVVM / Clean Architecture',
-    'State Management (Riverpod / Provider)',
+    'MVVM',
+    'State Management (Riverpod)',
     'Repository Layer',
     'REST APIs',
     'Local Database',
@@ -442,8 +442,6 @@ class ProfileData {
   static const List<String> androidArchitecturePipeline = [
     'Jetpack Compose UI',
     'MVVM',
-    'MVP',
-    'MVC',
     'Clean Architecture',
     'Dependency Injection (Hilt / Koin)',
     'Coroutines & Flow',

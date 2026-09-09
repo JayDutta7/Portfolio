@@ -114,10 +114,21 @@ class HeroSection extends StatelessWidget {
                             OutlineButton(
                               label: 'Download Resume',
                               icon: Icons.download_rounded,
-                              onPressed: () => downloadResume(
-                                profile.resumeAssetPath,
-                                profile.resumeDownloadFileName,
-                              ),
+                              onPressed: () async {
+                                try {
+                                  await downloadResume(
+                                    profile.resumeAssetPath,
+                                    profile.resumeDownloadFileName,
+                                  );
+                                } catch (e) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text('Download failed: ${e.toString()}')),
+                                    );
+                                  }
+                                }
+                              },
                             ),
                             OutlineButton(
                               label: 'Contact Me',

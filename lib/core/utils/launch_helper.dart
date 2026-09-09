@@ -4,7 +4,13 @@ class LaunchHelper {
   LaunchHelper._();
 
   static Future<void> openUrl(String url) async {
-    final uri = Uri.parse(url);
+    // If the URL doesn't have a protocol, prepend https:// to prevent it
+    // from being treated as a relative path on the web.
+    var targetUrl = url;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      targetUrl = 'https://$url';
+    }
+    final uri = Uri.parse(targetUrl);
     await launchUrl(uri, webOnlyWindowName: '_blank');
   }
 

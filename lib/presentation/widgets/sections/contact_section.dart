@@ -65,10 +65,20 @@ class ContactSection extends StatelessWidget {
           GradientButton(
             label: 'Download Resume (PDF)',
             icon: Icons.download_rounded,
-            onPressed: () => downloadResume(
-              profile.resumeAssetPath,
-              profile.resumeDownloadFileName,
-            ),
+            onPressed: () async {
+              try {
+                await downloadResume(
+                  profile.resumeAssetPath,
+                  profile.resumeDownloadFileName,
+                );
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Download failed: ${e.toString()}')),
+                  );
+                }
+              }
+            },
           ),
         ],
       ),
