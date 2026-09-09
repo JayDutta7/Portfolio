@@ -71,27 +71,33 @@ class SectionHeading extends StatelessWidget {
           textAlign: textAlign,
           style: theme.textTheme.labelLarge?.copyWith(
             color: theme.colorScheme.primary,
-            letterSpacing: 1.4,
+            letterSpacing: 1.6,
+            fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         Text(
           title,
           textAlign: textAlign,
-          style: theme.textTheme.headlineLarge,
+          style: theme.textTheme.displaySmall?.copyWith(
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.5,
+          ),
         ),
         if (description != null) ...[
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 640),
+            constraints: const BoxConstraints(maxWidth: 680),
             child: Text(
               description!,
               textAlign: textAlign,
-              style: theme.textTheme.bodyLarge,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                height: 1.6,
+              ),
             ),
           ),
         ],
-        const SizedBox(height: 48),
+        const SizedBox(height: 56),
       ],
     );
   }

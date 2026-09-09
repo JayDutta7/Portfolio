@@ -12,7 +12,7 @@ class HoverCard extends StatefulWidget {
     required this.child,
     this.onTap,
     this.padding = const EdgeInsets.all(24),
-    this.borderRadius = 20,
+    this.borderRadius = 28,
     super.key,
   });
 

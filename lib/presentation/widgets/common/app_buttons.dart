@@ -18,14 +18,14 @@ class GradientButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         onTap: onPressed,
         child: Ink(
           decoration: BoxDecoration(
             gradient: const LinearGradient(colors: AppColors.accentGradient),
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
                 color: AppColors.primary.withValues(alpha: 0.28),
@@ -76,15 +76,15 @@ class OutlineButton extends StatelessWidget {
     final theme = Theme.of(context);
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         onTap: onPressed,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 16),
           decoration: BoxDecoration(
-            border: Border.all(color: theme.dividerColor, width: 1.4),
-            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: theme.dividerColor, width: 1.6),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

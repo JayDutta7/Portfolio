@@ -23,6 +23,13 @@ class AppTheme {
             letterSpacing: -0.8,
             color: primaryText,
           ),
+          displaySmall: GoogleFonts.plusJakartaSans(
+            fontSize: 32,
+            fontWeight: FontWeight.w800,
+            height: 1.15,
+            letterSpacing: -0.5,
+            color: primaryText,
+          ),
           headlineLarge: GoogleFonts.plusJakartaSans(
             fontSize: 32,
             fontWeight: FontWeight.w700,
@@ -70,6 +77,7 @@ class AppTheme {
       primary: AppColors.primary,
       secondary: AppColors.secondary,
       surface: AppColors.lightSurface,
+      surfaceTint: Colors.white,
     );
     return ThemeData(
       useMaterial3: true,
@@ -80,10 +88,20 @@ class AppTheme {
         AppColors.lightTextPrimary,
         AppColors.lightTextSecondary,
       ),
+      cardTheme: CardThemeData(
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        color: AppColors.lightSurface,
+      ),
       dividerColor: AppColors.lightBorder,
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
       hoverColor: AppColors.primary.withValues(alpha: 0.04),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: false,
+      ),
     );
   }
 
@@ -94,6 +112,7 @@ class AppTheme {
       primary: AppColors.primary,
       secondary: AppColors.secondary,
       surface: AppColors.darkSurface,
+      surfaceTint: AppColors.primary,
     );
     return ThemeData(
       useMaterial3: true,
@@ -104,10 +123,20 @@ class AppTheme {
         AppColors.darkTextPrimary,
         AppColors.darkTextSecondary,
       ),
+      cardTheme: CardThemeData(
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        color: AppColors.darkSurface,
+      ),
       dividerColor: AppColors.darkBorder,
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
       hoverColor: AppColors.secondary.withValues(alpha: 0.06),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: false,
+      ),
     );
   }
 }
