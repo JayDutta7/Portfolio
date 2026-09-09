@@ -69,14 +69,18 @@ class _ProductProjectPage extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                project.title.toUpperCase(),
-                style: theme.textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -2.0,
+              Expanded(
+                child: Text(
+                  project.title.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -2.0,
+                  ),
                 ),
               ),
-              const Spacer(),
+              const SizedBox(width: 16),
               Text(
                 project.platforms.join(' • '),
                 style: theme.textTheme.labelSmall?.copyWith(
