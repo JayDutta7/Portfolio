@@ -363,7 +363,11 @@ class _FloatingDeviceState extends State<_FloatingDevice>
     );
 
     Future.delayed(Duration(milliseconds: widget.delay), () {
-      if (mounted) _controller.repeat(reverse: true);
+      // Avoid running an infinite repeating animation during `flutter test`.
+      final inTest = const bool.fromEnvironment('FLUTTER_TEST');
+      if (mounted && !inTest) {
+        _controller.repeat(reverse: true);
+      }
     });
   }
 
