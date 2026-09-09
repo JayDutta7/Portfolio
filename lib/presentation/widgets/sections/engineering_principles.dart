@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/utils/responsive.dart';
-import '../common/hover_card.dart';
 import '../common/section_wrapper.dart';
 
 class EngineeringPrinciples extends StatelessWidget {
@@ -8,51 +7,68 @@ class EngineeringPrinciples extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final isDesktop = Responsive.isDesktopOrWider(context);
 
-    final principles = [
-      const _Principle(
-        title: 'Architecture',
-        description: 'Maintainable and scalable application architecture using Clean Architecture and MVVM.',
-        icon: Icons.architecture_rounded,
-      ),
-      const _Principle(
-        title: 'Performance',
-        description: 'Responsive UI and optimized application performance, ensuring smooth 60fps experiences.',
-        icon: Icons.speed_rounded,
-      ),
-      const _Principle(
-        title: 'Offline First',
-        description: 'Reliable local persistence and synchronization strategies for field operations.',
-        icon: Icons.cloud_off_rounded,
-      ),
-      const _Principle(
-        title: 'Production',
-        description: 'Release management, Play Store deployment and real-world product engineering.',
-        icon: Icons.rocket_launch_rounded,
-      ),
+    final stages = [
+      {
+        'id': '01',
+        'title': 'UNDERSTAND',
+        'items': ['Product requirements', 'User flows', 'Business rules'],
+      },
+      {
+        'id': '02',
+        'title': 'ARCHITECT',
+        'items': ['Scalable architecture', 'State management', 'Data synchronization'],
+      },
+      {
+        'id': '03',
+        'title': 'BUILD',
+        'items': ['Pixel-perfect UI', 'Feature integration', 'Rigorous testing'],
+      },
+      {
+        'id': '04',
+        'title': 'SHIP',
+        'items': ['Optimization', 'Release management', 'Play Store deployment'],
+      },
     ];
 
     return SectionWrapper(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionHeading(
-            eyebrow: 'Engineering Philosophy',
-            title: 'How I Build',
+          Text(
+            'PROCESS',
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.w800,
+            ),
           ),
+          const SizedBox(height: 16),
+          Text(
+            'From idea to production.',
+            style: theme.textTheme.displaySmall?.copyWith(
+              height: 1.0,
+            ),
+          ),
+          const SizedBox(height: 80),
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: isDesktop ? 4 : 1,
-              crossAxisSpacing: 24,
-              mainAxisSpacing: 24,
-              childAspectRatio: isDesktop ? 0.85 : 1.5,
+              crossAxisSpacing: 40,
+              mainAxisSpacing: 40,
+              childAspectRatio: isDesktop ? 0.8 : 2.0,
             ),
-            itemCount: principles.length,
+            itemCount: stages.length,
             itemBuilder: (context, index) {
-              return _PrincipleCard(principle: principles[index]);
+              final stage = stages[index];
+              return _BuildStageCard(
+                id: stage['id'] as String,
+                title: stage['title'] as String,
+                items: stage['items'] as List<String>,
+              );
             },
           ),
         ],
@@ -61,60 +77,50 @@ class EngineeringPrinciples extends StatelessWidget {
   }
 }
 
-class _PrincipleCard extends StatelessWidget {
-  final _Principle principle;
-  const _PrincipleCard({required this.principle});
+class _BuildStageCard extends StatelessWidget {
+  final String id;
+  final String title;
+  final List<String> items;
+
+  const _BuildStageCard({
+    required this.id,
+    required this.title,
+    required this.items,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return HoverCard(
-      borderRadius: 16,
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              principle.icon,
-              color: theme.colorScheme.primary,
-              size: 28,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          id,
+          style: theme.textTheme.displaySmall?.copyWith(
+            fontWeight: FontWeight.w900,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          title,
+          style: theme.textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w900,
+            letterSpacing: 2.0,
+          ),
+        ),
+        const SizedBox(height: 24),
+        for (final item in items)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              item,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+              ),
             ),
           ),
-          const Spacer(),
-          Text(
-            principle.title,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            principle.description,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              height: 1.5,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-        ],
-      ),
+      ],
     );
   }
-}
-
-class _Principle {
-  final String title;
-  final String description;
-  final IconData icon;
-  const _Principle({
-    required this.title,
-    required this.description,
-    required this.icon,
-  });
 }

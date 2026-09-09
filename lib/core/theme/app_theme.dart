@@ -10,30 +10,30 @@ class AppTheme {
     return base
         .copyWith(
           displayLarge: GoogleFonts.plusJakartaSans(
-            fontSize: 72,
+            fontSize: 88,
+            fontWeight: FontWeight.w800,
+            height: 1.0,
+            letterSpacing: -4.0,
+            color: primaryText,
+          ),
+          displayMedium: GoogleFonts.plusJakartaSans(
+            fontSize: 64,
             fontWeight: FontWeight.w800,
             height: 1.05,
             letterSpacing: -2.5,
             color: primaryText,
           ),
-          displayMedium: GoogleFonts.plusJakartaSans(
-            fontSize: 48,
+          displaySmall: GoogleFonts.plusJakartaSans(
+            fontSize: 40,
             fontWeight: FontWeight.w800,
             height: 1.1,
             letterSpacing: -1.5,
             color: primaryText,
           ),
-          displaySmall: GoogleFonts.plusJakartaSans(
-            fontSize: 36,
-            fontWeight: FontWeight.w800,
-            height: 1.15,
-            letterSpacing: -1.0,
-            color: primaryText,
-          ),
           headlineLarge: GoogleFonts.plusJakartaSans(
             fontSize: 32,
             fontWeight: FontWeight.w700,
-            letterSpacing: -0.8,
+            letterSpacing: -1.0,
             color: primaryText,
           ),
           headlineMedium: GoogleFonts.plusJakartaSans(
@@ -54,20 +54,26 @@ class AppTheme {
             color: primaryText,
           ),
           bodyLarge: GoogleFonts.inter(
-            fontSize: 18,
-            height: 1.7,
+            fontSize: 19,
+            height: 1.6,
             color: secondaryText,
           ),
           bodyMedium: GoogleFonts.inter(
             fontSize: 16,
-            height: 1.7,
+            height: 1.6,
             color: secondaryText,
           ),
-          labelLarge: GoogleFonts.inter(
+          labelLarge: GoogleFonts.jetBrainsMono(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
+            letterSpacing: 1.0,
             color: primaryText,
+          ),
+          labelSmall: GoogleFonts.jetBrainsMono(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 1.0,
+            color: secondaryText,
           ),
         )
         .apply(bodyColor: secondaryText, displayColor: primaryText);

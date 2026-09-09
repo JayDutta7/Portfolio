@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/responsive.dart';
 import '../../viewmodels/theme_viewmodel.dart';
-import '../../viewmodels/profile_viewmodel.dart';
 
 class NavItem {
   final String label;
@@ -22,7 +21,7 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(88);
+  Size get preferredSize => const Size.fromHeight(100);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,61 +29,45 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
     final isDesktop = Responsive.isDesktopOrWider(context);
     final hPad = Responsive.pagePadding(context);
     final themeController = ref.watch(themeProvider);
-    final profileAsync = ref.watch(profileViewModelProvider);
 
     return Container(
       height: preferredSize.height,
-      padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface.withValues(alpha: 0.7),
-          borderRadius: BorderRadius.circular(100),
-          border: Border.all(color: theme.dividerColor, width: 0.5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
+      padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 20),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(100),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Padding(
+          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          child: Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(100),
+              border: Border.all(color: theme.dividerColor.withValues(alpha: 0.5), width: 0.5),
+            ),
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
               children: [
-                _Logo(),
+                const _Logo(),
                 const Spacer(),
                 if (isDesktop) ...[
                   for (final item in items)
                     _NavLink(
-                      label: item.label,
+                      label: item.label.toUpperCase(),
                       onTap: () => onNavTap(item.sectionKey),
                     ),
-                  const SizedBox(width: 20),
-                ],
-                IconButton(
-                  tooltip: themeController.isDark
-                      ? 'Light Mode'
-                      : 'Dark Mode',
-                  onPressed: themeController.toggle,
-                  icon: Icon(
-                    themeController.isDark
-                        ? Icons.light_mode_outlined
-                        : Icons.dark_mode_outlined,
-                    size: 20,
-                  ),
-                ),
-                if (isDesktop && profileAsync.hasValue) ...[
                   const SizedBox(width: 12),
-                  _ResumeButton(resumeUrl: profileAsync.value!.resumeAssetPath),
-                ],
-                if (!isDesktop) ...[
+                  _ThemeToggle(
+                    isDark: themeController.isDark,
+                    onToggle: themeController.toggle,
+                  ),
+                  const SizedBox(width: 12),
+                  const _ResumeAction(),
+                ] else ...[
+                  _ThemeToggle(
+                    isDark: themeController.isDark,
+                    onToggle: themeController.toggle,
+                  ),
                   const SizedBox(width: 8),
                   IconButton(
-                    tooltip: 'Menu',
                     icon: const Icon(Icons.menu_rounded, size: 24),
                     onPressed: () => _openMobileMenu(context),
                   ),
@@ -126,9 +109,9 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(vertical: 4),
                   title: Text(
-                    item.label,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+                    item.label.toUpperCase(),
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded, size: 20),
@@ -146,71 +129,59 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
 }
 
 class _Logo extends StatelessWidget {
+  const _Logo();
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.secondary,
-              ],
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Center(
-            child: Text(
-              'JD',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w900,
-                fontSize: 14,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        if (Responsive.isDesktopOrWider(context))
-          Text(
-            'Jayajit Dutta',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
-            ),
-          ),
-      ],
+    return Text(
+      'JAYAJIT',
+      style: theme.textTheme.labelLarge?.copyWith(
+        fontWeight: FontWeight.w900,
+        letterSpacing: 2.0,
+      ),
     );
   }
 }
 
-class _ResumeButton extends StatelessWidget {
-  final String resumeUrl;
-  const _ResumeButton({required this.resumeUrl});
+class _ThemeToggle extends StatelessWidget {
+  final bool isDark;
+  final VoidCallback onToggle;
+
+  const _ThemeToggle({required this.isDark, required this.onToggle});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onToggle,
+      icon: Icon(
+        isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+        size: 20,
+      ),
+    );
+  }
+}
+
+class _ResumeAction extends StatelessWidget {
+  const _ResumeAction();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ElevatedButton(
-      onPressed: () {
-        // Handle resume download/view
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
-        elevation: 0,
+    return TextButton(
+      onPressed: () {},
+      style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        backgroundColor: theme.colorScheme.onSurface,
+        foregroundColor: theme.colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-        textStyle: theme.textTheme.labelLarge?.copyWith(
-          fontWeight: FontWeight.w700,
+      ),
+      child: Text(
+        'RESUME',
+        style: theme.textTheme.labelSmall?.copyWith(
+          fontWeight: FontWeight.w900,
+          color: theme.colorScheme.surface,
         ),
       ),
-      child: const Text('Resume'),
     );
   }
 }
@@ -241,11 +212,11 @@ class _NavLinkState extends State<_NavLink> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 200),
-            style: theme.textTheme.titleSmall!.copyWith(
-              fontWeight: _hovering ? FontWeight.w700 : FontWeight.w500,
+            style: theme.textTheme.labelSmall!.copyWith(
+              fontWeight: _hovering ? FontWeight.w900 : FontWeight.w700,
               color: _hovering
                   ? theme.colorScheme.primary
-                  : theme.textTheme.bodyMedium?.color,
+                  : theme.textTheme.labelSmall?.color?.withValues(alpha: 0.6),
             ),
             child: Text(widget.label),
           ),

@@ -5,14 +5,15 @@ import '../widgets/common/nav_bar.dart';
 import '../widgets/sections/about_section.dart';
 import '../widgets/sections/architecture_section.dart';
 import '../widgets/sections/contact_section.dart';
+import '../widgets/sections/device_showcase.dart';
 import '../widgets/sections/education_section.dart';
 import '../widgets/sections/experience_section.dart';
 import '../widgets/sections/engineering_principles.dart';
+import '../widgets/sections/code_moment.dart';
 import '../widgets/sections/footer_section.dart';
 import '../widgets/sections/hero_section.dart';
 import '../widgets/sections/projects_section.dart';
 import '../widgets/sections/skills_section.dart';
-import '../widgets/sections/stats_section.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -69,13 +70,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                 sectionKey: _heroKey,
                 onViewWork: () => _scrollTo(_projectsKey),
               ),
-              AboutSection(profile: profile, sectionKey: _aboutKey),
-              SkillsSection(profile: profile, sectionKey: _skillsKey),
-              ExperienceSection(profile: profile, sectionKey: _experienceKey),
-              const EngineeringPrinciples(),
               ProjectsSection(profile: profile, sectionKey: _projectsKey),
+              DeviceShowcase(projects: profile.projects.take(4).toList()),
               ArchitectureSection(profile: profile),
-              StatsSection(profile: profile),
+              SkillsSection(profile: profile, sectionKey: _skillsKey),
+              const EngineeringPrinciples(),
+              const CodeMoment(),
+              ExperienceSection(profile: profile, sectionKey: _experienceKey),
+              AboutSection(profile: profile, sectionKey: _aboutKey),
               EducationSection(profile: profile, sectionKey: _educationKey),
               ContactSection(profile: profile, sectionKey: _contactKey),
               SiteFooter(profile: profile),

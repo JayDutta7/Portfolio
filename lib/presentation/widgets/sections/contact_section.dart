@@ -20,38 +20,37 @@ class ContactSection extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Let\'s build something\nworth shipping.',
+              'Have a mobile product\nworth building?',
               textAlign: TextAlign.center,
               style: theme.textTheme.displayMedium?.copyWith(
-                fontWeight: FontWeight.w800,
+                height: 1.0,
                 letterSpacing: -2.0,
-                height: 1.1,
               ),
             ),
             const SizedBox(height: 32),
             ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
+              constraints: const BoxConstraints(maxWidth: 540),
               child: Text(
-                'Open to interesting mobile, Flutter and product engineering opportunities.',
+                'Let\'s turn the idea into something people can actually use.',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
             ),
-            const SizedBox(height: 64),
+            const SizedBox(height: 80),
             Wrap(
               spacing: 24,
               runSpacing: 24,
               alignment: WrapAlignment.center,
               children: [
-                _BigButton(
-                  label: 'Let\'s Connect',
+                _CTAButton(
+                  label: 'LET\'S TALK',
                   onPressed: () => LaunchHelper.sendEmail(profile.email),
                   primary: true,
                 ),
-                _BigButton(
-                  label: 'Download Resume',
+                _CTAButton(
+                  label: 'DOWNLOAD RESUME',
                   onPressed: () async {
                     try {
                       await downloadResume(
@@ -69,24 +68,15 @@ class ContactSection extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 48),
+            const SizedBox(height: 80),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _SocialLink(
-                  label: 'GitHub',
-                  onTap: () => LaunchHelper.openUrl(profile.githubUrl),
-                ),
-                _Dot(),
-                _SocialLink(
-                  label: 'LinkedIn',
-                  onTap: () => LaunchHelper.openUrl(profile.linkedInUrl),
-                ),
-                _Dot(),
-                _SocialLink(
-                  label: 'Email',
-                  onTap: () => LaunchHelper.sendEmail(profile.email),
-                ),
+                _SocialAction(label: 'GITHUB', onTap: () => LaunchHelper.openUrl(profile.githubUrl)),
+                _ActionDivider(),
+                _SocialAction(label: 'LINKEDIN', onTap: () => LaunchHelper.openUrl(profile.linkedInUrl)),
+                _ActionDivider(),
+                _SocialAction(label: 'EMAIL', onTap: () => LaunchHelper.sendEmail(profile.email)),
               ],
             ),
           ],
@@ -96,12 +86,12 @@ class ContactSection extends StatelessWidget {
   }
 }
 
-class _BigButton extends StatelessWidget {
+class _CTAButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
   final bool primary;
 
-  const _BigButton({
+  const _CTAButton({
     required this.label,
     required this.onPressed,
     this.primary = false,
@@ -113,54 +103,55 @@ class _BigButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: primary ? theme.colorScheme.primary : theme.colorScheme.surface,
-        foregroundColor: primary ? Colors.white : theme.colorScheme.onSurface,
-        padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 28),
+        backgroundColor: primary ? theme.colorScheme.onSurface : Colors.transparent,
+        foregroundColor: primary ? theme.colorScheme.surface : theme.colorScheme.onSurface,
+        padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 32),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(100),
           side: primary ? BorderSide.none : BorderSide(color: theme.dividerColor, width: 1.5),
         ),
         elevation: 0,
       ),
       child: Text(
         label,
-        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
-      ),
-    );
-  }
-}
-
-class _SocialLink extends StatelessWidget {
-  final String label;
-  final VoidCallback onTap;
-  const _SocialLink({required this.label, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Text(
-          label,
-          style: theme.textTheme.labelLarge?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-          ),
+        style: theme.textTheme.labelSmall?.copyWith(
+          fontWeight: FontWeight.w900,
+          letterSpacing: 2.0,
         ),
       ),
     );
   }
 }
 
-class _Dot extends StatelessWidget {
+class _SocialAction extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+  const _SocialAction({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      child: Text(
+        label,
+        style: theme.textTheme.labelSmall?.copyWith(
+          fontWeight: FontWeight.w900,
+          letterSpacing: 2.0,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 4,
       height: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
         color: Theme.of(context).dividerColor,
         shape: BoxShape.circle,

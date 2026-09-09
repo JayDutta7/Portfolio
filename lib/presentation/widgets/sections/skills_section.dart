@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
-import '../common/hover_card.dart';
 import '../common/section_wrapper.dart';
 
 class SkillsSection extends StatelessWidget {
@@ -9,152 +7,164 @@ class SkillsSection extends StatelessWidget {
   final GlobalKey? sectionKey;
   const SkillsSection({required this.profile, this.sectionKey, super.key});
 
-  IconData _iconFor(String key) {
-    switch (key) {
-      case 'mobile':
-        return Icons.smartphone_rounded;
-      case 'architecture':
-        return Icons.account_tree_rounded;
-      case 'state':
-        return Icons.dynamic_feed_rounded;
-      case 'networking':
-        return Icons.wifi_tethering_rounded;
-      case 'storage':
-        return Icons.storage_rounded;
-      default:
-        return Icons.bolt_rounded;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isDesktop = Responsive.isDesktopOrWider(context);
+    final theme = Theme.of(context);
 
     return SectionWrapper(
       sectionKey: sectionKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionHeading(
-            eyebrow: 'Ecosystem',
-            title: 'Engineering Stack',
-          ),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: isDesktop ? 3 : 1,
-              crossAxisSpacing: 24,
-              mainAxisSpacing: 24,
-              childAspectRatio: isDesktop ? 1.2 : 1.4,
+          Text(
+            '04 / TOOLKIT',
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.w800,
             ),
-            itemCount: profile.skillCategories.length,
-            itemBuilder: (context, index) {
-              final category = profile.skillCategories[index];
-              return _SkillCard(
-                category: category,
-                icon: _iconFor(category.iconAsset),
-              );
-            },
           ),
-          const SizedBox(height: 100),
-          const _TechnologyWall(),
+          const SizedBox(height: 16),
+          Text(
+            'My engineering\ntoolkit.',
+            style: theme.textTheme.displayMedium?.copyWith(
+              height: 1.0,
+            ),
+          ),
+          const SizedBox(height: 80),
+          const _CommandPaletteToolkit(),
         ],
       ),
     );
   }
 }
 
-class _TechnologyWall extends StatelessWidget {
-  const _TechnologyWall();
+class _CommandPaletteToolkit extends StatelessWidget {
+  const _CommandPaletteToolkit();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final tech = [
-      'Kotlin', 'Flutter', 'Android', 'Dart', 'Jetpack Compose',
-      'Coroutines', 'Flow', 'Riverpod', 'Hilt', 'Koin', 'Room',
-      'Retrofit', 'Dio', 'Firebase', 'Clean Architecture', 'MVVM'
+    final categories = [
+      {
+        'title': 'MOBILE',
+        'items': ['Android', 'Flutter', 'Jetpack Compose', 'Kotlin', 'Dart'],
+      },
+      {
+        'title': 'ARCHITECTURE',
+        'items': ['MVVM', 'Clean Architecture', 'Repository Pattern', 'Dependency Injection'],
+      },
+      {
+        'title': 'STATE',
+        'items': ['Riverpod', 'Provider', 'StateFlow', 'SharedFlow'],
+      },
+      {
+        'title': 'DATA',
+        'items': ['REST API', 'Dio', 'Retrofit', 'ObjectBox', 'SQLite'],
+      },
+      {
+        'title': 'DEVICE',
+        'items': ['CameraX', 'OpenCV', 'ML Kit', 'ArUco'],
+      },
+      {
+        'title': 'CLOUD',
+        'items': ['Firebase', 'CI/CD', 'Git', 'Postman'],
+      },
     ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          'PRODUCTION TESTED',
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: theme.colorScheme.primary,
-            letterSpacing: 4,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        const SizedBox(height: 48),
-        Wrap(
-          spacing: 48,
-          runSpacing: 32,
-          alignment: WrapAlignment.center,
-          children: [
-            for (final item in tech)
-              Opacity(
-                opacity: 0.4,
-                child: Text(
-                  item,
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -1.0,
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.dividerColor, width: 1.0),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: theme.dividerColor, width: 0.5)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.search_rounded, size: 20, color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
+                const SizedBox(width: 16),
+                Text(
+                  'Search engineering capabilities...',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                   ),
                 ),
-              ),
-          ],
-        ),
-      ],
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isDesktop = constraints.maxWidth > 600;
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: isDesktop ? 2 : 1,
+                    crossAxisSpacing: 40,
+                    mainAxisSpacing: 40,
+                    childAspectRatio: isDesktop ? 2.5 : 3.0,
+                  ),
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final cat = categories[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          (cat['title'] as String),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: theme.colorScheme.primary,
+                            letterSpacing: 2.0,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            for (final item in (cat['items'] as List<String>))
+                              _ToolkitChip(label: item),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _SkillCard extends StatelessWidget {
-  final SkillCategory category;
-  final IconData icon;
-
-  const _SkillCard({required this.category, required this.icon});
+class _ToolkitChip extends StatelessWidget {
+  final String label;
+  const _ToolkitChip({required this.label});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return HoverCard(
-      borderRadius: 16,
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: theme.colorScheme.primary, size: 24),
-              const SizedBox(width: 12),
-              Text(
-                category.title,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final skill in category.skills)
-                Text(
-                  skill,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
-                ),
-            ],
-          ),
-        ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: theme.scaffoldBackgroundColor,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: theme.dividerColor, width: 0.5),
+      ),
+      child: Text(
+        label,
+        style: theme.textTheme.labelSmall?.copyWith(fontSize: 10),
       ),
     );
   }
