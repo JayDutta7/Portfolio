@@ -39,7 +39,7 @@ class HeroSection extends StatelessWidget {
                       isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'JAYAJIT DUTTA',
+                      profile.name,
                       style: theme.textTheme.labelLarge?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w900,
