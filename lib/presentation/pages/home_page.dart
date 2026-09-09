@@ -83,9 +83,32 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
       ),
-      loading: () => const Scaffold(
+      loading: () => Scaffold(
+        backgroundColor: const Color(0xFF050505),
         body: Center(
-          child: CircularProgressIndicator(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Jayajit Dutta'.toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  letterSpacing: 4,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       error: (error, stack) => Scaffold(
