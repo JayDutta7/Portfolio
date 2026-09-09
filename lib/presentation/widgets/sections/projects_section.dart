@@ -234,7 +234,7 @@ class _ProductMockup extends StatelessWidget {
           border: Border.all(color: const Color(0xFF1F1F21), width: 8),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.45),
+              color: Colors.black.withValues(alpha: 0.45),
               blurRadius: 48,
               offset: const Offset(0, 22),
             ),
@@ -266,7 +266,7 @@ class _ProductMockup extends StatelessWidget {
         border: Border.all(color: const Color(0xFF1F1F21), width: 6),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.42),
+            color: Colors.black.withValues(alpha: 0.42),
             blurRadius: 44,
             offset: const Offset(0, 20),
           ),

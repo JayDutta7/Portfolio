@@ -162,7 +162,7 @@ class _DeviceItem extends StatelessWidget {
             border: Border.all(color: const Color(0xFF1F1F21), width: 6),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.32),
+                color: Colors.black.withValues(alpha: 0.32),
                 blurRadius: 34,
                 offset: const Offset(0, 18),
               ),
@@ -187,7 +187,7 @@ class _DeviceItem extends StatelessWidget {
           label.toUpperCase(),
           style: theme.textTheme.labelSmall?.copyWith(
             fontWeight: FontWeight.w900,
-            color: theme.colorScheme.onSurface.withOpacity(0.32),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.32),
           ),
         ),
       ],

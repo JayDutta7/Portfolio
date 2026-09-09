@@ -151,7 +151,6 @@ class _ProductShowcase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final first = projects.isNotEmpty ? projects[0] : null;
     final second = projects.length > 1 ? projects[1] : null;
 
@@ -169,7 +168,7 @@ class _ProductShowcase extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.06),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.06),
                     blurRadius: 120,
                     spreadRadius: 60,
                   ),
@@ -232,7 +231,7 @@ class _SmartphoneFrame extends StatelessWidget {
         border: Border.all(color: const Color(0xFF1F1F21), width: 10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.55),
+            color: Colors.black.withValues(alpha: 0.55),
             blurRadius: 44,
             offset: const Offset(0, 22),
           ),
@@ -273,7 +272,7 @@ class _SmartphoneFrame extends StatelessWidget {
                   title.toUpperCase(),
                   style: theme.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w900,
-                    color: accent.withOpacity(0.6),
+                    color: accent.withValues(alpha: 0.6),
                     letterSpacing: 1.2,
                   ),
                 ),
@@ -309,7 +308,7 @@ class _FloatingLabel extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface.withOpacity(0.86),
+          color: theme.colorScheme.surface.withValues(alpha: 0.86),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: theme.dividerColor, width: 0.5),
         ),
