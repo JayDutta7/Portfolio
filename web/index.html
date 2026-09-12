@@ -9,9 +9,10 @@
   <meta name="author" content="Jayajit Dutta">
   <meta name="theme-color" content="#6366F1">
 
-  <!-- High-performance preconnect & font preloading -->
+  <!-- High-performance preconnect & font/CanvasKit preloading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
 
   <!-- Preload hero image -->
@@ -124,23 +125,39 @@
 
   <script src="flutter_bootstrap.js" async></script>
   <script>
-    window.addEventListener('load', function() {
-      // Ensure smooth removal when Flutter completes entrypoint initialization
-      var checkFlutterLoaded = setInterval(function() {
-        if (window._flutter && window._flutter.loader) {
-          clearInterval(checkFlutterLoaded);
-        }
-      }, 50);
-
-      // Fallback timer to hide loader cleanly if load takes place
-      setTimeout(function() {
-        var loading = document.querySelector('#loading-indicator');
-        if (loading) {
+    (function() {
+      var loading = document.querySelector('#loading-indicator');
+      function hideLoader() {
+        if (loading && loading.style.opacity !== '0') {
           loading.style.opacity = '0';
-          setTimeout(function() { loading.remove(); }, 300);
+          setTimeout(function() {
+            if (loading && loading.parentNode) {
+              loading.parentNode.removeChild(loading);
+            }
+          }, 300);
         }
-      }, 800);
-    });
+      }
+
+      // Observe DOM mutations to detect when Flutter injects its view/canvas element
+      var observer = new MutationObserver(function(mutations, obs) {
+        var flutterElement = document.querySelector('flutter-view, flt-glass-pane, canvas, flt-scene-host');
+        if (flutterElement) {
+          obs.disconnect();
+          hideLoader();
+        }
+      });
+
+      if (document.body) {
+        observer.observe(document.body, { childList: true, subtree: true });
+      } else {
+        document.addEventListener('DOMContentLoaded', function() {
+          observer.observe(document.body, { childList: true, subtree: true });
+        });
+      }
+
+      // Safety fallback timer if loading takes unusually long
+      setTimeout(hideLoader, 15000);
+    })();
   </script>
 </body>
 </html>
