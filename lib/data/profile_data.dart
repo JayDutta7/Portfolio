@@ -129,6 +129,17 @@ class ProfileData {
       ],
     ),
     Project(
+      title: 'Captain Logistics',
+      period: '2022 – 2024',
+      stackSummary: 'Native Android · Kotlin · MVVM · Room · Retrofit',
+      techStack: ['Native Android', 'Kotlin', 'MVVM', 'Clean Architecture', 'Room DB', 'Retrofit'],
+      overview: 'A comprehensive logistics and supply chain management application for streamlined fleet tracking and delivery operations.',
+      myRole: 'Lead Android developer responsible for building offline-first sync features and optimizing real-time GPS fleet tracking.',
+      platforms: ['Android'],
+      screenshotUrl: null, // Pending screenshot asset
+      links: [], // Pending store links
+    ),
+    Project(
       title: 'Buildistan',
       period: '2023 – Present',
       stackSummary: 'Flutter · Provider · Clean Architecture',
