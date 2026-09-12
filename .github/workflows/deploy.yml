@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -55,17 +55,10 @@ jobs:
       - name: Add .nojekyll
         run: touch build/web/.nojekyll
 
-      - name: Upload artifact for GitHub Actions deployment
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
-
-      - name: Deploy to gh-pages branch (fallback for branch-based deployment)
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
-          force_orphan: true
 
   deploy:
     needs: build
@@ -77,4 +70,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        continue-on-error: true
