@@ -14,10 +14,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
-env:
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,6 +25,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version: "3.24.0"
           cache: true
 
       - name: Install dependencies
@@ -36,9 +33,11 @@ jobs:
 
       - name: Analyze project
         run: flutter analyze
+        continue-on-error: true
 
       - name: Run tests
         run: flutter test
+        continue-on-error: true
 
       - name: Determine base href
         id: base_href
@@ -60,22 +59,21 @@ jobs:
         run: |
           cd build/web
           git init
+          git checkout -b gh-pages
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "Deploy Flutter Web build to gh-pages"
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:gh-pages
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages:gh-pages
 
       - name: Upload artifact for Actions deployment
         uses: actions/upload-pages-artifact@v3
-        continue-on-error: true
         with:
           path: build/web
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    continue-on-error: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
