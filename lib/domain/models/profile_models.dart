@@ -57,6 +57,7 @@ class Project {
   final String? solution;
   final List<String> platforms;
   final List<ProjectLink> links;
+  final String? screenshotUrl;
 
   const Project({
     required this.title,
@@ -71,6 +72,7 @@ class Project {
     this.solution,
     this.platforms = const [],
     this.links = const [],
+    this.screenshotUrl,
   });
 }
 

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewmodels/profile_viewmodel.dart';
+import '../widgets/common/mesh_background.dart';
 import '../widgets/common/nav_bar.dart';
 import '../widgets/sections/about_section.dart';
 import '../widgets/sections/architecture_section.dart';
 import '../widgets/sections/contact_section.dart';
-import '../widgets/sections/device_showcase.dart';
 import '../widgets/sections/education_section.dart';
 import '../widgets/sections/experience_section.dart';
-import '../widgets/sections/engineering_principles.dart';
-import '../widgets/sections/code_moment.dart';
 import '../widgets/sections/footer_section.dart';
 import '../widgets/sections/hero_section.dart';
 import '../widgets/sections/projects_section.dart';
 import '../widgets/sections/skills_section.dart';
+import '../widgets/sections/setup_section.dart';
+import '../widgets/sections/stats_section.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -32,13 +32,10 @@ class _HomePageState extends ConsumerState<HomePage> {
   final _contactKey = GlobalKey();
 
   late final List<NavItem> _navItems = [
-    NavItem('Home', _heroKey),
-    NavItem('About', _aboutKey),
-    NavItem('Skills', _skillsKey),
+    NavItem('Work', _projectsKey),
     NavItem('Experience', _experienceKey),
-    NavItem('Projects', _projectsKey),
-    NavItem('Education', _educationKey),
-    NavItem('Contact', _contactKey),
+    NavItem('Engineering', _skillsKey),
+    NavItem('About', _aboutKey),
   ];
 
   void _scrollTo(GlobalKey key) {
@@ -46,7 +43,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     if (ctx != null) {
       Scrollable.ensureVisible(
         ctx,
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 600),
         curve: Curves.easeInOutCubic,
       );
     }
@@ -55,58 +52,71 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final profileViewModel = ref.watch(profileViewModelProvider);
+    final theme = Theme.of(context);
 
     return profileViewModel.when(
       data: (profile) => Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: NavBar(
           items: _navItems,
           onNavTap: _scrollTo,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              HeroSection(
-                profile: profile,
-                sectionKey: _heroKey,
-                onViewWork: () => _scrollTo(_projectsKey),
+        body: Stack(
+          children: [
+            // Ambient Mesh & Glow Canvas
+            const Positioned.fill(
+              child: AmbientMeshBackground(),
+            ),
+
+            // Scrollable Section Layer
+            Positioned.fill(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    HeroSection(
+                      profile: profile,
+                      sectionKey: _heroKey,
+                      onViewWork: () => _scrollTo(_projectsKey),
+                    ),
+                    StatsSection(profile: profile),
+                    ExperienceSection(profile: profile, sectionKey: _experienceKey),
+                    ProjectsSection(profile: profile, sectionKey: _projectsKey),
+                    ArchitectureSection(profile: profile),
+                    SkillsSection(profile: profile, sectionKey: _skillsKey),
+                    const SetupSection(),
+                    AboutSection(profile: profile, sectionKey: _aboutKey),
+                    EducationSection(profile: profile, sectionKey: _educationKey),
+                    ContactSection(profile: profile, sectionKey: _contactKey),
+                    SiteFooter(profile: profile),
+                  ],
+                ),
               ),
-              ProjectsSection(profile: profile, sectionKey: _projectsKey),
-              DeviceShowcase(projects: profile.projects.take(4).toList()),
-              ArchitectureSection(profile: profile),
-              SkillsSection(profile: profile, sectionKey: _skillsKey),
-              const EngineeringPrinciples(),
-              const CodeMoment(),
-              ExperienceSection(profile: profile, sectionKey: _experienceKey),
-              AboutSection(profile: profile, sectionKey: _aboutKey),
-              EducationSection(profile: profile, sectionKey: _educationKey),
-              ContactSection(profile: profile, sectionKey: _contactKey),
-              SiteFooter(profile: profile),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       loading: () => Scaffold(
-        backgroundColor: const Color(0xFF050505),
+        backgroundColor: theme.scaffoldBackgroundColor,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
-                width: 60,
-                height: 60,
+              SizedBox(
+                width: 50,
+                height: 50,
                 child: CircularProgressIndicator(
                   strokeWidth: 3,
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
+                  valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
                 ),
               ),
               const SizedBox(height: 24),
               Text(
-                'Jayajit Dutta'.toUpperCase(),
-                style: const TextStyle(
-                  color: Colors.white,
+                'JAYAJIT DUTTA'.toUpperCase(),
+                style: TextStyle(
+                  color: theme.colorScheme.onSurface,
                   letterSpacing: 4,
                   fontWeight: FontWeight.w900,
-                  fontSize: 12,
+                  fontSize: 13,
                 ),
               ),
             ],
@@ -115,7 +125,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       ),
       error: (error, stack) => Scaffold(
         body: Center(
-          child: Text('Error: $error'),
+          child: Text('Error loading profile: $error'),
         ),
       ),
     );

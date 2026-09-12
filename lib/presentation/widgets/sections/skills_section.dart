@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
+import '../common/glass_container.dart';
+import '../common/gradient_text.dart';
 import '../common/section_wrapper.dart';
 
 class SkillsSection extends StatelessWidget {
@@ -10,161 +14,201 @@ class SkillsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return SectionWrapper(
       sectionKey: sectionKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '04 / TOOLKIT',
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.w800,
-            ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+                ),
+                child: Text(
+                  '05 / TOOLKIT',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            'My engineering\ntoolkit.',
+          const SizedBox(height: 24),
+          GradientText(
+            'High-end engineering\ncapabilities.',
+            colors: isDark
+                ? [Colors.white, AppColors.accent, AppColors.secondary]
+                : [AppColors.lightTextPrimary, AppColors.primary],
             style: theme.textTheme.displayMedium?.copyWith(
-              height: 1.0,
+              height: 1.05,
+              fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: 80),
-          const _CommandPaletteToolkit(),
+          const SizedBox(height: 64),
+          const _ModernToolkitPalette(),
         ],
       ),
     );
   }
 }
 
-class _CommandPaletteToolkit extends StatelessWidget {
-  const _CommandPaletteToolkit();
+class _ModernToolkitPalette extends StatelessWidget {
+  const _ModernToolkitPalette();
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final categories = [
       {
-        'title': 'MOBILE',
-        'items': ['Android', 'Flutter', 'Jetpack Compose', 'Kotlin', 'Dart'],
+        'title': 'MOBILE DEVELOPMENT',
+        'items': ['Android SDK', 'Flutter', 'Jetpack Compose', 'Kotlin', 'Dart'],
+        'color': AppColors.primary,
+        'icon': Icons.smartphone_rounded,
       },
       {
-        'title': 'ARCHITECTURE',
+        'title': 'ARCHITECTURE & DESIGN',
         'items': ['MVVM', 'Clean Architecture', 'Repository Pattern', 'Dependency Injection'],
+        'color': AppColors.secondary,
+        'icon': Icons.account_tree_rounded,
       },
       {
-        'title': 'STATE',
+        'title': 'STATE MANAGEMENT',
         'items': ['Riverpod', 'Provider', 'StateFlow', 'SharedFlow'],
+        'color': AppColors.accent,
+        'icon': Icons.sync_rounded,
       },
       {
-        'title': 'DATA',
-        'items': ['REST API', 'Dio', 'Retrofit', 'ObjectBox', 'SQLite'],
+        'title': 'DATA & NETWORKING',
+        'items': ['REST APIs', 'Dio', 'Retrofit', 'Room DB', 'SQLite', 'ObjectBox'],
+        'color': AppColors.emerald,
+        'icon': Icons.storage_rounded,
       },
       {
-        'title': 'DEVICE',
-        'items': ['CameraX', 'OpenCV', 'ML Kit', 'ArUco'],
+        'title': 'DEVICE & HARDWARE',
+        'items': ['CameraX', 'OpenCV', 'ML Kit', 'ArUco', 'GPS & Location'],
+        'color': AppColors.amber,
+        'icon': Icons.sensors_rounded,
       },
       {
-        'title': 'CLOUD',
-        'items': ['Firebase', 'CI/CD', 'Git', 'Postman'],
+        'title': 'CLOUD & DEVOPS',
+        'items': ['Firebase', 'CI/CD Pipelines', 'Git / GitHub', 'Postman'],
+        'color': const Color(0xFFEC4899),
+        'icon': Icons.cloud_done_rounded,
       },
     ];
 
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.dividerColor, width: 1.0),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: theme.dividerColor, width: 0.5)),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.search_rounded, size: 20, color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
-                const SizedBox(width: 16),
-                Text(
-                  'Search engineering capabilities...',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                  ),
-                ),
-              ],
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isDesktop = Responsive.isDesktopOrWider(context);
+        final columns = isDesktop ? 3 : (constraints.maxWidth > 700 ? 2 : 1);
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: columns,
+            crossAxisSpacing: 24,
+            mainAxisSpacing: 24,
+            childAspectRatio: isDesktop ? 1.25 : 1.4,
           ),
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final isDesktop = constraints.maxWidth > 600;
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: isDesktop ? 2 : 1,
-                    crossAxisSpacing: 40,
-                    mainAxisSpacing: 40,
-                    childAspectRatio: isDesktop ? 2.5 : 3.0,
-                  ),
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final cat = categories[index];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          (cat['title'] as String),
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: theme.colorScheme.primary,
-                            letterSpacing: 2.0,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            for (final item in (cat['items'] as List<String>))
-                              _ToolkitChip(label: item),
-                          ],
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-            ),
-          ),
-        ],
-      ),
+          itemCount: categories.length,
+          itemBuilder: (context, index) {
+            final cat = categories[index];
+            return _ToolkitCardRich(
+              title: cat['title'] as String,
+              items: cat['items'] as List<String>,
+              color: cat['color'] as Color,
+              icon: cat['icon'] as IconData,
+            );
+          },
+        );
+      },
     );
   }
 }
 
-class _ToolkitChip extends StatelessWidget {
-  final String label;
-  const _ToolkitChip({required this.label});
+class _ToolkitCardRich extends StatelessWidget {
+  final String title;
+  final List<String> items;
+  final Color color;
+  final IconData icon;
+
+  const _ToolkitCardRich({
+    required this.title,
+    required this.items,
+    required this.color,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: theme.scaffoldBackgroundColor,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: theme.dividerColor, width: 0.5),
-      ),
-      child: Text(
-        label,
-        style: theme.textTheme.labelSmall?.copyWith(fontSize: 10),
+
+    return GlassContainer(
+      padding: const EdgeInsets.all(28),
+      glowColor: color,
+      borderColor: color.withValues(alpha: 0.3),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: color.withValues(alpha: 0.3)),
+                ),
+                child: Icon(icon, size: 20, color: color),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  title,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: color,
+                    letterSpacing: 1.2,
+                    fontSize: 11,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Expanded(
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                for (final item in items)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: theme.dividerColor),
+                    ),
+                    child: Text(
+                      item,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

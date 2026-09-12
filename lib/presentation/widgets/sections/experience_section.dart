@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
+import '../common/glass_container.dart';
+import '../common/gradient_text.dart';
+import '../common/pulse_badge.dart';
 import '../common/section_wrapper.dart';
 
 class ExperienceSection extends StatelessWidget {
@@ -10,188 +15,192 @@ class ExperienceSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return SectionWrapper(
       sectionKey: sectionKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '05 / EXPERIENCE',
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '9 years of building.',
-            style: theme.textTheme.displayMedium?.copyWith(
-              height: 1.0,
-            ),
-          ),
-          const SizedBox(height: 80),
-          const _HorizontalTimeline(),
-          const SizedBox(height: 100),
-          _CurrentExperienceCard(item: profile.experience.first),
-        ],
-      ),
-    );
-  }
-}
-
-class _HorizontalTimeline extends StatelessWidget {
-  const _HorizontalTimeline();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final milestones = [
-      {'year': '2017', 'title': 'ANDROID'},
-      {'year': '2019', 'title': 'PRODUCT'},
-      {'year': '2020', 'title': 'FLUTTER'},
-      {'year': '2022', 'title': 'ARCHITECTURE'},
-      {'year': '2024', 'title': 'JETPACK COMPOSE'},
-      {'year': '2026', 'title': 'SENIOR EXPERT'},
-    ];
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (int i = 0; i < milestones.length; i++) ...[
-            _TimelineMilestone(
-              year: milestones[i]['year']!,
-              title: milestones[i]['title']!,
-            ),
-            if (i < milestones.length - 1)
-              Container(
-                width: 100,
-                height: 1,
-                color: theme.dividerColor,
-              ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _TimelineMilestone extends StatelessWidget {
-  final String year;
-  final String title;
-
-  const _TimelineMilestone({required this.year, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      children: [
-        Text(
-          year,
-          style: theme.textTheme.labelSmall?.copyWith(
-            fontWeight: FontWeight.w900,
-            color: theme.colorScheme.primary,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary,
-            shape: BoxShape.circle,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          title,
-          style: theme.textTheme.labelSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _CurrentExperienceCard extends StatelessWidget {
-  final ExperienceItem item;
-  const _CurrentExperienceCard({required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(48),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.dividerColor, width: 1.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
           Row(
             children: [
-              Text(
-                'CURRENT',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.secondary,
-                  fontWeight: FontWeight.w900,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
                 ),
-              ),
-              const Spacer(),
-              Text(
-                item.period.toUpperCase(),
-                style: theme.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                child: Text(
+                  '04 / CAREER',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.primary,
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 32),
-          Text(
-            item.role,
-            style: theme.textTheme.displaySmall?.copyWith(
-              fontWeight: FontWeight.w800,
-              letterSpacing: -1.0,
+          const SizedBox(height: 24),
+          GradientText(
+            '9 years of evolution.',
+            colors: isDark
+                ? [Colors.white, AppColors.primary, AppColors.secondary]
+                : [AppColors.lightTextPrimary, AppColors.primary],
+            style: theme.textTheme.displayMedium?.copyWith(
+              height: 1.05,
+              fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            item.company,
-            style: theme.textTheme.headlineMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.w700,
+          const SizedBox(height: 64),
+          for (int i = 0; i < profile.experience.length; i++)
+            _TimelineExperienceCard(
+              item: profile.experience[i],
+              isLast: i == profile.experience.length - 1,
             ),
-          ),
-          const SizedBox(height: 48),
-          for (final h in item.highlights)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Row(
+        ],
+      ),
+    );
+  }
+}
+
+class _TimelineExperienceCard extends StatelessWidget {
+  final ExperienceItem item;
+  final bool isLast;
+
+  const _TimelineExperienceCard({
+    required this.item,
+    required this.isLast,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDesktop = Responsive.isDesktopOrWider(context);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 40),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Vertical Timeline Line & Dot
+          if (isDesktop) ...[
+            SizedBox(
+              width: 140,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: Icon(Icons.arrow_forward_rounded, size: 14),
+                  Text(
+                    item.period.split(' – ').first.toUpperCase(),
+                    style: theme.textTheme.displaySmall?.copyWith(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.primary.withValues(alpha: 0.6),
+                    ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      h,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                      ),
+                  const SizedBox(height: 4),
+                  Text(
+                    item.period,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 11,
                     ),
                   ),
                 ],
               ),
             ),
+            const SizedBox(width: 24),
+          ],
+          // Card Content
+          Expanded(
+            child: GlassContainer(
+              padding: const EdgeInsets.all(32),
+              glowColor: item.isCurrent ? AppColors.primary : AppColors.secondary,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.role.toUpperCase(),
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 13,
+                                letterSpacing: 1.5,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              item.company,
+                              style: theme.textTheme.headlineLarge?.copyWith(
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (item.isCurrent) ...[
+                        const PulseBadge(
+                          label: 'ACTIVE ROLE',
+                          dotColor: AppColors.emerald,
+                        ),
+                      ],
+                    ],
+                  ),
+                  if (!isDesktop) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      item.period,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 24),
+                  for (final highlight in item.highlights)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 4),
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: AppColors.emerald.withValues(alpha: 0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.check_rounded,
+                              size: 14,
+                              color: AppColors.emerald,
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Text(
+                              highlight,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                height: 1.6,
+                                fontSize: 15,
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

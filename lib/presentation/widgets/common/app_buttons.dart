@@ -24,7 +24,7 @@ class GradientButton extends StatelessWidget {
         onTap: onPressed,
         child: Ink(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: AppColors.accentGradient),
+            gradient:  LinearGradient(colors: AppColors.primaryGradient),
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
+import '../common/glass_container.dart';
+import '../common/gradient_text.dart';
 import '../common/section_wrapper.dart';
 
 class ArchitectureSection extends StatelessWidget {
@@ -12,140 +15,211 @@ class ArchitectureSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDesktop = Responsive.isDesktopOrWider(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return SectionWrapper(
       sectionKey: sectionKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '03 / ENGINEERING',
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.w800,
-            ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+                ),
+                child: Text(
+                  '03 / ENGINEERING ARCHITECTURE',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Text(
+          const SizedBox(height: 24),
+          GradientText(
             'Beautiful on the surface.\nThoughtful underneath.',
-            style: theme.textTheme.displaySmall?.copyWith(
-              height: 1.0,
+            colors: isDark
+                ? [Colors.white, AppColors.secondary, AppColors.primary]
+                : [AppColors.lightTextPrimary, AppColors.primary],
+            style: theme.textTheme.displayMedium?.copyWith(
+              height: 1.05,
+              fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: 80),
-          const _ArchitectureDiagram(),
-          const SizedBox(height: 120),
-          _EcosystemComparison(isDesktop: isDesktop),
+          const SizedBox(height: 64),
+          const _ArchitectureStackVisualizer(),
+          const SizedBox(height: 100),
+          _EcosystemBattle(isDesktop: isDesktop),
         ],
       ),
     );
   }
 }
 
-class _ArchitectureDiagram extends StatelessWidget {
-  const _ArchitectureDiagram();
+class _ArchitectureStackVisualizer extends StatelessWidget {
+  const _ArchitectureStackVisualizer();
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-        _DiagramNode(title: 'FLUTTER / COMPOSE UI', color: Color(0xFF6366F1)),
-        _ConnectingLine(),
-        _DiagramNode(title: 'VIEWMODEL / RIVERPOD', color: Color(0xFF818CF8)),
-        _ConnectingLine(),
-        _DiagramNode(title: 'REPOSITORY LAYER', color: Color(0xFF14B8A6)),
-        _ConnectingLine(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _DiagramNode(title: 'REMOTE API', width: 200, color: Color(0xFF2DD4BF)),
-            SizedBox(width: 24),
-            _DiagramNode(title: 'LOCAL DB', width: 200, color: Color(0xFF5EEAD4)),
-          ],
+        const _StackNode(
+          title: '01. UI LAYER',
+          sub: 'Jetpack Compose / Flutter UI',
+          color: AppColors.primary,
+        ),
+        _StackArrow(),
+        const _StackNode(
+          title: '02. PRESENTATION / STATE LAYER',
+          sub: 'ViewModel / StateFlow / Riverpod',
+          color: AppColors.secondary,
+        ),
+        _StackArrow(),
+        const _StackNode(
+          title: '03. DOMAIN / BUSINESS LOGIC',
+          sub: 'Clean Architecture UseCases & Entities',
+          color: AppColors.accent,
+        ),
+        _StackArrow(),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final isWide = constraints.maxWidth > 600;
+            return Flex(
+              direction: isWide ? Axis.horizontal : Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _maybeExpanded(
+                  expand: isWide,
+                  flex: 1,
+                  child: const _StackNode(
+                    title: 'REMOTE API DATA SOURCE',
+                    sub: 'Retrofit / Dio / REST APIs',
+                    color: AppColors.emerald,
+                  ),
+                ),
+                if (isWide) const SizedBox(width: 20) else const SizedBox(height: 16),
+                _maybeExpanded(
+                  expand: isWide,
+                  flex: 1,
+                  child: const _StackNode(
+                    title: 'LOCAL CACHE DATA SOURCE',
+                    sub: 'Room DB / SQLite / ObjectBox',
+                    color: AppColors.amber,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
   }
 }
 
-class _DiagramNode extends StatelessWidget {
+class _StackNode extends StatelessWidget {
   final String title;
+  final String sub;
   final Color color;
-  final double width;
 
-  const _DiagramNode({
+  const _StackNode({
     required this.title,
+    required this.sub,
     required this.color,
-    this.width = 500,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      width: width,
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: theme.dividerColor, width: 0.5),
-      ),
+    return GlassContainer(
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+      glowColor: color,
+      borderColor: color.withValues(alpha: 0.3),
       child: Center(
-        child: Text(
-          title,
-          style: theme.textTheme.labelSmall?.copyWith(
-            fontWeight: FontWeight.w900,
-            color: color,
-          ),
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w900,
+                color: color,
+                letterSpacing: 2,
+                fontSize: 11,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              sub,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _ConnectingLine extends StatelessWidget {
-  const _ConnectingLine();
+class _StackArrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 1,
-      height: 40,
-      color: Theme.of(context).dividerColor,
+      height: 36,
+      width: 2,
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.primary,
+            AppColors.secondary.withValues(alpha: 0.3),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class _EcosystemComparison extends StatelessWidget {
+class _EcosystemBattle extends StatelessWidget {
   final bool isDesktop;
-  const _EcosystemComparison({required this.isDesktop});
+  const _EcosystemBattle({required this.isDesktop});
 
   @override
   Widget build(BuildContext context) {
     return Flex(
       direction: isDesktop ? Axis.horizontal : Axis.vertical,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _maybeExpanded(
           expand: isDesktop,
           flex: 1,
-          child: const _EcosystemBox(
-            title: 'ANDROID',
-            items: ['Kotlin', 'Jetpack Compose', 'Coroutines', 'Flow', 'WorkManager', 'CameraX', 'Hilt', 'ML Kit'],
-            color: Color(0xFF3DDC84),
+          child: const _EcosystemCardRich(
+            title: 'NATIVE ANDROID',
+            subtitle: 'High-performance Kotlin & Jetpack Compose',
+            items: ['Kotlin', 'Jetpack Compose', 'Coroutines & Flow', 'Clean Architecture', 'Hilt / Koin', 'Room DB', 'WorkManager', 'CameraX'],
+            color: AppColors.androidGreen,
+            icon: Icons.android_rounded,
           ),
         ),
-        if (isDesktop) ...[
-          const SizedBox(width: 40),
-          Text('VS', style: TextStyle(color: Colors.white.withValues(alpha: 0.1), fontWeight: FontWeight.w900, fontSize: 48)),
-          const SizedBox(width: 40),
-        ] else
-          const SizedBox(height: 40),
+        if (isDesktop) const SizedBox(width: 32) else const SizedBox(height: 32),
         _maybeExpanded(
           expand: isDesktop,
           flex: 1,
-          child: const _EcosystemBox(
-            title: 'FLUTTER',
-            items: ['Dart', 'Riverpod', 'Provider', 'MVVM', 'Dio', 'REST API', 'ObjectBox', 'Firebase'],
-            color: Color(0xFF02569B),
+          child: const _EcosystemCardRich(
+            title: 'FLUTTER MULTI-PLATFORM',
+            subtitle: 'Cross-platform Android & iOS execution',
+            items: ['Dart', 'Riverpod', 'Provider', 'MVVM', 'Dio / REST APIs', 'ObjectBox', 'sqflite', 'Firebase Push'],
+            color: AppColors.flutterBlue,
+            icon: Icons.flutter_dash_rounded,
           ),
         ),
       ],
@@ -153,49 +227,87 @@ class _EcosystemComparison extends StatelessWidget {
   }
 }
 
-class _EcosystemBox extends StatelessWidget {
+class _EcosystemCardRich extends StatelessWidget {
   final String title;
+  final String subtitle;
   final List<String> items;
   final Color color;
+  final IconData icon;
 
-  const _EcosystemBox({
+  const _EcosystemCardRich({
     required this.title,
+    required this.subtitle,
     required this.items,
     required this.color,
+    required this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(48),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.dividerColor, width: 1.0),
-      ),
+    return GlassContainer(
+      padding: const EdgeInsets.all(40),
+      glowColor: color,
+      borderColor: color.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: theme.textTheme.displaySmall?.copyWith(
-              fontWeight: FontWeight.w900,
-              color: color,
-              letterSpacing: -1.0,
-            ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: color.withValues(alpha: 0.4)),
+                ),
+                child: Icon(icon, color: color, size: 36),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: color,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontSize: 13,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 36),
           Wrap(
-            spacing: 12,
-            runSpacing: 12,
+            spacing: 10,
+            runSpacing: 10,
             children: [
               for (final item in items)
-                Text(
-                  item,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: color.withValues(alpha: 0.2)),
+                  ),
+                  child: Text(
+                    item,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: theme.colorScheme.onSurface,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
             ],

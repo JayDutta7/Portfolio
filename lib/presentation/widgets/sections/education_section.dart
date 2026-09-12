@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
-import '../common/hover_card.dart';
+import '../common/glass_container.dart';
+import '../common/gradient_text.dart';
 import '../common/section_wrapper.dart';
 
 class EducationSection extends StatelessWidget {
@@ -11,25 +13,53 @@ class EducationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final isDesktop = Responsive.isDesktopOrWider(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return SectionWrapper(
       sectionKey: sectionKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionHeading(
-            eyebrow: 'Background',
-            title: 'Education & Certifications',
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+                ),
+                child: Text(
+                  'BACKGROUND',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 24),
+          GradientText(
+            'Education & Academics',
+            colors: isDark
+                ? [Colors.white, AppColors.secondary, AppColors.primary]
+                : [AppColors.lightTextPrimary, AppColors.primary],
+            style: theme.textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 48),
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: isDesktop ? 3 : 1,
+              crossAxisCount: isDesktop ? 2 : 1,
               crossAxisSpacing: 24,
               mainAxisSpacing: 24,
-              childAspectRatio: isDesktop ? 1.6 : 2.0,
+              childAspectRatio: isDesktop ? 2.2 : 2.0,
             ),
             itemCount: profile.education.length,
             itemBuilder: (context, index) {
@@ -49,55 +79,76 @@ class _EducationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return HoverCard(
-      borderRadius: 16,
-      padding: const EdgeInsets.all(32),
+    return GlassContainer(
+      padding: const EdgeInsets.all(28),
+      glowColor: AppColors.primary,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                item.isCertification
-                    ? Icons.workspace_premium_rounded
-                    : Icons.school_rounded,
-                color: theme.colorScheme.primary,
-                size: 20,
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  item.isCertification ? Icons.workspace_premium_rounded : Icons.school_rounded,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
               ),
-              const SizedBox(width: 12),
-              Text(
-                item.period,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: theme.colorScheme.primary,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Text(
+                  item.period,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.primary,
+                    fontSize: 11,
+                  ),
                 ),
               ),
             ],
           ),
-          const Spacer(),
-          Text(
-            item.title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            item.institution,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-          if (item.detail != null) ...[
-            const SizedBox(height: 12),
-            Text(
-              item.detail!,
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.secondary,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 17,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              Text(
+                item.institution,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  fontSize: 14,
+                ),
+              ),
+              if (item.detail != null) ...[
+                const SizedBox(height: 8),
+                Text(
+                  item.detail!,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.secondary,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ],
       ),
     );
