@@ -36,7 +36,7 @@ class ProfileData {
       'Firebase, offline-first data sync and real-time GPS tracking across '
       'enterprise field-operations products.';
 
-  static const String profilePicture = 'assets/images/picture.png';
+  static const String profilePicture = 'assets/images/picture.jpg';
   static const String resumeAssetPath = 'assets/resume/Jayajit_Dutta_CV.pdf';
   static const String resumeDownloadFileName = 'Jayajit_Dutta_CV.pdf';
 
@@ -161,7 +161,7 @@ class ProfileData {
       overview: 'Massage Club app—your ultimate destination for relaxation and rejuvenation!',
       myRole: 'Android developer implementing core booking features.',
       platforms: ['Android'],
-      screenshotUrl: 'assets/images/massageclub.png',
+      screenshotUrl: 'assets/images/massageclub.jpg',
       links: [ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.massageclub&hl=en', type: ProjectLinkType.playStore)],
     ),
   ];

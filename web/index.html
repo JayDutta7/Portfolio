@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <base href="$FLUTTER_BASE_HREF">
   <meta charset="UTF-8">
-  <script>
-    (function() {
-      var path = window.location.pathname;
-      if (path.includes('/avijit-portfolio/')) {
-        document.write('<base href="/avijit-portfolio/">');
-      } else {
-        document.write('<base href="/">');
-      }
-    })();
-  </script>
 
   <meta name="description" content="Senior Android & Flutter Developer with 9+ years of experience building scalable mobile and cross-platform applications using Kotlin, Jetpack Compose, Flutter and Clean Architecture.">
   <meta name="keywords" content="Jayajit Dutta, Android Developer, Flutter Developer, Senior Mobile Engineer, Kotlin, Jetpack Compose, Clean Architecture, MVVM, Mobile App Portfolio">
   <meta name="author" content="Jayajit Dutta">
   <meta name="theme-color" content="#6366F1">
+
+  <!-- Preconnect to Google Fonts for faster font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -57,7 +52,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: opacity 0.5s ease-out;
+      transition: opacity 0.3s ease-out;
     }
     .loader {
       width: 80px;
@@ -125,15 +120,13 @@
 
   <script>
     window.addEventListener('load', function(ev) {
-      setTimeout(function() {
-        var loading = document.querySelector('#loading-indicator');
-        if (loading) {
-          loading.style.opacity = '0';
-          setTimeout(function() {
-            loading.remove();
-          }, 500);
-        }
-      }, 1500);
+      var loading = document.querySelector('#loading-indicator');
+      if (loading) {
+        loading.style.opacity = '0';
+        setTimeout(function() {
+          loading.remove();
+        }, 300);
+      }
     });
   </script>
   <script src="flutter_bootstrap.js" async></script>

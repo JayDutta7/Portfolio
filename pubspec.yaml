@@ -26,10 +26,4 @@ flutter:
 
   assets:
     - assets/resume/Jayajit_Dutta_CV.pdf
-    - assets/images/picture.png
-    - assets/images/crm.jpeg
-    - assets/images/ghareka.jpeg
-    - assets/images/pariwar.webp
-    - assets/images/buildistan.jpeg
-    - assets/images/massageclub.png
-    - assets/images/ghareka_pmt.jpeg
+    - assets/images/
