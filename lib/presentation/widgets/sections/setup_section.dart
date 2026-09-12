@@ -92,7 +92,7 @@ class SetupSection extends StatelessWidget {
                   if (i < specs.length - 1) ...[
                     const SizedBox(height: 16),
                     Divider(color: theme.dividerColor.withValues(alpha: 0.3), height: 1),
-                    const SizedBox(height: 16),
+                    const SizedBox(height : 16),
                   ],
                 ],
               ],
