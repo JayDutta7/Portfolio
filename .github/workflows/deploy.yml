@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -39,7 +39,6 @@ jobs:
       # For a PROJECT page (https://<user>.github.io/<repo>/) the base
       # href must match the repo name. For a USER/ORG page
       # (https://<user>.github.io/) or a custom domain, it must be "/".
-      # This step figures it out automatically from the repository name.
       - name: Determine base href
         id: base_href
         run: |
@@ -56,10 +55,17 @@ jobs:
       - name: Add .nojekyll
         run: touch build/web/.nojekyll
 
-      - name: Upload artifact
+      - name: Upload artifact for GitHub Actions deployment
         uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
+
+      - name: Deploy to gh-pages branch (fallback for branch-based deployment)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+          force_orphan: true
 
   deploy:
     needs: build
@@ -71,3 +77,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true
