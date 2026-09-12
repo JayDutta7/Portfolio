@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -16,14 +16,10 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -43,11 +39,11 @@ jobs:
       - name: Determine base href
         id: base_href
         run: |
-          BASE="${{ steps.pages.outputs.base_path }}"
-          if [[ -z "$BASE" || "$BASE" == "/" ]]; then
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          if [[ "$REPO_NAME" == *".github.io" ]]; then
             echo "href=/" >> "$GITHUB_OUTPUT"
           else
-            echo "href=${BASE}/" >> "$GITHUB_OUTPUT"
+            echo "href=/$REPO_NAME/" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build Flutter Web
@@ -56,14 +52,26 @@ jobs:
       - name: Add .nojekyll
         run: touch build/web/.nojekyll
 
-      - name: Upload artifact
+      - name: Deploy to gh-pages branch
+        run: |
+          cd build/web
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Deploy Flutter Web build to gh-pages"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:gh-pages
+
+      - name: Upload artifact for Actions deployment
         uses: actions/upload-pages-artifact@v3
+        continue-on-error: true
         with:
           path: build/web
 
   deploy:
     needs: build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    continue-on-error: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
