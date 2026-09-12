@@ -56,9 +56,9 @@ extension AppLanguageX on AppLanguage {
 
   String get heroHeadline {
     switch (this) {
-      case AppLanguage.bengali: return 'মানুষ পছন্দ করে এমন\nচমৎকার মোবাইল\nঅভিজ্ঞতা তৈরি করা।';
-      case AppLanguage.hindi: return 'लोगों को पसंद आने वाले\nशानदार मोबाइल\nअनुभव बनाना।';
-      case AppLanguage.english: return 'Building mobile\nexperiences that\npeople love.';
+      case AppLanguage.bengali: return 'সিনিয়র মোবাইল ডেভেলপার\nAndroid • Kotlin • Flutter';
+      case AppLanguage.hindi: return 'सीनियर मोबाइल डेवलपर\nAndroid • Kotlin • Flutter';
+      case AppLanguage.english: return 'Senior Mobile Developer\nAndroid • Kotlin • Flutter';
     }
   }
 
@@ -72,9 +72,9 @@ extension AppLanguageX on AppLanguage {
 
   String get downloadCv {
     switch (this) {
-      case AppLanguage.bengali: return 'সিভি ডাউনলোড করুন';
-      case AppLanguage.hindi: return 'सीवी डाउनलोड करें';
-      case AppLanguage.english: return 'DOWNLOAD CV';
+      case AppLanguage.bengali: return 'রিজিউম ডাউনলোড';
+      case AppLanguage.hindi: return 'रिज्यूमे डाउनलोड';
+      case AppLanguage.english: return 'DOWNLOAD RESUME';
     }
   }
 

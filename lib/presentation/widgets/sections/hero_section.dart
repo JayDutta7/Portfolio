@@ -83,18 +83,13 @@ class HeroSection extends ConsumerWidget {
                       ),
                       const SizedBox(height: 48),
                       Wrap(
-                        spacing: 20,
-                        runSpacing: 20,
+                        spacing: 16,
+                        runSpacing: 16,
                         alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
                         children: [
                           _PrimaryCTAButton(
-                            label: currentLanguage.exploreWork,
-                            icon: Icons.arrow_downward_rounded,
-                            onPressed: onViewWork,
-                          ),
-                          _SecondaryCTAButton(
                             label: currentLanguage.downloadCv,
-                            icon: Icons.description_rounded,
+                            icon: Icons.download_rounded,
                             onPressed: () async {
                               try {
                                 await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
@@ -107,24 +102,29 @@ class HeroSection extends ConsumerWidget {
                               }
                             },
                           ),
+                          _SecondaryCTAButton(
+                            label: currentLanguage.exploreWork,
+                            icon: Icons.arrow_downward_rounded,
+                            onPressed: onViewWork,
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 40),
-                      Row(
-                        mainAxisAlignment: isDesktop ? MainAxisAlignment.start : MainAxisAlignment.center,
+                      const SizedBox(height: 36),
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 12,
+                        alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
                         children: [
                           _SocialPill(
                             icon: Icons.code_rounded,
                             label: 'GitHub',
                             onTap: () => LaunchHelper.openUrl(profile.githubUrl),
                           ),
-                          const SizedBox(width: 12),
                           _SocialPill(
                             icon: Icons.work_rounded,
                             label: 'LinkedIn',
                             onTap: () => LaunchHelper.openUrl(profile.linkedInUrl),
                           ),
-                          const SizedBox(width: 12),
                           _SocialPill(
                             icon: Icons.email_rounded,
                             label: 'Email',
@@ -136,11 +136,13 @@ class HeroSection extends ConsumerWidget {
                   ),
                 ),
                 if (isDesktop) const SizedBox(width: 60),
-                if (!isDesktop) const SizedBox(height: 60),
+                if (!isDesktop) const SizedBox(height: 48),
                 _maybeExpanded(
                   expand: isDesktop,
                   flex: 5,
-                  child: const _VisualShowcase(),
+                  child: const Center(
+                    child: _VisualShowcase(),
+                  ),
                 ),
               ],
             ),
@@ -156,10 +158,12 @@ class _VisualShowcase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-      height: 500,
-      width: 480,
-      child: Stack(
+    return const FittedBox(
+      fit: BoxFit.scaleDown,
+      child: SizedBox(
+        height: 500,
+        width: 480,
+        child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
@@ -226,8 +230,9 @@ class _VisualShowcase extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class _PrimaryCTAButton extends StatefulWidget {
@@ -388,7 +393,8 @@ class _SocialPillState extends State<_SocialPill> {
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          constraints: const BoxConstraints(minHeight: 44),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
             color: _isHovered
                 ? theme.colorScheme.primary.withValues(alpha: isDark ? 0.2 : 0.1)

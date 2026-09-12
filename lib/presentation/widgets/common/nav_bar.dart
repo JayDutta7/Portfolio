@@ -7,6 +7,7 @@ import '../../../core/utils/resume_download/resume_download.dart';
 import '../../viewmodels/locale_viewmodel.dart';
 import '../../viewmodels/theme_viewmodel.dart';
 import '../../viewmodels/profile_viewmodel.dart';
+import '../../../domain/models/profile_models.dart';
 import 'pulse_badge.dart';
 
 class NavItem {
@@ -35,12 +36,12 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
     final isDesktop = Responsive.isDesktopOrWider(context);
     final hPad = Responsive.pagePadding(context);
     final themeController = ref.watch(themeProvider);
-    final profileState = ref.watch(profileViewModelProvider);
+    final profile = ref.watch(profileViewModelProvider);
     final currentLanguage = ref.watch(localeProvider);
 
     return Container(
       height: preferredSize.height,
-      padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 14),
+      padding: EdgeInsets.symmetric(horizontal: isDesktop ? hPad : 16, vertical: 14),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1300),
@@ -68,7 +69,7 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: isDesktop ? 20 : 12, vertical: 8),
                 child: Row(
                   children: [
                     const _Logo(),
@@ -94,25 +95,20 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                         onToggle: themeController.toggle,
                       ),
                       const SizedBox(width: 12),
-                      profileState.when(
-                        data: (profile) => _ResumeAction(
-                          assetPath: profile.resumeAssetPath,
-                          fileName: profile.resumeDownloadFileName,
-                        ),
-                        loading: () => const SizedBox.shrink(),
-                        error: (_, __) => const SizedBox.shrink(),
+                      _ResumeAction(
+                        assetPath: profile.resumeAssetPath,
+                        fileName: profile.resumeDownloadFileName,
                       ),
                     ] else ...[
-                      const _LanguageSelector(),
-                      const SizedBox(width: 8),
                       _ThemeToggle(
                         isDark: themeController.isDark,
                         onToggle: themeController.toggle,
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 4),
                       IconButton(
                         icon: const Icon(Icons.menu_rounded, size: 24),
-                        onPressed: () => _openMobileMenu(context, ref),
+                        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                        onPressed: () => _openMobileMenu(context, ref, profile),
                       ),
                     ],
                   ],
@@ -125,11 +121,12 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-  void _openMobileMenu(BuildContext context, WidgetRef ref) {
+  void _openMobileMenu(BuildContext context, WidgetRef ref, Profile profile) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
+      isScrollControlled: true,
       builder: (sheetContext) {
         final theme = Theme.of(context);
         final isDark = theme.brightness == Brightness.dark;
@@ -160,9 +157,15 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  PulseBadge(
-                    label: currentLanguage.availableBadge,
-                    dotColor: AppColors.emerald,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      PulseBadge(
+                        label: currentLanguage.availableBadge,
+                        dotColor: AppColors.emerald,
+                      ),
+                      const _LanguageSelector(),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   for (final item in items)
@@ -181,6 +184,53 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                         onNavTap(item.sectionKey);
                       },
                     ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(colors: AppColors.primaryGradient),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.35),
+                            blurRadius: 16,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: ElevatedButton.icon(
+                        onPressed: () async {
+                          Navigator.of(sheetContext).pop();
+                          try {
+                            await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Download failed: $e')),
+                              );
+                            }
+                          }
+                        },
+                        icon: const Icon(Icons.download_rounded, size: 18, color: Colors.white),
+                        label: Text(
+                          currentLanguage.downloadCv.toUpperCase(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.4,
+                            fontSize: 13,
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -271,6 +321,9 @@ class _Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isCompact = width < 500;
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -299,13 +352,13 @@ class _Logo extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Text(
-          'JAYAJIT DUTTA',
+          isCompact ? 'JAYAJIT' : 'JAYAJIT DUTTA',
           style: theme.textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w900,
-            letterSpacing: 2.0,
-            fontSize: 14,
+            letterSpacing: isCompact ? 1.4 : 2.0,
+            fontSize: isCompact ? 13 : 14,
           ),
         ),
       ],

@@ -52,83 +52,48 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final profileViewModel = ref.watch(profileViewModelProvider);
+    final profile = ref.watch(profileViewModelProvider);
     final currentLanguage = ref.watch(localeProvider);
     final theme = Theme.of(context);
 
-    return profileViewModel.when(
-      data: (profile) => Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        appBar: NavBar(
-          items: _getNavItems(currentLanguage),
-          onNavTap: _scrollTo,
-        ),
-        body: Stack(
-          children: [
-            // Ambient Mesh & Glow Canvas
-            const Positioned.fill(
-              child: AmbientMeshBackground(),
-            ),
-
-            // Scrollable Section Layer
-            Positioned.fill(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    HeroSection(
-                      profile: profile,
-                      sectionKey: _heroKey,
-                      onViewWork: () => _scrollTo(_projectsKey),
-                    ),
-                    StatsSection(profile: profile),
-                    ExperienceSection(profile: profile, sectionKey: _experienceKey),
-                    ProjectsSection(profile: profile, sectionKey: _projectsKey),
-                    ArchitectureSection(profile: profile),
-                    SkillsSection(profile: profile, sectionKey: _skillsKey),
-                    const SetupSection(),
-                    AboutSection(profile: profile, sectionKey: _aboutKey),
-                    EducationSection(profile: profile, sectionKey: _educationKey),
-                    ContactSection(profile: profile, sectionKey: _contactKey),
-                    SiteFooter(profile: profile),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: NavBar(
+        items: _getNavItems(currentLanguage),
+        onNavTap: _scrollTo,
       ),
-      loading: () => Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 50,
-                height: 50,
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'JAYAJIT DUTTA'.toUpperCase(),
-                style: TextStyle(
-                  color: theme.colorScheme.onSurface,
-                  letterSpacing: 4,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 13,
-                ),
-              ),
-            ],
+      body: Stack(
+        children: [
+          // Ambient Mesh & Glow Canvas
+          const Positioned.fill(
+            child: AmbientMeshBackground(),
           ),
-        ),
-      ),
-      error: (error, stack) => Scaffold(
-        body: Center(
-          child: Text('Error loading profile: $error'),
-        ),
+
+          // Scrollable Section Layer
+          Positioned.fill(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  HeroSection(
+                    profile: profile,
+                    sectionKey: _heroKey,
+                    onViewWork: () => _scrollTo(_projectsKey),
+                  ),
+                  StatsSection(profile: profile),
+                  ExperienceSection(profile: profile, sectionKey: _experienceKey),
+                  ProjectsSection(profile: profile, sectionKey: _projectsKey),
+                  ArchitectureSection(profile: profile),
+                  SkillsSection(profile: profile, sectionKey: _skillsKey),
+                  const SetupSection(),
+                  AboutSection(profile: profile, sectionKey: _aboutKey),
+                  EducationSection(profile: profile, sectionKey: _educationKey),
+                  ContactSection(profile: profile, sectionKey: _contactKey),
+                  SiteFooter(profile: profile),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

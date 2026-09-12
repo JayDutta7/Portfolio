@@ -103,19 +103,21 @@ class _ModernToolkitPalette extends StatelessWidget {
       },
     ];
 
+    final isDesktop = Responsive.isDesktopOrWider(context);
+
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isDesktop = Responsive.isDesktopOrWider(context);
         final columns = isDesktop ? 3 : (constraints.maxWidth > 700 ? 2 : 1);
+        final aspect = isDesktop ? 1.25 : (constraints.maxWidth > 700 ? 1.3 : 1.15);
 
         return GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: columns,
-            crossAxisSpacing: 24,
-            mainAxisSpacing: 24,
-            childAspectRatio: isDesktop ? 1.25 : 1.4,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
+            childAspectRatio: aspect,
           ),
           itemCount: categories.length,
           itemBuilder: (context, index) {

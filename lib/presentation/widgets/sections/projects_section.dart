@@ -16,26 +16,15 @@ class ProjectsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Grouping projects: Open Source vs Company Apps
-    final openSource = profile.projects.where((p) => p.links.any((l) => l.type == ProjectLinkType.github)).toList();
-    final companyApps = profile.projects.where((p) => !openSource.contains(p)).toList();
-
     return SectionWrapper(
       sectionKey: sectionKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _RichSectionHeader(title: 'FEATURED PRODUCTS', index: '01'),
+          const _RichSectionHeader(title: 'MOBILE APPLICATIONS & PRODUCTS', index: '01'),
           const SizedBox(height: 56),
-          for (final project in companyApps)
+          for (final project in profile.projects)
             _ProductShowcaseCard(project: project),
-
-          if (openSource.isNotEmpty) ...[
-            const SizedBox(height: 120),
-            const _RichSectionHeader(title: 'OPEN SOURCE & LABS', index: '02'),
-            const SizedBox(height: 56),
-            _TechnicalProjectGrid(projects: openSource),
-          ],
         ],
       ),
     );
@@ -50,6 +39,7 @@ class _RichSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDesktop = Responsive.isDesktopOrWider(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -69,28 +59,33 @@ class _RichSectionHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 16),
-        Text(
-          title,
-          style: theme.textTheme.labelLarge?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 3,
-            fontSize: 16,
+        Flexible(
+          child: Text(
+            title,
+            style: theme.textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w900,
+              letterSpacing: isDesktop ? 3 : 1.5,
+              fontSize: isDesktop ? 16 : 13,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-        const SizedBox(width: 24),
-        Expanded(
-          child: Container(
-            height: 1,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  theme.dividerColor,
-                  theme.dividerColor.withValues(alpha: 0.1),
-                ],
+        if (isDesktop) ...[
+          const SizedBox(width: 24),
+          Expanded(
+            child: Container(
+              height: 1,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    theme.dividerColor,
+                    theme.dividerColor.withValues(alpha: 0.1),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -134,13 +129,15 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 8,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         _TechTagRich(
                           label: widget.project.platforms.join(' • '),
                           color: accentColor,
                         ),
-                        const SizedBox(width: 12),
                         Text(
                           widget.project.period,
                           style: theme.textTheme.labelSmall?.copyWith(
@@ -171,11 +168,29 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
                         fontSize: 16,
                       ),
                     ),
-                    const SizedBox(height: 32),
-                    _InfoItemRich(label: 'ENGINEERING STACK', content: widget.project.stackSummary),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 28),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'TECHNOLOGIES & LIBRARIES',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                            fontSize: 10,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _ProjectTechTags(
+                          techStack: widget.project.techStack,
+                          primaryColor: accentColor,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
                     _InfoItemRich(label: 'MY ROLE', content: widget.project.myRole),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 36),
                     Wrap(
                       spacing: 16,
                       runSpacing: 16,
@@ -211,16 +226,22 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
                 expand: isDesktop,
                 flex: 4,
                 child: Center(
-                  child: AnimatedScale(
-                    duration: const Duration(milliseconds: 300),
-                    scale: _isHovered ? 1.04 : 1.0,
-                    child: DeviceMockup(
-                      title: widget.project.title,
-                      assetPath: widget.project.screenshotUrl,
-                      fallbackIcon: isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
-                      glowColor: accentColor,
-                      width: 220,
-                      height: 450,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 240),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: AnimatedScale(
+                        duration: const Duration(milliseconds: 300),
+                        scale: _isHovered ? 1.03 : 1.0,
+                        child: DeviceMockup(
+                          title: widget.project.title,
+                          assetPath: widget.project.screenshotUrl,
+                          fallbackIcon: isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
+                          glowColor: accentColor,
+                          width: 220,
+                          height: 460,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -246,6 +267,7 @@ class _LinkPill extends StatelessWidget {
         onTap: () => LaunchHelper.openUrl(link.url),
         borderRadius: BorderRadius.circular(100),
         child: Container(
+          constraints: const BoxConstraints(minHeight: 44),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
@@ -281,104 +303,95 @@ class _LinkPill extends StatelessWidget {
   }
 }
 
-class _TechnicalProjectGrid extends StatelessWidget {
-  final List<Project> projects;
-  const _TechnicalProjectGrid({required this.projects});
+class _ProjectTechTags extends StatelessWidget {
+  final List<String> techStack;
+  final Color primaryColor;
 
-  @override
-  Widget build(BuildContext context) {
-    final isDesktop = Responsive.isDesktopOrWider(context);
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: isDesktop ? 3 : 1,
-        crossAxisSpacing: 24,
-        mainAxisSpacing: 24,
-        childAspectRatio: isDesktop ? 1.2 : 1.4,
-      ),
-      itemCount: projects.length,
-      itemBuilder: (context, index) => _TechnicalCardRich(project: projects[index]),
-    );
+  const _ProjectTechTags({
+    required this.techStack,
+    required this.primaryColor,
+  });
+
+  Color _getTagColor(String tech) {
+    final lower = tech.toLowerCase();
+    if (lower.contains('kotlin') || lower.contains('android') || lower.contains('compose')) {
+      return AppColors.androidGreen;
+    }
+    if (lower.contains('flutter') || lower.contains('dart') || lower.contains('riverpod')) {
+      return AppColors.flutterBlue;
+    }
+    if (lower.contains('retrofit') || lower.contains('rest') || lower.contains('dio')) {
+      return AppColors.emerald;
+    }
+    if (lower.contains('room') || lower.contains('sqlite') || lower.contains('objectbox')) {
+      return AppColors.amber;
+    }
+    if (lower.contains('rxjava') || lower.contains('coroutine') || lower.contains('flow')) {
+      return AppColors.secondary;
+    }
+    if (lower.contains('clean') || lower.contains('mvvm') || lower.contains('architecture')) {
+      return AppColors.accent;
+    }
+    return primaryColor;
   }
-}
 
-class _TechnicalCardRich extends StatelessWidget {
-  final Project project;
-  const _TechnicalCardRich({required this.project});
+  IconData _getTagIcon(String tech) {
+    final lower = tech.toLowerCase();
+    if (lower.contains('compose')) return Icons.widgets_rounded;
+    if (lower.contains('kotlin') || lower.contains('android')) return Icons.android_rounded;
+    if (lower.contains('flutter') || lower.contains('dart') || lower.contains('riverpod')) return Icons.flutter_dash_rounded;
+    if (lower.contains('retrofit') || lower.contains('rest') || lower.contains('dio')) return Icons.cloud_sync_rounded;
+    if (lower.contains('room') || lower.contains('sqlite')) return Icons.storage_rounded;
+    if (lower.contains('rxjava') || lower.contains('coroutine') || lower.contains('flow')) return Icons.stream_rounded;
+    if (lower.contains('clean') || lower.contains('mvvm')) return Icons.layers_rounded;
+    if (lower.contains('gps') || lower.contains('location')) return Icons.location_on_rounded;
+    if (lower.contains('firebase')) return Icons.local_fire_department_rounded;
+    return Icons.code_rounded;
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return GlassContainer(
-      padding: const EdgeInsets.all(28),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ProjectDetailsPage(project: project),
-          ),
-        );
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final tech in techStack)
+          Builder(
+            builder: (context) {
+              final color = _getTagColor(tech);
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.code_rounded, size: 20, color: AppColors.primary),
-              ),
-              const Icon(Icons.arrow_outward_rounded, size: 20, color: AppColors.primary),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Text(
-            project.title,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: Text(
-              project.overview,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                fontSize: 13,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            children: [
-              for (final tech in project.techStack.take(3))
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: theme.dividerColor),
+                  color: color.withValues(alpha: isDark ? 0.12 : 0.08),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: color.withValues(alpha: isDark ? 0.35 : 0.25),
+                    width: 1,
                   ),
-                  child: Text(
-                    tech,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(_getTagIcon(tech), size: 12, color: color),
+                    const SizedBox(width: 6),
+                    Text(
+                      tech,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: isDark ? Colors.white.withValues(alpha: 0.9) : color,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 11,
+                        letterSpacing: 0.2,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-            ],
+              );
+            },
           ),
-        ],
-      ),
+      ],
     );
   }
 }

@@ -70,12 +70,14 @@ class SetupSection extends StatelessWidget {
                     Container(width: 12, height: 12, decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFFFBD2E))),
                     const SizedBox(width: 8),
                     Container(width: 12, height: 12, decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF27C93F))),
-                    const SizedBox(width: 16),
-                    Text(
-                      'jayajit@macbook-pro ~ % neofetch',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontFamily: 'monospace',
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    Expanded(
+                      child: Text(
+                        'jayajit@macbook-pro ~ % neofetch',
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          fontFamily: 'monospace',
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                        ),
                       ),
                     ),
                   ],

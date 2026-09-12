@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/launch_helper.dart';
+import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
 import '../common/glass_container.dart';
 import '../common/gradient_text.dart';
@@ -16,13 +17,14 @@ class ContactSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final isDesktop = Responsive.isDesktopOrWider(context);
 
     return SectionWrapper(
       sectionKey: sectionKey,
-      verticalPadding: 120,
+      verticalPadding: isDesktop ? 120 : 60,
       child: Center(
         child: GlassContainer(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 64),
+          padding: EdgeInsets.symmetric(horizontal: isDesktop ? 40 : 20, vertical: isDesktop ? 64 : 36),
           glowColor: AppColors.primary,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -165,7 +167,7 @@ class _RichCTAButtonState extends State<_RichCTAButton> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 22),
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
             ),
           ),
@@ -192,7 +194,8 @@ class _SocialActionRich extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(100),
-      child: Padding(
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           mainAxisSize: MainAxisSize.min,

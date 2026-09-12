@@ -32,14 +32,10 @@ class PortfolioApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeViewModel = ref.watch(themeProvider);
-    final profileAsyncValue = ref.watch(profileViewModelProvider);
+    final profile = ref.watch(profileViewModelProvider);
 
     return MaterialApp(
-      title: profileAsyncValue.when(
-        data: (profile) => profile.seoTitle,
-        loading: () => 'Jayajit Dutta | Portfolio',
-        error: (_, __) => 'Jayajit Dutta | Portfolio',
-      ),
+      title: profile.seoTitle,
       debugShowCheckedModeBanner: false,
       themeMode: themeViewModel.mode,
       theme: AppTheme.light,

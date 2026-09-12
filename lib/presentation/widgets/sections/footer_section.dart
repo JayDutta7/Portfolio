@@ -13,17 +13,22 @@ class SiteFooter extends StatelessWidget {
     final hPad = Responsive.pagePadding(context);
     final year = DateTime.now().year;
 
+    final isDesktop = Responsive.isDesktopOrWider(context);
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 60),
+      padding: EdgeInsets.symmetric(horizontal: hPad, vertical: isDesktop ? 60 : 36),
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: theme.dividerColor, width: 1)),
       ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Flex(
+            direction: isDesktop ? Axis.horizontal : Axis.vertical,
+            mainAxisAlignment: isDesktop ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: 28,
@@ -53,8 +58,10 @@ class SiteFooter extends StatelessWidget {
                   ),
                 ],
               ),
+              if (!isDesktop) const SizedBox(height: 16),
               Text(
                 '© $year • BUILT WITH FLUTTER WEB',
+                textAlign: TextAlign.center,
                 style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                   fontSize: 11,

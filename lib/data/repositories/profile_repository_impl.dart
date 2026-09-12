@@ -5,7 +5,7 @@ import '../profile_data.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
   @override
-  Future<Profile> getProfile([AppLanguage language = AppLanguage.english]) async {
+  Profile getProfile([AppLanguage language = AppLanguage.english]) {
     return ProfileData.getProfile(language);
   }
 }

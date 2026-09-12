@@ -52,20 +52,30 @@ class EducationSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 48),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: isDesktop ? 2 : 1,
-              crossAxisSpacing: 24,
-              mainAxisSpacing: 24,
-              childAspectRatio: isDesktop ? 2.2 : 2.0,
+          if (!isDesktop)
+            Column(
+              children: [
+                for (final edu in profile.education) ...[
+                  _EducationCard(item: edu),
+                  const SizedBox(height: 16),
+                ],
+              ],
+            )
+          else
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 24,
+                mainAxisSpacing: 24,
+                childAspectRatio: 2.2,
+              ),
+              itemCount: profile.education.length,
+              itemBuilder: (context, index) {
+                return _EducationCard(item: profile.education[index]);
+              },
             ),
-            itemCount: profile.education.length,
-            itemBuilder: (context, index) {
-              return _EducationCard(item: profile.education[index]);
-            },
-          ),
         ],
       ),
     );
@@ -84,7 +94,7 @@ class _EducationCard extends StatelessWidget {
       glowColor: AppColors.primary,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,6 +128,7 @@ class _EducationCard extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 18),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

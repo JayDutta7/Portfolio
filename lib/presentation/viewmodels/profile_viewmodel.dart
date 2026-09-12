@@ -8,7 +8,7 @@ final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   return ProfileRepositoryImpl();
 });
 
-final profileViewModelProvider = FutureProvider<Profile>((ref) async {
+final profileViewModelProvider = Provider<Profile>((ref) {
   final language = ref.watch(localeProvider);
   final repository = ref.watch(profileRepositoryProvider);
   return repository.getProfile(language);

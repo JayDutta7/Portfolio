@@ -78,13 +78,16 @@ class _PulseBadgeState extends State<PulseBadge> with SingleTickerProviderStateM
             ),
           ),
           const SizedBox(width: 10),
-          Text(
-            widget.label,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: isDark ? Colors.white : theme.colorScheme.onSurface,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.2,
-              fontSize: 11,
+          Flexible(
+            child: Text(
+              widget.label,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.2,
+                fontSize: 11,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
