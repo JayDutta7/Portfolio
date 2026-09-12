@@ -8,13 +8,19 @@
   <meta name="description" content="Senior Android & Flutter Developer with 9+ years of experience building scalable mobile and cross-platform applications using Kotlin, Jetpack Compose, Flutter and Clean Architecture.">
   <meta name="keywords" content="Jayajit Dutta, Android Developer, Flutter Developer, Senior Mobile Engineer, Kotlin, Jetpack Compose, Clean Architecture, MVVM, Mobile App Portfolio">
   <meta name="author" content="Jayajit Dutta">
-  <meta name="theme-color" content="#6366F1">
+  <meta name="theme-color" content="#0a0d14">
 
-  <!-- High-performance preconnect & font/CanvasKit preloading -->
+  <!-- High-performance preconnect & resource hints -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Non-blocking asynchronous font loading -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" as="style">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap">
+  </noscript>
 
   <!-- Preload hero image -->
   <link rel="preload" href="assets/images/picture.jpg" as="image">
@@ -43,17 +49,168 @@
   <link rel="manifest" href="manifest.json">
 
   <style>
-    body {
-      background-color: #050505;
+    /* Zero-delay immediate initial paint */
+    *, *::before, *::after {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      overflow: hidden;
+    }
+    html, body {
+      background-color: #0a0d14;
+      margin: 0;
+      padding: 0;
       width: 100vw;
       height: 100vh;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    #loading-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at 50% 40%, #131929 0%, #0a0d14 70%);
+      z-index: 999999;
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
+    }
+    .logo-container {
+      position: relative;
+      width: 84px;
+      height: 84px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .pulse-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(56, 189, 248, 0.25) 100%);
+      animation: pulseRing 2.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+    }
+    .logo-box {
+      position: relative;
+      width: 68px;
+      height: 68px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);
+      box-shadow: 0 0 28px rgba(56, 189, 248, 0.45), 0 8px 16px rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+    }
+    .logo-text {
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 26px;
+      letter-spacing: -1px;
+    }
+    .brand-name {
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .brand-role {
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .progress-bar-wrap {
+      width: 180px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-bar-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 45%;
+      background: linear-gradient(90deg, #6366f1, #38bdf8, #10b981);
+      border-radius: 4px;
+      animation: progressShimmer 1.5s ease-in-out infinite;
+    }
+    @keyframes pulseRing {
+      0% { transform: scale(0.92); opacity: 0.8; }
+      50% { transform: scale(1.18); opacity: 0.15; }
+      100% { transform: scale(0.92); opacity: 0.8; }
+    }
+    @keyframes progressShimmer {
+      0% { left: -45%; width: 30%; }
+      50% { left: 35%; width: 50%; }
+      100% { left: 100%; width: 30%; }
     }
   </style>
 </head>
 <body>
+  <!-- Instant-render Fast Branded Splash -->
+  <div id="loading-indicator">
+    <div class="logo-container">
+      <div class="pulse-ring"></div>
+      <div class="logo-box">
+        <span class="logo-text">JD</span>
+      </div>
+    </div>
+    <div class="brand-name">JAYAJIT DUTTA</div>
+    <div class="brand-role">Senior Android &amp; Flutter Developer</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-inner"></div>
+    </div>
+  </div>
+
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    (function() {
+      var loader = document.getElementById('loading-indicator');
+      function hideLoader() {
+        if (!loader || loader.getAttribute('data-hidden') === 'true') return;
+        loader.setAttribute('data-hidden', 'true');
+        loader.style.opacity = '0';
+        setTimeout(function() {
+          if (loader && loader.parentNode) {
+            loader.parentNode.removeChild(loader);
+          }
+        }, 360);
+      }
+
+      // Detect when Flutter renders view, canvas, or pane
+      var observer = new MutationObserver(function(mutations, obs) {
+        var flutterElement = document.querySelector('flutter-view, flt-glass-pane, canvas, flt-scene-host');
+        if (flutterElement) {
+          obs.disconnect();
+          hideLoader();
+        }
+      });
+
+      if (document.body) {
+        observer.observe(document.body, { childList: true, subtree: true });
+      } else {
+        document.addEventListener('DOMContentLoaded', function() {
+          observer.observe(document.body, { childList: true, subtree: true });
+        });
+      }
+
+      // Fallback timer to prevent loader sticking under any condition
+      setTimeout(hideLoader, 12000);
+    })();
+  </script>
 </body>
 </html>

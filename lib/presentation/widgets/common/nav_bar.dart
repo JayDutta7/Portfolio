@@ -45,7 +45,7 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
       bottom: false,
       child: Container(
         height: preferredSize.height,
-        padding: EdgeInsets.symmetric(horizontal: isDesktop ? hPad : 14, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: isDesktop ? hPad : (width < 360 ? 8 : 14), vertical: 10),
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1300),
@@ -73,10 +73,10 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                       ),
                     ],
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: isDesktop ? 18 : 12, vertical: 6),
+                  padding: EdgeInsets.symmetric(horizontal: isDesktop ? 18 : (width < 360 ? 8 : 12), vertical: 6),
                   child: Row(
                     children: [
-                      const _Logo(),
+                      const Flexible(child: _Logo()),
                       if (isDesktop && width >= 1350) ...[
                         const SizedBox(width: 14),
                         PulseBadge(
@@ -351,22 +351,29 @@ class _Logo extends StatelessWidget {
           ),
           child: const Center(
             child: Text(
-              'J',
+              'JD',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w900,
-                fontSize: 18,
+                fontSize: 13,
+                letterSpacing: -0.5,
               ),
             ),
           ),
         ),
         const SizedBox(width: 8),
-        Text(
-          isVeryCompact ? 'JAYAJIT' : (isCompact ? 'JAYAJIT' : 'JAYAJIT DUTTA'),
-          style: theme.textTheme.labelLarge?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: isVeryCompact ? 1.0 : (isCompact ? 1.4 : 2.0),
-            fontSize: isVeryCompact ? 12 : (isCompact ? 13 : 14),
+        Flexible(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              'JAYAJIT DUTTA',
+              maxLines: 1,
+              style: theme.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w900,
+                letterSpacing: isVeryCompact ? 0.8 : (isCompact ? 1.2 : 2.0),
+                fontSize: isVeryCompact ? 11.5 : (isCompact ? 12.5 : 14),
+              ),
+            ),
           ),
         ),
       ],

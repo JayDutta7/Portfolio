@@ -39,11 +39,12 @@ class SiteFooter extends StatelessWidget {
                     ),
                     child: const Center(
                       child: Text(
-                        'J',
+                        'JD',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w900,
-                          fontSize: 14,
+                          fontSize: 12,
+                          letterSpacing: -0.5,
                         ),
                       ),
                     ),
