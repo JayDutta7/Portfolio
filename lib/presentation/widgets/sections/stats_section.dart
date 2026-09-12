@@ -42,7 +42,7 @@ class StatsSection extends StatelessWidget {
         'value': '20%',
         'label': 'CRASH RATE REDUCTION',
         'sub': 'Clean Architecture & Kotlin',
-        'colors': [AppColors.accent, Color(0xFFEC4899)],
+        'colors': [AppColors.accent, const Color(0xFFEC4899)],
         'icon': Icons.bug_report_rounded,
       },
     ];

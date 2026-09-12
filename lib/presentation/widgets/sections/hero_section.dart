@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/launch_helper.dart';
@@ -484,6 +485,7 @@ class _FloatingWidget extends StatefulWidget {
 class _FloatingWidgetState extends State<_FloatingWidget> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -498,13 +500,14 @@ class _FloatingWidgetState extends State<_FloatingWidget> with SingleTickerProvi
       end: 10.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    Future.delayed(Duration(milliseconds: widget.delay), () {
+    _timer = Timer(Duration(milliseconds: widget.delay), () {
       if (mounted) _controller.repeat(reverse: true);
     });
   }
 
   @override
   void dispose() {
+    _timer?.cancel();
     _controller.dispose();
     super.dispose();
   }

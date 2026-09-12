@@ -10,8 +10,9 @@ void main() {
         child: PortfolioApp(),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.textContaining(ProfileData.name), findsWidgets);
+    expect(find.textContaining(ProfileData.name.toUpperCase()), findsWidgets);
   });
 }
