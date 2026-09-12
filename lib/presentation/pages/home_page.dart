@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../viewmodels/locale_viewmodel.dart';
 import '../viewmodels/profile_viewmodel.dart';
 import '../widgets/common/mesh_background.dart';
 import '../widgets/common/nav_bar.dart';
@@ -31,11 +32,11 @@ class _HomePageState extends ConsumerState<HomePage> {
   final _educationKey = GlobalKey();
   final _contactKey = GlobalKey();
 
-  late final List<NavItem> _navItems = [
-    NavItem('Work', _projectsKey),
-    NavItem('Experience', _experienceKey),
-    NavItem('Engineering', _skillsKey),
-    NavItem('About', _aboutKey),
+  List<NavItem> _getNavItems(AppLanguage lang) => [
+    NavItem(lang.navWork, _projectsKey),
+    NavItem(lang.navExperience, _experienceKey),
+    NavItem(lang.navEngineering, _skillsKey),
+    NavItem(lang.navAbout, _aboutKey),
   ];
 
   void _scrollTo(GlobalKey key) {
@@ -52,13 +53,14 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final profileViewModel = ref.watch(profileViewModelProvider);
+    final currentLanguage = ref.watch(localeProvider);
     final theme = Theme.of(context);
 
     return profileViewModel.when(
       data: (profile) => Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: NavBar(
-          items: _navItems,
+          items: _getNavItems(currentLanguage),
           onNavTap: _scrollTo,
         ),
         body: Stack(

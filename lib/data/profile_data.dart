@@ -1,183 +1,497 @@
 import '../domain/models/profile_models.dart';
+import '../presentation/viewmodels/locale_viewmodel.dart';
 
 class ProfileData {
   ProfileData._();
 
   static const String name = 'Jayajit Dutta';
-  static const String title = 'Senior Mobile Application Developer';
-  static const String subtitle = 'Android & Flutter Specialist';
-  static const String experienceBadge = '9+ Years Experience';
-  static const String location = 'Serampore, West Bengal, India';
   static const String phone = '+91 7980726164';
   static const String email = 'jayajit1989@gmail.com';
-
   static const String linkedInUrl = 'https://www.linkedin.com/in/jayajit-dutta-7124b9125';
   static const String githubUrl = 'https://github.com/JayDutta7';
-
-  static const String heroIntro =
-      'Results-driven Senior Mobile Application Developer with 9+ years of '
-      'hands-on experience designing, architecting, and deploying scalable '
-      'Native Android (Kotlin, Jetpack Compose) and cross-platform (Flutter) '
-      'applications for high-impact enterprise products.';
-
-  static const String aboutMe =
-      'I\'m a Senior Mobile Application Developer with over 9 years of '
-      'experience building Native Android and cross-platform Flutter '
-      'applications end-to-end — from architecture to production release. '
-      'My background spans modernizing legacy Java codebases to Kotlin, '
-      'improving app runtime performance by up to 20%, and reducing crash '
-      'rates through disciplined Clean Architecture and MVVM practices.\n\n'
-      'I\'ve led and mentored a 3-developer Agile/Scrum engineering squad, '
-      'owning sprint planning, code reviews and on-time delivery, while '
-      'partnering closely with product and design teams to ship features '
-      'that measurably move user engagement. Recently, I\'ve extended that '
-      'expertise into Flutter to deliver cross-platform apps faster without '
-      'compromising on native-quality architecture — integrating REST APIs, '
-      'Firebase, offline-first data sync and real-time GPS tracking across '
-      'enterprise field-operations products.';
-
   static const String profilePicture = 'assets/images/picture.jpg';
   static const String resumeAssetPath = 'assets/resume/Jayajit_Dutta_CV.pdf';
   static const String resumeDownloadFileName = 'Jayajit_Dutta_CV.pdf';
 
-  static const String seoTitle = 'Jayajit Dutta | Senior Android & Flutter Developer';
-  static const String seoDescription = 'Senior Android & Flutter Developer with 9+ years of experience.';
+  static Profile getProfile(AppLanguage language) {
+    switch (language) {
+      case AppLanguage.bengali:
+        return _bengaliProfile;
+      case AppLanguage.hindi:
+        return _hindiProfile;
+      case AppLanguage.english:
+        return _englishProfile;
+    }
+  }
 
-  static const List<SkillCategory> skillCategories = [
-    SkillCategory(title: 'Mobile', iconAsset: 'mobile', skills: ['Kotlin', 'Android', 'Flutter', 'Dart', 'Jetpack Compose']),
-    SkillCategory(title: 'Architecture', iconAsset: 'architecture', skills: ['MVVM', 'Clean Architecture', 'Repository Pattern', 'Dependency Injection']),
-    SkillCategory(title: 'State Management', iconAsset: 'state', skills: ['Riverpod', 'Provider', 'StateFlow', 'SharedFlow']),
-    SkillCategory(title: 'Networking', iconAsset: 'networking', skills: ['Dio', 'Retrofit', 'REST APIs', 'Postman']),
-    SkillCategory(title: 'Storage', iconAsset: 'storage', skills: ['Room DB', 'SQLite', 'sqflite', 'ObjectBox']),
-    SkillCategory(title: 'Specialized', iconAsset: 'other', skills: ['WorkManager', 'CameraX', 'ML Kit', 'OpenCV', 'Firebase']),
-  ];
+  static const Profile _englishProfile = Profile(
+    name: name,
+    title: 'Senior Mobile Application Developer',
+    subtitle: 'Android & Flutter Specialist',
+    experienceBadge: '9+ Years Experience',
+    location: 'Serampore, West Bengal, India',
+    phone: phone,
+    email: email,
+    linkedInUrl: linkedInUrl,
+    githubUrl: githubUrl,
+    heroIntro: 'Results-driven Senior Mobile Application Developer with 9+ years of hands-on experience designing, architecting, and deploying scalable Native Android (Kotlin, Jetpack Compose) and cross-platform (Flutter) applications for high-impact enterprise products.',
+    aboutMe: 'I\'m a Senior Mobile Application Developer with over 9 years of experience building Native Android and cross-platform Flutter applications end-to-end — from architecture to production release. My background spans modernizing legacy Java codebases to Kotlin, improving app runtime performance by up to 20%, and reducing crash rates through disciplined Clean Architecture and MVVM practices.\n\nI\'ve led and mentored a 3-developer Agile/Scrum engineering squad, owning sprint planning, code reviews and on-time delivery, while partnering closely with product and design teams to ship features that measurably move user engagement. Recently, I\'ve extended that expertise into Flutter to deliver cross-platform apps faster without compromising on native-quality architecture — integrating REST APIs, Firebase, offline-first data sync and real-time GPS tracking across enterprise field-operations products.',
+    profilePicture: profilePicture,
+    resumeAssetPath: resumeAssetPath,
+    resumeDownloadFileName: resumeDownloadFileName,
+    seoTitle: 'Jayajit Dutta | Senior Android & Flutter Developer',
+    seoDescription: 'Senior Android & Flutter Developer with 9+ years of experience.',
+    skillCategories: [
+      SkillCategory(title: 'Mobile', iconAsset: 'mobile', skills: ['Kotlin', 'Android', 'Flutter', 'Dart', 'Jetpack Compose']),
+      SkillCategory(title: 'Architecture', iconAsset: 'architecture', skills: ['MVVM', 'Clean Architecture', 'Repository Pattern', 'Dependency Injection']),
+      SkillCategory(title: 'State Management', iconAsset: 'state', skills: ['Riverpod', 'Provider', 'StateFlow', 'SharedFlow']),
+      SkillCategory(title: 'Networking', iconAsset: 'networking', skills: ['Dio', 'Retrofit', 'REST APIs', 'Postman']),
+      SkillCategory(title: 'Storage', iconAsset: 'storage', skills: ['Room DB', 'SQLite', 'sqflite', 'ObjectBox']),
+      SkillCategory(title: 'Specialized', iconAsset: 'other', skills: ['WorkManager', 'CameraX', 'ML Kit', 'OpenCV', 'Firebase']),
+    ],
+    experience: [
+      ExperienceItem(
+        company: 'Shyam Steel Industries Ltd.',
+        role: 'Android Developer',
+        period: 'Sep 2020 – Present',
+        isCurrent: true,
+        highlights: [
+          'Architected and delivered multiple high-traffic flagship mobile applications, improving overall app runtime performance by 20%.',
+          'Spearheaded code migration from legacy Java to modern Kotlin, reducing application crash rates by 20% and improving codebase maintainability.',
+          'Led and mentored a 3-developer Agile/Scrum engineering squad, driving sprint planning, code reviews, and on-time delivery.',
+        ],
+      ),
+      ExperienceItem(
+        company: 'DCC Services Pvt Ltd.',
+        role: 'Associate Consultant',
+        period: 'Jan 2020 – Sep 2020',
+        highlights: ['Developed customized Android solutions for small-to-medium businesses.'],
+      ),
+      ExperienceItem(
+        company: 'Matrix Media Solution Pvt. Ltd.',
+        role: 'Android Developer',
+        period: 'Nov 2018 – Dec 2019',
+        highlights: ['Engineered third-party REST API integrations and core Android libraries.'],
+      ),
+      ExperienceItem(
+        company: 'Nat IT Solved Pvt. Ltd.',
+        role: 'Android Developer',
+        period: 'Jul 2017 – Oct 2018',
+        highlights: ['Engineered native Android applications, REST API integrations, and local database storage features.'],
+      ),
+    ],
+    projects: [
+      Project(
+        title: 'Ghareka PMT',
+        period: '2025 – Present',
+        stackSummary: 'Native Android · Kotlin · Jetpack Compose · Clean Architecture · Room · Retrofit',
+        techStack: ['Native Android', 'Kotlin', 'Jetpack Compose', 'Clean Architecture', 'Room', 'Retrofit'],
+        overview: 'An enterprise field CRM for project site check-ins, automated check-outs, GPS tracking, and daily attendance management.',
+        myRole: 'Sole/lead Android developer responsible for architecture, implementation and delivery.',
+        platforms: ['Android'],
+        screenshotUrl: 'assets/images/ghareka_pmt.jpeg',
+        links: [ProjectLink(label: 'pmt.ghareka.com', url: 'https://pmt.ghareka.com', type: ProjectLinkType.web)],
+      ),
+      Project(
+        title: 'Retail CRM',
+        period: '2021 – 2024',
+        stackSummary: 'Kotlin · MVVM · Clean Architecture · Room · Retrofit',
+        techStack: ['Kotlin', 'MVVM', 'Clean Architecture', 'Room', 'Retrofit'],
+        overview: 'A full-scale retail field management app featuring offline data caching & synchronization, dealer check-ins, and GPS workflow automation.',
+        myRole: 'Android developer responsible for the offline-first sync architecture and field workflow automation.',
+        platforms: ['Android'],
+        screenshotUrl: 'assets/images/crm.jpeg',
+      ),
+      Project(
+        title: 'Ghareka Consumer App',
+        period: '2025 – Present',
+        stackSummary: 'Flutter · Cross-Platform · Riverpod · REST APIs · Firebase',
+        techStack: ['Flutter', 'Riverpod', 'Cross-Platform', 'REST APIs', 'Firebase'],
+        overview: 'An end-to-end home construction tracking mobile app providing accurate progress updates and timeline tracking for homeowners.',
+        myRole: 'Flutter developer building the cross-platform consumer experience, backed by REST APIs and Firebase.',
+        platforms: ['Android', 'iOS'],
+        screenshotUrl: 'assets/images/ghareka.jpeg',
+        links: [
+          ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.ghreka.consumerapp', type: ProjectLinkType.playStore),
+          ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id6467111338', type: ProjectLinkType.appStore),
+        ],
+      ),
+      Project(
+        title: 'Pariwar App',
+        period: '2024 – 2025',
+        stackSummary: 'Flutter · Dart · Riverpod · REST APIs · Firebase Push Notifications',
+        techStack: ['Flutter', 'Dart', 'Riverpod', 'REST APIs', 'Firebase Push Notifications'],
+        overview: 'A multi-tier distributor & dealer collaboration app with live inventory management, order placement, and reward point tracking.',
+        myRole: 'Flutter developer delivering the distributor/dealer facing application and its push-notification driven workflows.',
+        platforms: ['Android', 'iOS'],
+        screenshotUrl: 'assets/images/pariwar.webp',
+        links: [
+          ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.shyamsteel.pariwar', type: ProjectLinkType.playStore),
+          ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id1635952518', type: ProjectLinkType.appStore),
+        ],
+      ),
+      Project(
+        title: 'Captain Logistics',
+        period: '2022 – 2024',
+        stackSummary: 'Native Android · Kotlin · MVVM · Room · Retrofit',
+        techStack: ['Native Android', 'Kotlin', 'MVVM', 'Clean Architecture', 'Room DB', 'Retrofit'],
+        overview: 'A comprehensive logistics and supply chain management application for streamlined fleet tracking and delivery operations.',
+        myRole: 'Lead Android developer responsible for building offline-first sync features and optimizing real-time GPS fleet tracking.',
+        platforms: ['Android'],
+        screenshotUrl: null,
+        links: [],
+      ),
+      Project(
+        title: 'Buildistan',
+        period: '2023 – Present',
+        stackSummary: 'Flutter · Provider · Clean Architecture',
+        techStack: ['Flutter', 'Provider', 'Clean Architecture'],
+        overview: 'A procurement marketplace connecting buyers and sellers for streamlined B2B trade management.',
+        myRole: 'Flutter developer building the marketplace app with Provider-based state management on a Clean Architecture base.',
+        platforms: ['Android', 'iOS'],
+        screenshotUrl: 'assets/images/buildistan.jpeg',
+        links: [
+          ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.buildistan.b2b', type: ProjectLinkType.playStore),
+          ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id6472875216', type: ProjectLinkType.appStore),
+        ],
+      ),
+      Project(
+        title: 'Massage Club',
+        period: '2017 – 2019',
+        stackSummary: 'Android · Java · MVP',
+        techStack: ['Android SDK', 'Java', 'MVP'],
+        overview: 'Massage Club app—your ultimate destination for relaxation and rejuvenation!',
+        myRole: 'Android developer implementing core booking features.',
+        platforms: ['Android'],
+        screenshotUrl: 'assets/images/massageclub.jpg',
+        links: [ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.massageclub&hl=en', type: ProjectLinkType.playStore)],
+      ),
+    ],
+    stats: [
+      StatItem(value: '9+', label: 'Years Experience'),
+      StatItem(value: '2', label: 'Platforms — Android + Flutter'),
+      StatItem(value: '10', label: 'Enterprise Applications'),
+      StatItem(value: '4', label: 'Companies'),
+    ],
+    education: [
+      EducationItem(title: 'Master of Computer Applications (MCA)', institution: 'Brainware Group of Institution', period: '2012 – 2015', detail: 'CGPA: 7.23'),
+      EducationItem(title: 'Bachelor of Computer Applications (BCA)', institution: 'Meghnad Saha Institute of Technology', period: '2008 – 2011', detail: 'CGPA: 7.21'),
+    ],
+    flutterArchitecturePipeline: ['Flutter UI', 'MVVM', 'State Management (Riverpod)', 'Repository Layer', 'REST APIs', 'Local Database', 'Firebase', 'Production Application'],
+    androidArchitecturePipeline: ['Jetpack Compose UI', 'MVVM', 'Clean Architecture', 'Dependency Injection (Hilt / Koin)', 'Coroutines & Flow', 'Repository Layer', 'Retrofit (REST APIs)', 'Room / SQLite', 'Production Application'],
+  );
 
-  static const List<ExperienceItem> experience = [
-    ExperienceItem(
-      company: 'Shyam Steel Industries Ltd.',
-      role: 'Android Developer',
-      period: 'Sep 2020 – Present',
-      isCurrent: true,
-      highlights: [
-        'Architected and delivered multiple high-traffic flagship mobile applications, improving overall app runtime performance by 20%.',
-        'Spearheaded code migration from legacy Java to modern Kotlin, reducing application crash rates by 20% and improving codebase maintainability.',
-        'Led and mentored a 3-developer Agile/Scrum engineering squad, driving sprint planning, code reviews, and on-time delivery.',
-      ],
-    ),
-    ExperienceItem(
-      company: 'DCC Services Pvt Ltd.',
-      role: 'Associate Consultant',
-      period: 'Jan 2020 – Sep 2020',
-      highlights: ['Developed customized Android solutions for small-to-medium businesses.'],
-    ),
-    ExperienceItem(
-      company: 'Matrix Media Solution Pvt. Ltd.',
-      role: 'Android Developer',
-      period: 'Nov 2018 – Dec 2019',
-      highlights: ['Engineered third-party REST API integrations and core Android libraries.'],
-    ),
-  ];
+  static const Profile _bengaliProfile = Profile(
+    name: name,
+    title: 'সিনিয়র মোবাইল অ্যাপ্লিকেশন ডেভেলপার',
+    subtitle: 'অ্যান্ড্রয়েড এবং ফ্ল্যাটার বিশেষজ্ঞ',
+    experienceBadge: '৯+ বছরের অভিজ্ঞতা',
+    location: 'শ্রীরামপুর, পশ্চিমবঙ্গ, ভারত',
+    phone: phone,
+    email: email,
+    linkedInUrl: linkedInUrl,
+    githubUrl: githubUrl,
+    heroIntro: '৯+ বছরের অভিজ্ঞতা সম্পন্ন ফলাফল-ভিত্তিক সিনিয়র মোবাইল অ্যাপ্লিকেশন ডেভেলপার যিনি স্কেলেবল নেটিভ অ্যান্ড্রয়েড (Kotlin, Jetpack Compose) এবং ফ্ল্যাটার (Flutter) অ্যাপ তৈরিতে পারদর্শী।',
+    aboutMe: 'আমি ৯ বছরেরও বেশি অভিজ্ঞতাসম্পন্ন একজন সিনিয়র মোবাইল অ্যাপ ডেভেলপার। আর্কিটেকচার থেকে প্রোডাকশন রিলিজ পর্যন্ত নেটিভ অ্যান্ড্রয়েড এবং ফ্ল্যাটার অ্যাপ তৈরি করেছি। আমার কাজের মূল লক্ষ্য হল আধুনিক কটলিন (Kotlin), ক্লিন আর্কিটেকচার এবং এমভিভিএম (MVVM) অনুশীলনের মাধ্যমে অ্যাপের পারফরম্যান্স ২০% বৃদ্ধি করা এবং ক্র্যাশ হার কমানো।\n\nআমি ৩ জন ডেভেলপারের একটি এজাইল দলের নেতৃত্ব দিয়েছি এবং নির্ভরযোগ্য এন্টারপ্রাইজ অ্যাপ্লিকেশন সরবরাহ করেছি।',
+    profilePicture: profilePicture,
+    resumeAssetPath: resumeAssetPath,
+    resumeDownloadFileName: resumeDownloadFileName,
+    seoTitle: 'জয়জিৎ দত্ত | সিনিয়র অ্যান্ড্রয়েড ও ফ্ল্যাটার ডেভেলপার',
+    seoDescription: '৯+ বছরের অভিজ্ঞতাসম্পন্ন সিনিয়র অ্যান্ড্রয়েড ও ফ্ল্যাটার ডেভেলপার।',
+    skillCategories: [
+      SkillCategory(title: 'মোবাইল', iconAsset: 'mobile', skills: ['Kotlin', 'Android', 'Flutter', 'Dart', 'Jetpack Compose']),
+      SkillCategory(title: 'আর্কিটেকচার', iconAsset: 'architecture', skills: ['MVVM', 'Clean Architecture', 'Repository Pattern', 'Dependency Injection']),
+      SkillCategory(title: 'স্টেট ম্যানেজমেন্ট', iconAsset: 'state', skills: ['Riverpod', 'Provider', 'StateFlow', 'SharedFlow']),
+      SkillCategory(title: 'নেটওয়ার্কিং', iconAsset: 'networking', skills: ['Dio', 'Retrofit', 'REST APIs', 'Postman']),
+      SkillCategory(title: 'স্টোরেজ', iconAsset: 'storage', skills: ['Room DB', 'SQLite', 'sqflite', 'ObjectBox']),
+      SkillCategory(title: 'বিশেষজ্ঞ', iconAsset: 'other', skills: ['WorkManager', 'CameraX', 'ML Kit', 'OpenCV', 'Firebase']),
+    ],
+    experience: [
+      ExperienceItem(
+        company: 'শ্যাম স্টিল ইন্ডাস্ট্রিজ লিমিটেড',
+        role: 'অ্যান্ড্রয়েড ডেভেলপার',
+        period: 'সেপ্টেম্বর ২০২০ – বর্তমান',
+        isCurrent: true,
+        highlights: [
+          'হাই-ট্রাফিক ফ্ল্যাগশিপ মোবাইল অ্যাপ্লিকেশন আর্কিটেক্ট ও তৈরি করেছেন, যা অ্যাপের পারফরম্যান্স ২০% উন্নত করেছে।',
+          'লেগ্যাসি জাভা থেকে আধুনিক কটলিনে মাইগ্রেশন সম্পন্ন করেছেন, অ্যাপ ক্র্যাশ রেট ২০% কমিয়েছেন।',
+          '৩ জন ডেভেলপারের ইঞ্জিনিয়ারিং টিমের নেতৃত্ব ও মেন্টরিং প্রদান করেছেন।',
+        ],
+      ),
+      ExperienceItem(
+        company: 'ডিসিসি সার্ভিসেস প্রাইভেট লিমিটেড',
+        role: 'অ্যাসোসিয়েট কনসালটেন্ট',
+        period: 'জানুয়ারি ২০২০ – সেপ্টেম্বর ২০২০',
+        highlights: ['ক্ষুদ্র ও মাঝারি ব্যবসার জন্য কাস্টমাইজড অ্যান্ড্রয়েড সলিউশন তৈরি করেছেন।'],
+      ),
+      ExperienceItem(
+        company: 'ম্যাট্রিক্স মিডিয়া সলিউশন প্রাইভেট লিমিটেড',
+        role: 'অ্যান্ড্রয়েড ডেভেলপার',
+        period: 'নভেম্বর ২০১৮ – ডিসেম্বর ২০১৯',
+        highlights: ['থার্ড-পার্টি রেস্ট এপিআই ইন্টিগ্রেশন এবং কোর অ্যান্ড্রয়েড লাইব্রেরি ইঞ্জিনিয়ারিং করেছেন।'],
+      ),
+      ExperienceItem(
+        company: 'ন্যাট আইটি সলভড প্রাইভেট লিমিটেড',
+        role: 'অ্যান্ড্রয়েড ডেভেলপার',
+        period: 'জুলাই ২০১৭ – অক্টোবর ২০১৮',
+        highlights: ['নেটিভ অ্যান্ড্রয়েড অ্যাপ্লিকেশন, রেস্ট এপিআই ইন্টিগ্রেশন এবং লোকাল ডাটাবেস স্টোরেজ ফিচার তৈরি করেছেন।'],
+      ),
+    ],
+    projects: [
+      Project(
+        title: 'ঘরেকা পিএমটি',
+        period: '২০২৫ – বর্তমান',
+        stackSummary: 'নেটিভ অ্যান্ড্রয়েড · Kotlin · Jetpack Compose · Clean Architecture · Room · Retrofit',
+        techStack: ['Native Android', 'Kotlin', 'Jetpack Compose', 'Clean Architecture', 'Room', 'Retrofit'],
+        overview: 'প্রজেক্ট সাইট চেক-ইন, স্বয়ংক্রিয় চেক-আউট, জিপিএস ট্র্যাকিং এবং দৈনন্দিন উপস্থিতি পরিচালনার জন্য একটি এন্টারপ্রাইজ ফিল্ড সিআরএম।',
+        myRole: 'একক/প্রধান অ্যান্ড্রয়েড ডেভেলপার হিসেবে আর্কিটেকচার, বাস্তবায়ন এবং সরবরাহের জন্য দায়ী।',
+        platforms: ['Android'],
+        screenshotUrl: 'assets/images/ghareka_pmt.jpeg',
+        links: [ProjectLink(label: 'pmt.ghareka.com', url: 'https://pmt.ghareka.com', type: ProjectLinkType.web)],
+      ),
+      Project(
+        title: 'রিটেল সিআরএম',
+        period: '২০২১ – ২০২৪',
+        stackSummary: 'Kotlin · MVVM · Clean Architecture · Room · Retrofit',
+        techStack: ['Kotlin', 'MVVM', 'Clean Architecture', 'Room', 'Retrofit'],
+        overview: 'অফলাইন ডাটা ক্যাচিং ও সিঙ্ক, ডিলার চেক-ইন এবং জিপিএস ওয়ার্কফ্লো সয়ংক্রিয়করণের একটি সম্পূর্ণ রিটেল ফিল্ড ম্যানেজমেন্ট অ্যাপ।',
+        myRole: 'অফলাইন-ফার্স্ট সিঙ্ক আর্কিটেকচার এবং ফিল্ড ওয়ার্কফ্লো অটোমেশনের দায়িত্বপ্রাপ্ত ডেভেলপার।',
+        platforms: ['Android'],
+        screenshotUrl: 'assets/images/crm.jpeg',
+      ),
+      Project(
+        title: 'ঘরেকা কনজিউমার অ্যাপ',
+        period: '২০২৫ – বর্তমান',
+        stackSummary: 'Flutter · Cross-Platform · Riverpod · REST APIs · Firebase',
+        techStack: ['Flutter', 'Riverpod', 'Cross-Platform', 'REST APIs', 'Firebase'],
+        overview: 'বাড়ি নির্মাণ ট্র্যাকিংয়ের জন্য একটি গ্রাহক অ্যাপ যা বাড়ির মালিকদের সঠিক আপডেট ও সময়রেখা প্রদান করে।',
+        myRole: 'ক্রস-প্ল্যাটফর্ম গ্রাহক অভিজ্ঞতা তৈরির ফ্ল্যাটার ডেভেলপার।',
+        platforms: ['Android', 'iOS'],
+        screenshotUrl: 'assets/images/ghareka.jpeg',
+        links: [
+          ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.ghreka.consumerapp', type: ProjectLinkType.playStore),
+          ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id6467111338', type: ProjectLinkType.appStore),
+        ],
+      ),
+      Project(
+        title: 'পরিবার অ্যাপ',
+        period: '২০২৪ – ২০২৫',
+        stackSummary: 'Flutter · Dart · Riverpod · REST APIs · Firebase Push Notifications',
+        techStack: ['Flutter', 'Dart', 'Riverpod', 'REST APIs', 'Firebase Push Notifications'],
+        overview: 'লাইভ ইনভেন্টরি ম্যানেজমেন্ট, অর্ডার প্লেসমেন্ট এবং রিওয়ার্ড পয়েন্ট ট্র্যাকিং সহ মাল্টি-টায়ার ডিস্ট্রিবিউটর অ্যাপ।',
+        myRole: 'ডিস্ট্রিবিউটর/ডিলার অ্যাপ্লিকেশন সরবরাহকারী ফ্ল্যাটার ডেভেলপার।',
+        platforms: ['Android', 'iOS'],
+        screenshotUrl: 'assets/images/pariwar.webp',
+        links: [
+          ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.shyamsteel.pariwar', type: ProjectLinkType.playStore),
+          ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id1635952518', type: ProjectLinkType.appStore),
+        ],
+      ),
+      Project(
+        title: 'ক্যাপ্টেন লজিস্টিকস',
+        period: '২০২২ – ২০২৪',
+        stackSummary: 'Native Android · Kotlin · MVVM · Room · Retrofit',
+        techStack: ['Native Android', 'Kotlin', 'MVVM', 'Clean Architecture', 'Room DB', 'Retrofit'],
+        overview: 'বহর ট্র্যাকিং এবং ডেলিভারি অপারেশনের জন্য একটি লজিস্টিকস এবং সাপ্লাই চেইন ম্যানেজমেন্ট অ্যাপ।',
+        myRole: 'অফলাইন-ফার্স্ট সিঙ্ক এবং রিয়েল-টাইম জিপিএস বহর ট্র্যাকিং অপ্টিমাইজ করার প্রধান ডেভেলপার।',
+        platforms: ['Android'],
+        screenshotUrl: null,
+        links: [],
+      ),
+      Project(
+        title: 'বিল্ডিস্তান',
+        period: '২০২৩ – বর্তমান',
+        stackSummary: 'Flutter · Provider · Clean Architecture',
+        techStack: ['Flutter', 'Provider', 'Clean Architecture'],
+        overview: 'ক্রেতা এবং বিক্রেতাদের সংযোগকারী একটি বি২বি প্রকিউরমেন্ট মার্কেটপ্লেস।',
+        myRole: 'প্রোভাইডার স্টেট ম্যানেজমেন্ট সহ মার্কেটপ্লেস অ্যাপ তৈরির ফ্ল্যাটার ডেভেলপার।',
+        platforms: ['Android', 'iOS'],
+        screenshotUrl: 'assets/images/buildistan.jpeg',
+        links: [
+          ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.buildistan.b2b', type: ProjectLinkType.playStore),
+          ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id6472875216', type: ProjectLinkType.appStore),
+        ],
+      ),
+      Project(
+        title: 'মাসাজ ক্লাব',
+        period: '২০১৭ – ২০১৯',
+        stackSummary: 'Android · Java · MVP',
+        techStack: ['Android SDK', 'Java', 'MVP'],
+        overview: 'মাসাজ ক্লাব অ্যাপ — রিল্যাক্সেশন এবং বুকিং অ্যাপ।',
+        myRole: 'মূল বুকিং ফিচার বাস্তবায়নকারী অ্যান্ড্রয়েড ডেভেলপার।',
+        platforms: ['Android'],
+        screenshotUrl: 'assets/images/massageclub.jpg',
+        links: [ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.massageclub&hl=en', type: ProjectLinkType.playStore)],
+      ),
+    ],
+    stats: [
+      StatItem(value: '৯+', label: 'বছরের অভিজ্ঞতা'),
+      StatItem(value: '২', label: 'প্ল্যাটফর্ম — অ্যান্ড্রয়েড + ফ্ল্যাটার'),
+      StatItem(value: '১০', label: 'এন্টারপ্রাইজ অ্যাপ্লিকেশন'),
+      StatItem(value: '৪', label: 'কোম্পানি'),
+    ],
+    education: [
+      EducationItem(title: 'মাস্টার অব কম্পিউটার অ্যাপ্লিকেশন (এমসিএ)', institution: 'ব্রেইনওয়্যার গ্রুপ অব ইনস্টিটিউশন', period: '২০১২ – ২০১৫', detail: 'সিজিপিএ: ৭.২৩'),
+      EducationItem(title: 'ব্যাচেলর অব কম্পিউটার অ্যাপ্লিকেশন (বিসিএ)', institution: 'মেঘনাদ সাহা ইনস্টিটিউট অব টেকনোলজি', period: '২০০৮ – ২০১১', detail: 'সিজিপিএ: ৭.২১'),
+    ],
+    flutterArchitecturePipeline: ['ফ্ল্যাটার ইউআই', 'এমভিভিএম', 'স্টেট ম্যানেজমেন্ট (রিভারপড)', 'রেপোজিটরি লেয়ার', 'রেস্ট এপিআই', 'লোকাল ডাটাবেস', 'ফায়ারবেস', 'প্রোডাকশন অ্যাপ্লিকেশন'],
+    androidArchitecturePipeline: ['জেটপ্যাক কম্পোজ ইউআই', 'এমভিভিএম', 'ক্লিন আর্কিটেকচার', 'ডিপেনডেন্সি ইনজেকশন (হিল্ট / কোইন)', 'করুটিনস ও ফ্লো', 'রেপোজিটরি লেয়ার', 'রেট্রোফিট (রেস্ট এপিআই)', 'রুম / এসকিউলাইট', 'প্রোডাকশন অ্যাপ্লিকেশন'],
+  );
 
-  static const List<Project> projects = [
-    Project(
-      title: 'Ghareka PMT',
-      period: '2025 – Present',
-      stackSummary: 'Native Android · Kotlin · Jetpack Compose · Clean Architecture · Room · Retrofit',
-      techStack: ['Native Android', 'Kotlin', 'Jetpack Compose', 'Clean Architecture', 'Room', 'Retrofit'],
-      overview: 'An enterprise field CRM for project site check-ins, automated check-outs, GPS tracking, and daily attendance management.',
-      myRole: 'Sole/lead Android developer responsible for architecture, implementation and delivery.',
-      platforms: ['Android'],
-      screenshotUrl: 'assets/images/ghareka_pmt.jpeg',
-      links: [ProjectLink(label: 'pmt.ghareka.com', url: 'https://pmt.ghareka.com', type: ProjectLinkType.web)],
-    ),
-    Project(
-      title: 'Retail CRM',
-      period: '2021 – 2024',
-      stackSummary: 'Kotlin · MVVM · Clean Architecture · Room · Retrofit',
-      techStack: ['Kotlin', 'MVVM', 'Clean Architecture', 'Room', 'Retrofit'],
-      overview: 'A full-scale retail field management app featuring offline data caching & synchronization, dealer check-ins, and GPS workflow automation.',
-      myRole: 'Android developer responsible for the offline-first sync architecture and field workflow automation.',
-      platforms: ['Android'],
-      screenshotUrl: 'assets/images/crm.jpeg',
-    ),
-    Project(
-      title: 'Ghareka Consumer App',
-      period: '2025 – Present',
-      stackSummary: 'Flutter · Cross-Platform · Riverpod · REST APIs · Firebase',
-      techStack: ['Flutter', 'Riverpod', 'Cross-Platform', 'REST APIs', 'Firebase'],
-      overview: 'An end-to-end home construction tracking mobile app providing accurate progress updates and timeline tracking for homeowners.',
-      myRole: 'Flutter developer building the cross-platform consumer experience, backed by REST APIs and Firebase.',
-      platforms: ['Android', 'iOS'],
-      screenshotUrl: 'assets/images/ghareka.jpeg',
-      links: [
-        ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.ghreka.consumerapp', type: ProjectLinkType.playStore),
-        ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id6467111338', type: ProjectLinkType.appStore),
-      ],
-    ),
-    Project(
-      title: 'Pariwar App',
-      period: '2024 – 2025',
-      stackSummary: 'Flutter · Dart · Riverpod · REST APIs · Firebase Push Notifications',
-      techStack: ['Flutter', 'Dart', 'Riverpod', 'REST APIs', 'Firebase Push Notifications'],
-      overview: 'A multi-tier distributor & dealer collaboration app with live inventory management, order placement, and reward point tracking.',
-      myRole: 'Flutter developer delivering the distributor/dealer facing application and its push-notification driven workflows.',
-      platforms: ['Android', 'iOS'],
-      screenshotUrl: 'assets/images/pariwar.webp',
-      links: [
-        ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.shyamsteel.pariwar', type: ProjectLinkType.playStore),
-        ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id1635952518', type: ProjectLinkType.appStore),
-      ],
-    ),
-    Project(
-      title: 'Captain Logistics',
-      period: '2022 – 2024',
-      stackSummary: 'Native Android · Kotlin · MVVM · Room · Retrofit',
-      techStack: ['Native Android', 'Kotlin', 'MVVM', 'Clean Architecture', 'Room DB', 'Retrofit'],
-      overview: 'A comprehensive logistics and supply chain management application for streamlined fleet tracking and delivery operations.',
-      myRole: 'Lead Android developer responsible for building offline-first sync features and optimizing real-time GPS fleet tracking.',
-      platforms: ['Android'],
-      screenshotUrl: null, // Pending screenshot asset
-      links: [], // Pending store links
-    ),
-    Project(
-      title: 'Buildistan',
-      period: '2023 – Present',
-      stackSummary: 'Flutter · Provider · Clean Architecture',
-      techStack: ['Flutter', 'Provider', 'Clean Architecture'],
-      overview: 'A procurement marketplace connecting buyers and sellers for streamlined B2B trade management.',
-      myRole: 'Flutter developer building the marketplace app with Provider-based state management on a Clean Architecture base.',
-      platforms: ['Android', 'iOS'],
-      screenshotUrl: 'assets/images/buildistan.jpeg',
-      links: [
-        ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.buildistan.b2b', type: ProjectLinkType.playStore),
-        ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id6472875216', type: ProjectLinkType.appStore),
-      ],
-    ),
-    Project(
-      title: 'Massage Club',
-      period: '2017 – 2019',
-      stackSummary: 'Android · Java · MVP',
-      techStack: ['Android SDK', 'Java', 'MVP'],
-      overview: 'Massage Club app—your ultimate destination for relaxation and rejuvenation!',
-      myRole: 'Android developer implementing core booking features.',
-      platforms: ['Android'],
-      screenshotUrl: 'assets/images/massageclub.jpg',
-      links: [ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.massageclub&hl=en', type: ProjectLinkType.playStore)],
-    ),
-  ];
-
-  static const List<StatItem> stats = [
-    StatItem(value: '9+', label: 'Years Experience'),
-    StatItem(value: '2', label: 'Platforms — Android + Flutter'),
-    StatItem(value: '10', label: 'Enterprise Applications'),
-    StatItem(value: '4', label: 'Companies'),
-  ];
-
-  static const List<EducationItem> education = [
-    EducationItem(title: 'Master of Computer Applications (MCA)', institution: 'Brainware Group of Institution', period: '2012 – 2015', detail: 'CGPA: 7.23'),
-    EducationItem(title: 'Bachelor of Computer Applications (BCA)', institution: 'Meghnad Saha Institute of Technology', period: '2008 – 2011', detail: 'CGPA: 7.21'),
-  ];
-
-  static const List<String> flutterArchitecturePipeline = ['Flutter UI', 'MVVM', 'State Management (Riverpod)', 'Repository Layer', 'REST APIs', 'Local Database', 'Firebase', 'Production Application'];
-  static const List<String> androidArchitecturePipeline = ['Jetpack Compose UI', 'MVVM', 'Clean Architecture', 'Dependency Injection (Hilt / Koin)', 'Coroutines & Flow', 'Repository Layer', 'Retrofit (REST APIs)', 'Room / SQLite', 'Production Application'];
+  static const Profile _hindiProfile = Profile(
+    name: name,
+    title: 'सीनियर मोबाइल एप्लिकेशन डेवलपर',
+    subtitle: 'एंड्रॉइड और फ़्लटर विशेषज्ञ',
+    experienceBadge: '9+ वर्षों का अनुभव',
+    location: 'श्रीरामपुर, पश्चिम बंगाल, भारत',
+    phone: phone,
+    email: email,
+    linkedInUrl: linkedInUrl,
+    githubUrl: githubUrl,
+    heroIntro: '9+ वर्षों के व्यावहारिक अनुभव के साथ परिणाम-उन्मुख सीनियर मोबाइल एप्लिकेशन डेवलपर जो नेटिव एंड्रॉइड (Kotlin, Jetpack Compose) और फ़्लटर (Flutter) ऐप्स डिजाइन करने में माहिर हैं।',
+    aboutMe: 'मैं 9 से अधिक वर्षों के अनुभव के साथ सीनियर मोबाइल डेवलपर हूं। आधुनिक कोटलिन (Kotlin), क्लीन आर्किटेक्चर और MVVM प्रथाओं के माध्यम से ऐप प्रदर्शन में 20% तक सुधार किया है और क्रैश दर को कम किया है।\n\nमैंने 3 डेवलपर्स की टीम का नेतृत्व किया है और उच्च गुणवत्ता वाले ऐप्स डिलीवर किए हैं।',
+    profilePicture: profilePicture,
+    resumeAssetPath: resumeAssetPath,
+    resumeDownloadFileName: resumeDownloadFileName,
+    seoTitle: 'जयजीत दत्ता | सीनियर एंड्रॉइड और फ़्लटर डेवलपर',
+    seoDescription: '9+ वर्षों के अनुभव वाले सीनियर एंड्रॉइड और फ़्लटर डेवलपर।',
+    skillCategories: [
+      SkillCategory(title: 'मोबाइल', iconAsset: 'mobile', skills: ['Kotlin', 'Android', 'Flutter', 'Dart', 'Jetpack Compose']),
+      SkillCategory(title: 'आर्किटेक्चर', iconAsset: 'architecture', skills: ['MVVM', 'Clean Architecture', 'Repository Pattern', 'Dependency Injection']),
+      SkillCategory(title: 'स्टेट मैनेजमेंट', iconAsset: 'state', skills: ['Riverpod', 'Provider', 'StateFlow', 'SharedFlow']),
+      SkillCategory(title: 'नेटवर्किंग', iconAsset: 'networking', skills: ['Dio', 'Retrofit', 'REST APIs', 'Postman']),
+      SkillCategory(title: 'स्टोरेज', iconAsset: 'storage', skills: ['Room DB', 'SQLite', 'sqflite', 'ObjectBox']),
+      SkillCategory(title: 'विशेषज्ञ', iconAsset: 'other', skills: ['WorkManager', 'CameraX', 'ML Kit', 'OpenCV', 'Firebase']),
+    ],
+    experience: [
+      ExperienceItem(
+        company: 'श्याम स्टील इंडस्ट्रीज लिमिटेड',
+        role: 'एंड्रॉइड डेवलपर',
+        period: 'सितंबर 2020 – वर्तमान',
+        isCurrent: true,
+        highlights: [
+          'हाई-ट्रैफ़िक फ़्लैगशिप मोबाइल एप्लिकेशन का निर्माण किया, जिससे ऐप प्रदर्शन में 20% सुधार हुआ।',
+          'जावा से आधुनिक कोटलिन में कोड माइग्रेशन किया, जिससे क्रैश दर 20% कम हुई।',
+          '3 डेवलपर्स की टीम का नेतृत्व और मार्गदर्शन किया।',
+        ],
+      ),
+      ExperienceItem(
+        company: 'डीसीसी सर्विसेज प्राइवेट लिमिटेड',
+        role: 'एसोसिएट कंसल्टेंट',
+        period: 'जनवरी 2020 – सितंबर 2020',
+        highlights: ['छोटे और मध्यम व्यवसायों के लिए कस्टमाइज्ड एंड्रॉइड समाधान विकसित किए।'],
+      ),
+      ExperienceItem(
+        company: 'मैट्रिक्स मीडिया सॉल्यूशन प्राइवेट लिमिटेड',
+        role: 'एंड्रॉइड डेवलपर',
+        period: 'नवंबर 2018 – दिसंबर 2019',
+        highlights: ['थर्ड-पार्टी REST API इंटीग्रेशन और कोर एंड्रॉइड लाइब्रेरी विकसित कीं।'],
+      ),
+      ExperienceItem(
+        company: 'नेट आईटी सॉल्व्ड प्राइवेट लिमिटेड',
+        role: 'एंड्रॉइड डेवलपर',
+        period: 'जुलाई 2017 – अक्टूबर 2018',
+        highlights: ['नेटिव एंड्रॉइड एप्लिकेशन, REST API इंटीग्रेशन और लोकल डेटाबेस स्टोरेज फीचर्स विकसित किए।'],
+      ),
+    ],
+    projects: [
+      Project(
+        title: 'घरेका पीएमटी',
+        period: '2025 – वर्तमान',
+        stackSummary: 'नेटिव एंड्रॉइड · Kotlin · Jetpack Compose · Clean Architecture · Room · Retrofit',
+        techStack: ['Native Android', 'Kotlin', 'Jetpack Compose', 'Clean Architecture', 'Room', 'Retrofit'],
+        overview: 'प्रोजेक्ट साइट चेक-इन, ऑटोमेटेड चेक-आउट, जीपीएस ट्रैकिंग और दैनिक उपस्थिति प्रबंधन के लिए एक एंटरप्राइज फ़ील्ड सीआरएम।',
+        myRole: 'आर्किटेक्चर और डिलीवरी के लिए जिम्मेदार मुख्य एंड्रॉइड डेवलपर।',
+        platforms: ['Android'],
+        screenshotUrl: 'assets/images/ghareka_pmt.jpeg',
+        links: [ProjectLink(label: 'pmt.ghareka.com', url: 'https://pmt.ghareka.com', type: ProjectLinkType.web)],
+      ),
+      Project(
+        title: 'रिटेल सीआरएम',
+        period: '2021 – 2024',
+        stackSummary: 'Kotlin · MVVM · Clean Architecture · Room · Retrofit',
+        techStack: ['Kotlin', 'MVVM', 'Clean Architecture', 'Room', 'Retrofit'],
+        overview: 'ऑफलाइन डेटा कैशिंग, डीलर चेक-इन और जीपीएस वर्कफ़्लो ऑटोमेशन वाला एक रिटेल फ़ील्ड मैनेजमेंट ऐप।',
+        myRole: 'ऑफलाइन-फर्स्ट सिंक आर्किटेक्चर के लिए जिम्मेदार डेवलपर।',
+        platforms: ['Android'],
+        screenshotUrl: 'assets/images/crm.jpeg',
+      ),
+      Project(
+        title: 'घरेका कंज्यूमर ऐप',
+        period: '2025 – वर्तमान',
+        stackSummary: 'Flutter · Cross-Platform · Riverpod · REST APIs · Firebase',
+        techStack: ['Flutter', 'Riverpod', 'Cross-Platform', 'REST APIs', 'Firebase'],
+        overview: 'घर निर्माण ट्रैकिंग मोबाइल ऐप जो घर मालिकों को सटीक प्रगति अपडेट प्रदान करता है।',
+        myRole: 'क्रॉस-प्लेटफ़ॉर्म अनुभव बनाने वाले फ़्लटर डेवलपर।',
+        platforms: ['Android', 'iOS'],
+        screenshotUrl: 'assets/images/ghareka.jpeg',
+        links: [
+          ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.ghreka.consumerapp', type: ProjectLinkType.playStore),
+          ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id6467111338', type: ProjectLinkType.appStore),
+        ],
+      ),
+      Project(
+        title: 'परिवार ऐप',
+        period: '2024 – 2025',
+        stackSummary: 'Flutter · Dart · Riverpod · REST APIs · Firebase Push Notifications',
+        techStack: ['Flutter', 'Dart', 'Riverpod', 'REST APIs', 'Firebase Push Notifications'],
+        overview: 'लाइव इन्वेंट्री प्रबंधन, ऑर्डर प्लेसमेंट और रिवॉर्ड पॉइंट ट्रैकिंग वाला डिस्ट्रीब्यूटर ऐप।',
+        myRole: 'डिस्ट्रीब्यूटर/डीलर एप्लिकेशन डिलीवर करने वाले फ़्लटर डेवलपर।',
+        platforms: ['Android', 'iOS'],
+        screenshotUrl: 'assets/images/pariwar.webp',
+        links: [
+          ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.shyamsteel.pariwar', type: ProjectLinkType.playStore),
+          ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id1635952518', type: ProjectLinkType.appStore),
+        ],
+      ),
+      Project(
+        title: 'कैप्टन लॉजिस्टिक्स',
+        period: '2022 – 2024',
+        stackSummary: 'Native Android · Kotlin · MVVM · Room · Retrofit',
+        techStack: ['Native Android', 'Kotlin', 'MVVM', 'Clean Architecture', 'Room DB', 'Retrofit'],
+        overview: 'सुव्यवस्थित बेड़ा ट्रैकिंग और डिलीवरी संचालन के लिए लॉजिस्टिक्स ऐप।',
+        myRole: 'ऑफलाइन सिंक और रीयल-टाइम जीपीएस ट्रैकिंग के मुख्य एंड्रॉइड डेवलपर।',
+        platforms: ['Android'],
+        screenshotUrl: null,
+        links: [],
+      ),
+      Project(
+        title: 'बिल्डिस्तान',
+        period: '2023 – वर्तमान',
+        stackSummary: 'Flutter · Provider · Clean Architecture',
+        techStack: ['Flutter', 'Provider', 'Clean Architecture'],
+        overview: 'खरीदारों और विक्रेताओं को जोड़ने वाला एक बी2बी मार्केटप्लेस।',
+        myRole: 'प्राइवेट स्टेट मैनेजमेंट के साथ मार्केटप्लेस ऐप बनाने वाले फ़्लटर डेवलपर।',
+        platforms: ['Android', 'iOS'],
+        screenshotUrl: 'assets/images/buildistan.jpeg',
+        links: [
+          ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.buildistan.b2b', type: ProjectLinkType.playStore),
+          ProjectLink(label: 'App Store', url: 'https://apps.apple.com/app/id6472875216', type: ProjectLinkType.appStore),
+        ],
+      ),
+      Project(
+        title: 'मसाज क्लब',
+        period: '2017 – 2019',
+        stackSummary: 'Android · Java · MVP',
+        techStack: ['Android SDK', 'Java', 'MVP'],
+        overview: 'मसाज क्लब ऐप — विश्राम और बुकिंग ऐप।',
+        myRole: 'मुख्य बुकिंग सुविधाएं लागू करने वाले एंड्रॉइड डेवलपर।',
+        platforms: ['Android'],
+        screenshotUrl: 'assets/images/massageclub.jpg',
+        links: [ProjectLink(label: 'Play Store', url: 'https://play.google.com/store/apps/details?id=com.massageclub&hl=en', type: ProjectLinkType.playStore)],
+      ),
+    ],
+    stats: [
+      StatItem(value: '9+', label: 'वर्षों का अनुभव'),
+      StatItem(value: '2', label: 'प्लेटफ़ॉर्म — एंड्रॉइड + फ़्लटर'),
+      StatItem(value: '10', label: 'एंटरप्राइज एप्लिकेशन'),
+      StatItem(value: '4', label: 'कंपनियां'),
+    ],
+    education: [
+      EducationItem(title: 'मास्टर ऑफ कंप्यूटर एप्लीकेशन (MCA)', institution: 'ब्रेनवेयर ग्रुप ऑफ इंस्टीट्यूशन', period: '2012 – 2015', detail: 'CGPA: 7.23'),
+      EducationItem(title: 'बैचलर ऑफ कंप्यूटर एप्लीकेशन (BCA)', institution: 'मेघनाद साहा इंस्टीट्यूट ऑफ टेक्नोलॉजी', period: '2008 – 2011', detail: 'CGPA: 7.21'),
+    ],
+    flutterArchitecturePipeline: ['फ़्लटर यूआई', 'एमवीवीएम', 'स्टेट मैनेजमेंट (रिवरपोड)', 'रिपॉजिटरी लेयर', 'रेस्ट एपीआई', 'लोकल डेटाबेस', 'फायरबेस', 'प्रोडक्शन एप्लिकेशन'],
+    androidArchitecturePipeline: ['जेटपैक कंपोज़ यूआई', 'एमवीवीएम', 'क्लीन आर्किटेक्चर', 'डिपेंडेंसी इंजेक्शन (हिल्ट / कॉइन)', 'कोरुटीन्स और फ्लो', 'रिपॉजिटरी लेयर', 'रेट्रोफिल्ट (रेस्ट एपीआई)', 'रूम / एसक्यूलाइट', 'प्रोडक्शन एप्लिकेशन'],
+  );
 }

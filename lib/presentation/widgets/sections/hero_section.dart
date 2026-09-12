@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/launch_helper.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../core/utils/resume_download/resume_download.dart';
 import '../../../domain/models/profile_models.dart';
+import '../../viewmodels/locale_viewmodel.dart';
 import '../common/device_mockup.dart';
 import '../common/glass_container.dart';
 import '../common/gradient_text.dart';
 import '../common/pulse_badge.dart';
 import '../common/section_wrapper.dart';
 
-class HeroSection extends StatelessWidget {
+class HeroSection extends ConsumerWidget {
   final Profile profile;
   final VoidCallback onViewWork;
   final GlobalKey? sectionKey;
@@ -24,10 +26,11 @@ class HeroSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDesktop = Responsive.isDesktopOrWider(context);
     final isDark = theme.brightness == Brightness.dark;
+    final currentLanguage = ref.watch(localeProvider);
 
     return SizedBox(
       key: sectionKey,
@@ -47,13 +50,13 @@ class HeroSection extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                     children: [
-                      const PulseBadge(
-                        label: 'SENIOR MOBILE ARCHITECT • 9+ YEARS',
+                      PulseBadge(
+                        label: currentLanguage.heroBadge,
                         dotColor: AppColors.primary,
                       ),
                       const SizedBox(height: 28),
                       GradientText(
-                        'Building mobile\nexperiences that\npeople love.',
+                        currentLanguage.heroHeadline,
                         colors: isDark
                             ? AppColors.heroTitleGradient
                             : AppColors.heroTitleGradientLight,
@@ -69,7 +72,7 @@ class HeroSection extends StatelessWidget {
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 580),
                         child: Text(
-                          'Senior Mobile Application Developer specializing in Native Android (Kotlin, Jetpack Compose) and Cross-Platform Flutter (Dart, Riverpod). Passionate about performance, clean architecture, and intuitive design.',
+                          profile.heroIntro,
                           textAlign: isDesktop ? TextAlign.left : TextAlign.center,
                           style: theme.textTheme.bodyLarge?.copyWith(
                             fontSize: 18,
@@ -85,12 +88,12 @@ class HeroSection extends StatelessWidget {
                         alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
                         children: [
                           _PrimaryCTAButton(
-                            label: 'EXPLORE MY WORK',
+                            label: currentLanguage.exploreWork,
                             icon: Icons.arrow_downward_rounded,
                             onPressed: onViewWork,
                           ),
                           _SecondaryCTAButton(
-                            label: 'DOWNLOAD CV',
+                            label: currentLanguage.downloadCv,
                             icon: Icons.description_rounded,
                             onPressed: () async {
                               try {

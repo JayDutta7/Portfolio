@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../core/utils/resume_download/resume_download.dart';
+import '../../viewmodels/locale_viewmodel.dart';
 import '../../viewmodels/theme_viewmodel.dart';
 import '../../viewmodels/profile_viewmodel.dart';
 import 'pulse_badge.dart';
@@ -35,6 +36,7 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
     final hPad = Responsive.pagePadding(context);
     final themeController = ref.watch(themeProvider);
     final profileState = ref.watch(profileViewModelProvider);
+    final currentLanguage = ref.watch(localeProvider);
 
     return Container(
       height: preferredSize.height,
@@ -72,8 +74,8 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                     const _Logo(),
                     if (isDesktop) ...[
                       const SizedBox(width: 20),
-                      const PulseBadge(
-                        label: '9+ YRS • AVAILABLE FOR PROJECTS',
+                      PulseBadge(
+                        label: currentLanguage.availableBadge,
                         dotColor: AppColors.emerald,
                       ),
                     ],
@@ -84,12 +86,14 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                           label: item.label.toUpperCase(),
                           onTap: () => onNavTap(item.sectionKey),
                         ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
+                      const _LanguageSelector(),
+                      const SizedBox(width: 12),
                       _ThemeToggle(
                         isDark: themeController.isDark,
                         onToggle: themeController.toggle,
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       profileState.when(
                         data: (profile) => _ResumeAction(
                           assetPath: profile.resumeAssetPath,
@@ -99,6 +103,8 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                         error: (_, __) => const SizedBox.shrink(),
                       ),
                     ] else ...[
+                      const _LanguageSelector(),
+                      const SizedBox(width: 8),
                       _ThemeToggle(
                         isDark: themeController.isDark,
                         onToggle: themeController.toggle,
@@ -106,7 +112,7 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                       const SizedBox(width: 8),
                       IconButton(
                         icon: const Icon(Icons.menu_rounded, size: 24),
-                        onPressed: () => _openMobileMenu(context),
+                        onPressed: () => _openMobileMenu(context, ref),
                       ),
                     ],
                   ],
@@ -119,7 +125,7 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-  void _openMobileMenu(BuildContext context) {
+  void _openMobileMenu(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -127,6 +133,7 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
       builder: (sheetContext) {
         final theme = Theme.of(context);
         final isDark = theme.brightness == Brightness.dark;
+        final currentLanguage = ref.watch(localeProvider);
 
         return ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
@@ -153,8 +160,8 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  const PulseBadge(
-                    label: '9+ YRS • AVAILABLE FOR PROJECTS',
+                  PulseBadge(
+                    label: currentLanguage.availableBadge,
                     dotColor: AppColors.emerald,
                   ),
                   const SizedBox(height: 20),
@@ -180,6 +187,81 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _LanguageSelector extends ConsumerWidget {
+  const _LanguageSelector();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final currentLanguage = ref.watch(localeProvider);
+
+    return PopupMenuButton<AppLanguage>(
+      onSelected: (language) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref.read(localeProvider.notifier).setLanguage(language);
+        });
+      },
+      tooltip: 'Select Language',
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: theme.dividerColor),
+      ),
+      color: isDark ? AppColors.darkSurface : Colors.white,
+      elevation: 8,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.05)
+              : Colors.black.withValues(alpha: 0.04),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: theme.dividerColor),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.language_rounded, size: 18, color: AppColors.primary),
+            const SizedBox(width: 6),
+            Text(
+              currentLanguage.shortName,
+              style: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(width: 2),
+            const Icon(Icons.arrow_drop_down_rounded, size: 18),
+          ],
+        ),
+      ),
+      itemBuilder: (context) => AppLanguage.values.map((lang) {
+        final isSelected = lang == currentLanguage;
+        return PopupMenuItem<AppLanguage>(
+          value: lang,
+          child: Row(
+            children: [
+              Text(lang.flag, style: const TextStyle(fontSize: 16)),
+              const SizedBox(width: 10),
+              Text(
+                lang.displayName,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                  color: isSelected ? AppColors.primary : theme.colorScheme.onSurface,
+                ),
+              ),
+              if (isSelected) ...[
+                const Spacer(),
+                const Icon(Icons.check_rounded, size: 16, color: AppColors.primary),
+              ],
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }
@@ -326,45 +408,29 @@ class _NavLink extends StatefulWidget {
 }
 
 class _NavLinkState extends State<_NavLink> {
-  bool _hovering = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovering = true),
-      onExit: (_) => setState(() => _hovering = false),
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
         onTap: widget.onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 200),
-                style: theme.textTheme.labelSmall!.copyWith(
-                  fontWeight: _hovering ? FontWeight.w900 : FontWeight.w700,
-                  fontSize: 12,
-                  letterSpacing: 1.2,
-                  color: _hovering
-                      ? theme.colorScheme.primary
-                      : theme.textTheme.labelSmall?.color?.withValues(alpha: 0.7),
-                ),
-                child: Text(widget.label),
-              ),
-              const SizedBox(height: 2),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: _hovering ? 16 : 0,
-                height: 2,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ],
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          child: AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 180),
+            style: (theme.textTheme.labelMedium ?? const TextStyle()).copyWith(
+              color: _hovered
+                  ? AppColors.primary
+                  : theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.85),
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.2,
+              fontSize: 13,
+            ),
+            child: Text(widget.label),
           ),
         ),
       ),

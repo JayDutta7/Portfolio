@@ -91,7 +91,7 @@ class _TimelineExperienceCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.period.split(' – ').first.toUpperCase(),
+                    item.period.split(RegExp(r'\s*[\u2013\u2014\-]\s*')).first.toUpperCase(),
                     style: theme.textTheme.displaySmall?.copyWith(
                       fontSize: 32,
                       fontWeight: FontWeight.w900,

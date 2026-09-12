@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -66,13 +67,41 @@ class DeviceMockup extends StatelessWidget {
             // Image Content or Fallback
             if (assetPath != null)
               Positioned.fill(
-                child: Image.asset(
-                  assetPath!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => _FallbackScreen(
-                    title: title,
-                    icon: fallbackIcon,
-                    glowColor: glowColor,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: showHeaderBar ? 26 : 0,
+                    bottom: 12,
+                  ),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      // Ambient Blurred Background Fill (for non-tall screenshots)
+                      Image.asset(
+                        assetPath!,
+                        fit: BoxFit.cover,
+                        alignment: Alignment.topCenter,
+                        errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+                      ),
+                      BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+                        child: Container(
+                          color: Colors.black.withValues(alpha: 0.45),
+                        ),
+                      ),
+                      // Crisp Fitted Main Image (aligned to top center)
+                      Center(
+                        child: Image.asset(
+                          assetPath!,
+                          fit: BoxFit.contain,
+                          alignment: Alignment.topCenter,
+                          errorBuilder: (context, error, stackTrace) => _FallbackScreen(
+                            title: title,
+                            icon: fallbackIcon,
+                            glowColor: glowColor,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
@@ -87,15 +116,17 @@ class DeviceMockup extends StatelessWidget {
 
             // Glass Sheen Reflection
             Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: const Alignment(0.4, 0.4),
-                    colors: [
-                      Colors.white.withValues(alpha: 0.15),
-                      Colors.transparent,
-                    ],
+              child: IgnorePointer(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: const Alignment(0.4, 0.4),
+                      colors: [
+                        Colors.white.withValues(alpha: 0.12),
+                        Colors.transparent,
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -108,9 +139,9 @@ class DeviceMockup extends StatelessWidget {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: 28,
+                  height: 26,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: Colors.black.withValues(alpha: 0.4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -124,8 +155,8 @@ class DeviceMockup extends StatelessWidget {
                       ),
                       // Dynamic Island pill
                       Container(
-                        width: 48,
-                        height: 10,
+                        width: 44,
+                        height: 9,
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(10),
@@ -146,7 +177,7 @@ class DeviceMockup extends StatelessWidget {
 
             // Bottom indicator bar
             Positioned(
-              bottom: 6,
+              bottom: 4,
               left: width * 0.3,
               right: width * 0.3,
               child: Container(

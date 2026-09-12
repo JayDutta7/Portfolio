@@ -15,32 +15,32 @@ class StatsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktopOrWider(context);
 
-    // High impact metrics
+    // High impact metrics mapped from localized profile data
     final statsData = [
       {
-        'value': '9+',
-        'label': 'YEARS EXPERIENCE',
+        'value': profile.stats.isNotEmpty ? profile.stats[0].value : '9+',
+        'label': profile.stats.isNotEmpty ? profile.stats[0].label.toUpperCase() : 'YEARS EXPERIENCE',
         'sub': 'Android & Flutter Development',
         'colors': [AppColors.primary, AppColors.secondary],
         'icon': Icons.workspace_premium_rounded,
       },
       {
-        'value': '10+',
-        'label': 'PRODUCTION APPS',
+        'value': profile.stats.length > 1 ? profile.stats[1].value : '2',
+        'label': profile.stats.length > 1 ? profile.stats[1].label.toUpperCase() : 'PLATFORMS — ANDROID + FLUTTER',
         'sub': 'Deployed to Play & App Store',
         'colors': [AppColors.secondary, AppColors.flutterBlue],
         'icon': Icons.rocket_launch_rounded,
       },
       {
-        'value': '20%',
-        'label': 'PERFORMANCE BOOST',
+        'value': profile.stats.length > 2 ? profile.stats[2].value : '10',
+        'label': profile.stats.length > 2 ? profile.stats[2].label.toUpperCase() : 'ENTERPRISE APPLICATIONS',
         'sub': 'Optimized Mobile Apps Runtime',
         'colors': [AppColors.androidGreen, AppColors.emerald],
         'icon': Icons.speed_rounded,
       },
       {
-        'value': '20%',
-        'label': 'CRASH RATE REDUCTION',
+        'value': profile.stats.length > 3 ? profile.stats[3].value : '4',
+        'label': profile.stats.length > 3 ? profile.stats[3].label.toUpperCase() : 'COMPANIES',
         'sub': 'Clean Architecture & Kotlin',
         'colors': [AppColors.accent, const Color(0xFFEC4899)],
         'icon': Icons.bug_report_rounded,
@@ -61,7 +61,7 @@ class StatsSection extends StatelessWidget {
               crossAxisCount: columns,
               crossAxisSpacing: 20,
               mainAxisSpacing: 20,
-              childAspectRatio: isDesktop ? 1.35 : 1.6,
+              childAspectRatio: isDesktop ? 1.15 : (constraints.maxWidth > 600 ? 1.25 : 1.45),
             ),
             itemCount: statsData.length,
             itemBuilder: (context, index) {
@@ -102,7 +102,7 @@ class _StatBentoCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return GlassContainer(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(18),
       glowColor: colors.first,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +112,7 @@ class _StatBentoCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: colors.first.withValues(alpha: isDark ? 0.15 : 0.08),
                   borderRadius: BorderRadius.circular(12),
@@ -121,7 +121,7 @@ class _StatBentoCard extends StatelessWidget {
                     width: 1,
                   ),
                 ),
-                child: Icon(icon, color: colors.first, size: 20),
+                child: Icon(icon, color: colors.first, size: 18),
               ),
               Container(
                 width: 6,
@@ -133,36 +133,44 @@ class _StatBentoCard extends StatelessWidget {
               ),
             ],
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GradientText(
-                value,
-                colors: colors,
-                style: theme.textTheme.displayMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 44,
-                  height: 1.0,
+          const SizedBox(height: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GradientText(
+                  value,
+                  colors: colors,
+                  style: theme.textTheme.displayMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 38,
+                    height: 1.0,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 12,
-                  letterSpacing: 1.2,
+                const SizedBox(height: 6),
+                Text(
+                  label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 11,
+                    letterSpacing: 1.0,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                sub,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontSize: 12,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                const SizedBox(height: 2),
+                Text(
+                  sub,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontSize: 11,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
