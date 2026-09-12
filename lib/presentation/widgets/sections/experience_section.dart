@@ -22,7 +22,7 @@ class ExperienceSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -31,11 +31,14 @@ class ExperienceSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
                 ),
-                child: Text(
-                  '04 / CAREER',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.primary,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '04 / CAREER',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
               ),
@@ -77,6 +80,9 @@ class _TimelineExperienceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDesktop = Responsive.isDesktopOrWider(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+    final isCompact = width < 380;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 40),
@@ -114,11 +120,22 @@ class _TimelineExperienceCard extends StatelessWidget {
           // Card Content
           Expanded(
             child: GlassContainer(
-              padding: const EdgeInsets.all(32),
+              padding: EdgeInsets.all(isDesktop ? 32 : (isMobile ? 18 : 24)),
               glowColor: item.isCurrent ? AppColors.primary : AppColors.secondary,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (isCompact && item.isCurrent) ...[
+                    const Row(
+                      children: [
+                        PulseBadge(
+                          label: 'ACTIVE ROLE',
+                          dotColor: AppColors.emerald,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                  ],
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -140,12 +157,13 @@ class _TimelineExperienceCard extends StatelessWidget {
                               item.company,
                               style: theme.textTheme.headlineLarge?.copyWith(
                                 fontWeight: FontWeight.w900,
+                                fontSize: isMobile ? 18 : 24,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      if (item.isCurrent) ...[
+                      if (!isCompact && item.isCurrent) ...[
                         const PulseBadge(
                           label: 'ACTIVE ROLE',
                           dotColor: AppColors.emerald,

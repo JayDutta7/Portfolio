@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
 import '../common/glass_container.dart';
 import '../common/gradient_text.dart';
@@ -103,20 +102,29 @@ class _ModernToolkitPalette extends StatelessWidget {
       },
     ];
 
-    final isDesktop = Responsive.isDesktopOrWider(context);
-
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = isDesktop ? 3 : (constraints.maxWidth > 700 ? 2 : 1);
-        final aspect = isDesktop ? 1.25 : (constraints.maxWidth > 700 ? 1.3 : 1.15);
+        final width = constraints.maxWidth;
+        final int columns;
+        final double aspect;
+        if (width >= 1150) {
+          columns = 3;
+          aspect = 1.35;
+        } else if (width >= 640) {
+          columns = 2;
+          aspect = 1.45;
+        } else {
+          columns = 1;
+          aspect = 1.6;
+        }
 
         return GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: columns,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
             childAspectRatio: aspect,
           ),
           itemCount: categories.length,
@@ -151,9 +159,11 @@ class _ToolkitCardRich extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
 
     return GlassContainer(
-      padding: const EdgeInsets.all(28),
+      padding: EdgeInsets.all(isMobile ? 18 : 24),
       glowColor: color,
       borderColor: color.withValues(alpha: 0.3),
       child: Column(
@@ -162,52 +172,55 @@ class _ToolkitCardRich extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: color.withValues(alpha: 0.3)),
                 ),
-                child: Icon(icon, size: 20, color: color),
+                child: Icon(icon, size: 18, color: color),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   title,
                   style: theme.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w900,
                     color: color,
-                    letterSpacing: 1.2,
+                    letterSpacing: 1.1,
                     fontSize: 11,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 18),
           Expanded(
-            child: Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                for (final item in items)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: theme.dividerColor),
-                    ),
-                    child: Text(
-                      item,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
-                        color: theme.colorScheme.onSurface,
+            child: SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final item in items)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: theme.dividerColor),
+                      ),
+                      child: Text(
+                        item,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

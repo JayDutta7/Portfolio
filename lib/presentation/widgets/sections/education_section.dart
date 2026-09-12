@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
 import '../common/glass_container.dart';
 import '../common/gradient_text.dart';
@@ -14,15 +13,17 @@ class EducationSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDesktop = Responsive.isDesktopOrWider(context);
     final isDark = theme.brightness == Brightness.dark;
+
+    final width = MediaQuery.sizeOf(context).width;
+    final isWideDesktop = width >= 1200;
 
     return SectionWrapper(
       sectionKey: sectionKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -31,11 +32,14 @@ class EducationSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
                 ),
-                child: Text(
-                  'BACKGROUND',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.primary,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'BACKGROUND',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
               ),
@@ -52,7 +56,7 @@ class EducationSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 48),
-          if (!isDesktop)
+          if (!isWideDesktop)
             Column(
               children: [
                 for (final edu in profile.education) ...[
@@ -67,9 +71,9 @@ class EducationSection extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 24,
-                mainAxisSpacing: 24,
-                childAspectRatio: 2.2,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+                childAspectRatio: 1.75,
               ),
               itemCount: profile.education.length,
               itemBuilder: (context, index) {
@@ -89,8 +93,11 @@ class _EducationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+
     return GlassContainer(
-      padding: const EdgeInsets.all(28),
+      padding: EdgeInsets.all(isMobile ? 18 : 24),
       glowColor: AppColors.primary,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -18,33 +18,47 @@ class ContactSection extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final isDesktop = Responsive.isDesktopOrWider(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+    final isCompact = width < 380;
+    final titleFontSize = isDesktop ? 44.0 : (isCompact ? 26.0 : 32.0);
 
     return SectionWrapper(
       sectionKey: sectionKey,
-      verticalPadding: isDesktop ? 120 : 60,
+      verticalPadding: isDesktop ? 100 : 48,
       child: Center(
         child: GlassContainer(
-          padding: EdgeInsets.symmetric(horizontal: isDesktop ? 40 : 20, vertical: isDesktop ? 64 : 36),
+          padding: EdgeInsets.symmetric(
+            horizontal: isDesktop ? 40 : (isCompact ? 16 : 24),
+            vertical: isDesktop ? 64 : (isCompact ? 32 : 40),
+          ),
           glowColor: AppColors.primary,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
-                ),
-                child: Text(
-                  '07 / CONTACT',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.primary,
+              Wrap(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        '07 / CONTACT',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
               GradientText(
                 'Have a mobile product\nworth building?',
                 textAlign: TextAlign.center,
@@ -52,13 +66,13 @@ class ContactSection extends StatelessWidget {
                     ? AppColors.heroTitleGradient
                     : AppColors.heroTitleGradientLight,
                 style: theme.textTheme.displayMedium?.copyWith(
-                  height: 1.05,
-                  letterSpacing: -1.5,
+                  height: 1.08,
+                  letterSpacing: isCompact ? -0.8 : -1.5,
                   fontWeight: FontWeight.w900,
-                  fontSize: 44,
+                  fontSize: titleFontSize,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 540),
                 child: Text(
@@ -66,19 +80,19 @@ class ContactSection extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                    fontSize: 18,
+                    fontSize: isMobile ? 15 : 18,
                   ),
                 ),
               ),
-              const SizedBox(height: 48),
+              SizedBox(height: isMobile ? 32 : 48),
               _RichCTAButton(
                 label: 'START A CONVERSATION',
                 email: profile.email,
               ),
-              const SizedBox(height: 56),
+              SizedBox(height: isMobile ? 36 : 56),
               Wrap(
-                spacing: 24,
-                runSpacing: 16,
+                spacing: isMobile ? 8 : 24,
+                runSpacing: isMobile ? 10 : 16,
                 alignment: WrapAlignment.center,
                 children: [
                   _SocialActionRich(
@@ -134,6 +148,9 @@ class _RichCTAButtonState extends State<_RichCTAButton> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
@@ -155,19 +172,25 @@ class _RichCTAButtonState extends State<_RichCTAButton> {
           child: ElevatedButton.icon(
             onPressed: () => LaunchHelper.sendEmail(widget.email),
             icon: const Icon(Icons.send_rounded, size: 18, color: Colors.white),
-            label: Text(
-              widget.label,
-              style: const TextStyle(
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                letterSpacing: 1.5,
-                fontSize: 13,
+            label: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                widget.label,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  letterSpacing: 1.5,
+                  fontSize: 13,
+                ),
               ),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 20 : 28,
+                vertical: isMobile ? 14 : 18,
+              ),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
             ),
           ),

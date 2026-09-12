@@ -17,12 +17,15 @@ class AboutSection extends StatelessWidget {
     final isDesktop = Responsive.isDesktopOrWider(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    final width = MediaQuery.sizeOf(context).width;
+    final isCompact = width < 380;
+
     return SectionWrapper(
       sectionKey: sectionKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -31,11 +34,14 @@ class AboutSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
                 ),
-                child: Text(
-                  '06 / ABOUT ME',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.primary,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '06 / ABOUT ME',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
               ),
@@ -88,7 +94,7 @@ class AboutSection extends StatelessWidget {
                 expand: isDesktop,
                 flex: 4,
                 child: GlassContainer(
-                  padding: const EdgeInsets.all(36),
+                  padding: EdgeInsets.all(isDesktop ? 32 : (isCompact ? 18 : 24)),
                   glowColor: AppColors.primary,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,9 +127,14 @@ class _AboutPortrait extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isCompact = width < 380;
+    final portraitWidth = isCompact ? 220.0 : 280.0;
+    final portraitHeight = isCompact ? 300.0 : 380.0;
+
     return Container(
-      width: 280,
-      height: 380,
+      width: portraitWidth,
+      height: portraitHeight,
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(32),

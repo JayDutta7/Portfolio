@@ -21,11 +21,14 @@ class SetupSection extends StatelessWidget {
       {'label': 'ENVIRONMENT', 'value': 'Serampore, India · Optimized for Deep Work', 'icon': Icons.place_rounded},
     ];
 
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+
     return SectionWrapper(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -34,11 +37,14 @@ class SetupSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
                 ),
-                child: Text(
-                  'WFH SETUP & WORKSTATION',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.primary,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'WFH SETUP & WORKSTATION',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
               ),
@@ -57,7 +63,7 @@ class SetupSection extends StatelessWidget {
           ),
           const SizedBox(height: 48),
           GlassContainer(
-            padding: const EdgeInsets.all(32),
+            padding: EdgeInsets.all(isMobile ? 20 : 32),
             glowColor: AppColors.primary,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -139,20 +139,30 @@ class _StackNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+    final isCompact = width < 380;
+
     return GlassContainer(
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 32,
+        vertical: isMobile ? 16 : 24,
+      ),
       glowColor: color,
       borderColor: color.withValues(alpha: 0.3),
       child: Center(
         child: Column(
           children: [
-            Text(
-              title,
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.w900,
-                color: color,
-                letterSpacing: 2,
-                fontSize: 11,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                title,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: color,
+                  letterSpacing: isCompact ? 1.0 : 2,
+                  fontSize: isCompact ? 10 : 11,
+                ),
               ),
             ),
             const SizedBox(height: 6),
@@ -161,7 +171,7 @@ class _StackNode extends StatelessWidget {
               textAlign: TextAlign.center,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w800,
-                fontSize: 18,
+                fontSize: isMobile ? (isCompact ? 14 : 16) : 18,
               ),
             ),
           ],
@@ -248,8 +258,12 @@ class _EcosystemCardRich extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+    final isCompact = width < 380;
+
     return GlassContainer(
-      padding: const EdgeInsets.all(40),
+      padding: EdgeInsets.all(isMobile ? (isCompact ? 18 : 24) : 36),
       glowColor: color,
       borderColor: color.withValues(alpha: 0.3),
       child: Column(
@@ -258,31 +272,36 @@ class _EcosystemCardRich extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(14),
+                padding: EdgeInsets.all(isMobile ? 10 : 14),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                   border: Border.all(color: color.withValues(alpha: 0.4)),
                 ),
-                child: Icon(icon, color: color, size: 36),
+                child: Icon(icon, color: color, size: isMobile ? 24 : 36),
               ),
-              const SizedBox(width: 20),
+              SizedBox(width: isMobile ? 14 : 20),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: color,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        title,
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          color: color,
+                          fontSize: isMobile ? (isCompact ? 17 : 20) : 24,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontSize: 13,
+                        fontSize: isMobile ? 12 : 13,
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
@@ -291,14 +310,17 @@ class _EcosystemCardRich extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 36),
+          SizedBox(height: isMobile ? 24 : 36),
           Wrap(
-            spacing: 10,
-            runSpacing: 10,
+            spacing: isMobile ? 8 : 10,
+            runSpacing: isMobile ? 8 : 10,
             children: [
               for (final item in items)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 10 : 14,
+                    vertical: isMobile ? 6 : 8,
+                  ),
                   decoration: BoxDecoration(
                     color: color.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(8),
@@ -309,7 +331,7 @@ class _EcosystemCardRich extends StatelessWidget {
                     style: theme.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w800,
                       color: theme.colorScheme.onSurface,
-                      fontSize: 12,
+                      fontSize: isMobile ? 11 : 12,
                     ),
                   ),
                 ),

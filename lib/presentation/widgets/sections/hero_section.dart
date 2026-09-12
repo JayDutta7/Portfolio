@@ -32,11 +32,15 @@ class HeroSection extends ConsumerWidget {
     final isDark = theme.brightness == Brightness.dark;
     final currentLanguage = ref.watch(localeProvider);
 
+    final width = MediaQuery.sizeOf(context).width;
+    final headlineFontSize = isDesktop ? 64.0 : (width < 380 ? 30.0 : (width < 600 ? 36.0 : 48.0));
+    final headlineLetterSpacing = isDesktop ? -2.5 : (width < 600 ? -1.0 : -1.8);
+
     return SizedBox(
       key: sectionKey,
       width: double.infinity,
       child: SectionWrapper(
-        verticalPadding: isDesktop ? 120 : 60,
+        verticalPadding: isDesktop ? 100 : 48,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -54,7 +58,7 @@ class HeroSection extends ConsumerWidget {
                         label: currentLanguage.heroBadge,
                         dotColor: AppColors.primary,
                       ),
-                      const SizedBox(height: 28),
+                      const SizedBox(height: 24),
                       GradientText(
                         currentLanguage.heroHeadline,
                         colors: isDark
@@ -62,13 +66,13 @@ class HeroSection extends ConsumerWidget {
                             : AppColors.heroTitleGradientLight,
                         textAlign: isDesktop ? TextAlign.left : TextAlign.center,
                         style: theme.textTheme.displayLarge?.copyWith(
-                          fontSize: isDesktop ? 68 : 42,
+                          fontSize: headlineFontSize,
                           fontWeight: FontWeight.w900,
-                          height: 1.05,
-                          letterSpacing: -2.5,
+                          height: 1.08,
+                          letterSpacing: headlineLetterSpacing,
                         ),
                       ),
-                      const SizedBox(height: 28),
+                      const SizedBox(height: 24),
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 580),
                         child: Text(
@@ -255,6 +259,8 @@ class _PrimaryCTAButtonState extends State<_PrimaryCTAButton> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 640;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
@@ -276,19 +282,22 @@ class _PrimaryCTAButtonState extends State<_PrimaryCTAButton> {
           child: ElevatedButton.icon(
             onPressed: widget.onPressed,
             icon: Icon(widget.icon, size: 18, color: Colors.white),
-            label: Text(
-              widget.label,
-              style: const TextStyle(
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.4,
-                fontSize: 13,
-                color: Colors.white,
+            label: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                widget.label,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.4,
+                  fontSize: 13,
+                  color: Colors.white,
+                ),
               ),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 22),
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 22 : 32, vertical: isMobile ? 16 : 22),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
           ),
@@ -320,6 +329,7 @@ class _SecondaryCTAButtonState extends State<_SecondaryCTAButton> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final isMobile = MediaQuery.sizeOf(context).width < 640;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -341,18 +351,21 @@ class _SecondaryCTAButtonState extends State<_SecondaryCTAButton> {
           child: OutlinedButton.icon(
             onPressed: widget.onPressed,
             icon: Icon(widget.icon, size: 18, color: theme.colorScheme.onSurface),
-            label: Text(
-              widget.label,
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.4,
-                fontSize: 13,
-                color: theme.colorScheme.onSurface,
+            label: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                widget.label,
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.4,
+                  fontSize: 13,
+                  color: theme.colorScheme.onSurface,
+                ),
               ),
             ),
             style: OutlinedButton.styleFrom(
               side: BorderSide.none,
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 22),
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 28, vertical: isMobile ? 16 : 22),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
           ),

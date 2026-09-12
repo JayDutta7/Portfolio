@@ -27,91 +27,98 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(90);
+  @override
+  Size get preferredSize => const Size.fromHeight(80);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final isDesktop = Responsive.isDesktopOrWider(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isDesktop = Responsive.isDesktopNavBar(context);
     final hPad = Responsive.pagePadding(context);
     final themeController = ref.watch(themeProvider);
     final profile = ref.watch(profileViewModelProvider);
     final currentLanguage = ref.watch(localeProvider);
 
-    return Container(
-      height: preferredSize.height,
-      padding: EdgeInsets.symmetric(horizontal: isDesktop ? hPad : 16, vertical: 14),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1300),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.darkSurface.withValues(alpha: 0.75)
-                      : Colors.white.withValues(alpha: 0.85),
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(
+    return SafeArea(
+      bottom: false,
+      child: Container(
+        height: preferredSize.height,
+        padding: EdgeInsets.symmetric(horizontal: isDesktop ? hPad : 14, vertical: 10),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1300),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                child: Container(
+                  decoration: BoxDecoration(
                     color: isDark
-                        ? AppColors.darkBorder.withValues(alpha: 0.8)
-                        : AppColors.lightBorder,
-                    width: 1,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
-                      blurRadius: 24,
-                      offset: const Offset(0, 8),
+                        ? AppColors.darkSurface.withValues(alpha: 0.8)
+                        : Colors.white.withValues(alpha: 0.88),
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder.withValues(alpha: 0.8)
+                          : AppColors.lightBorder,
+                      width: 1,
                     ),
-                  ],
-                ),
-                padding: EdgeInsets.symmetric(horizontal: isDesktop ? 20 : 12, vertical: 8),
-                child: Row(
-                  children: [
-                    const _Logo(),
-                    if (isDesktop) ...[
-                      const SizedBox(width: 20),
-                      PulseBadge(
-                        label: currentLanguage.availableBadge,
-                        dotColor: AppColors.emerald,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
                       ),
                     ],
-                    const Spacer(),
-                    if (isDesktop) ...[
-                      for (final item in items)
-                        _NavLink(
-                          label: item.label.toUpperCase(),
-                          onTap: () => onNavTap(item.sectionKey),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: isDesktop ? 18 : 12, vertical: 6),
+                  child: Row(
+                    children: [
+                      const _Logo(),
+                      if (isDesktop && width >= 1350) ...[
+                        const SizedBox(width: 14),
+                        PulseBadge(
+                          label: currentLanguage == AppLanguage.bengali
+                              ? 'উপলব্ধ'
+                              : (currentLanguage == AppLanguage.hindi ? 'उपलब्ध' : 'AVAILABLE'),
+                          dotColor: AppColors.emerald,
                         ),
-                      const SizedBox(width: 12),
-                      const _LanguageSelector(),
-                      const SizedBox(width: 12),
-                      _ThemeToggle(
-                        isDark: themeController.isDark,
-                        onToggle: themeController.toggle,
-                      ),
-                      const SizedBox(width: 12),
-                      _ResumeAction(
-                        assetPath: profile.resumeAssetPath,
-                        fileName: profile.resumeDownloadFileName,
-                      ),
-                    ] else ...[
-                      _ThemeToggle(
-                        isDark: themeController.isDark,
-                        onToggle: themeController.toggle,
-                      ),
-                      const SizedBox(width: 4),
-                      IconButton(
-                        icon: const Icon(Icons.menu_rounded, size: 24),
-                        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                        onPressed: () => _openMobileMenu(context, ref, profile),
-                      ),
+                      ],
+                      const Spacer(),
+                      if (isDesktop) ...[
+                        for (final item in items)
+                          _NavLink(
+                            label: item.label.toUpperCase(),
+                            onTap: () => onNavTap(item.sectionKey),
+                          ),
+                        const SizedBox(width: 6),
+                        const _LanguageSelector(),
+                        const SizedBox(width: 6),
+                        _ThemeToggle(
+                          isDark: themeController.isDark,
+                          onToggle: themeController.toggle,
+                        ),
+                        const SizedBox(width: 8),
+                        _ResumeAction(
+                          assetPath: profile.resumeAssetPath,
+                          fileName: profile.resumeDownloadFileName,
+                        ),
+                      ] else ...[
+                        _ThemeToggle(
+                          isDark: themeController.isDark,
+                          onToggle: themeController.toggle,
+                        ),
+                        const SizedBox(width: 4),
+                        IconButton(
+                          icon: const Icon(Icons.menu_rounded, size: 24),
+                          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                          onPressed: () => _openMobileMenu(context, ref, profile),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -322,6 +329,7 @@ class _Logo extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final width = MediaQuery.sizeOf(context).width;
+    final isVeryCompact = width < 360;
     final isCompact = width < 500;
 
     return Row(
@@ -352,13 +360,13 @@ class _Logo extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 8),
         Text(
-          isCompact ? 'JAYAJIT' : 'JAYAJIT DUTTA',
+          isVeryCompact ? 'JAYAJIT' : (isCompact ? 'JAYAJIT' : 'JAYAJIT DUTTA'),
           style: theme.textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w900,
-            letterSpacing: isCompact ? 1.4 : 2.0,
-            fontSize: isCompact ? 13 : 14,
+            letterSpacing: isVeryCompact ? 1.0 : (isCompact ? 1.4 : 2.0),
+            fontSize: isVeryCompact ? 12 : (isCompact ? 13 : 14),
           ),
         ),
       ],
@@ -442,7 +450,7 @@ class _ResumeAction extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         ),
       ),
@@ -472,7 +480,7 @@ class _NavLinkState extends State<_NavLink> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 180),
             style: (theme.textTheme.labelMedium ?? const TextStyle()).copyWith(

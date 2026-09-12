@@ -30,6 +30,9 @@ class Responsive {
     return DeviceType.ultrawide;
   }
 
+  static bool isCompactMobile(BuildContext context) =>
+      MediaQuery.sizeOf(context).width < 380;
+
   static bool isMobile(BuildContext context) =>
       MediaQuery.sizeOf(context).width < Breakpoints.mobile;
 
@@ -41,21 +44,26 @@ class Responsive {
   static bool isDesktopOrWider(BuildContext context) =>
       MediaQuery.sizeOf(context).width >= Breakpoints.tablet;
 
+  /// True when the viewport is wide enough for the full horizontal navbar (>= 1150px).
+  static bool isDesktopNavBar(BuildContext context) =>
+      MediaQuery.sizeOf(context).width >= 1150;
+
   /// Horizontal page padding that scales with viewport size.
   static double pagePadding(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
+    if (width < 380) return 16;
     if (width < Breakpoints.mobile) return 20;
-    if (width < Breakpoints.tablet) return 40;
-    if (width < Breakpoints.laptop) return 64;
-    if (width < Breakpoints.desktop) return 96;
-    return 160;
+    if (width < Breakpoints.tablet) return 32;
+    if (width < Breakpoints.laptop) return 40;
+    if (width < Breakpoints.desktop) return 64;
+    return 80;
   }
 
   /// Caps content width on very large / ultrawide screens so text
   /// doesn't stretch edge-to-edge.
   static double maxContentWidth(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    if (width >= Breakpoints.desktop) return 1400;
+    if (width >= Breakpoints.desktop) return 1320;
     return width;
   }
 

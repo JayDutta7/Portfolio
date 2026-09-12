@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/responsive.dart';
 import '../../../domain/models/profile_models.dart';
 import '../common/glass_container.dart';
 import '../common/gradient_text.dart';
@@ -13,8 +12,6 @@ class StatsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = Responsive.isDesktopOrWider(context);
-
     // High impact metrics mapped from localized profile data
     final statsData = [
       {
@@ -52,16 +49,28 @@ class StatsSection extends StatelessWidget {
       verticalPadding: 40,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final columns = isDesktop ? 4 : (constraints.maxWidth > 600 ? 2 : 1);
+          final width = constraints.maxWidth;
+          final int columns;
+          final double aspectRatio;
+          if (width >= 1100) {
+            columns = 4;
+            aspectRatio = 1.25;
+          } else if (width >= 620) {
+            columns = 2;
+            aspectRatio = 1.4;
+          } else {
+            columns = 1;
+            aspectRatio = 1.65;
+          }
 
           return GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: columns,
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20,
-              childAspectRatio: isDesktop ? 1.15 : (constraints.maxWidth > 600 ? 1.25 : 1.45),
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: aspectRatio,
             ),
             itemCount: statsData.length,
             itemBuilder: (context, index) {
@@ -102,7 +111,7 @@ class _StatBentoCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return GlassContainer(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       glowColor: colors.first,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,16 +121,16 @@ class _StatBentoCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   color: colors.first.withValues(alpha: isDark ? 0.15 : 0.08),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: colors.first.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
-                child: Icon(icon, color: colors.first, size: 18),
+                child: Icon(icon, color: colors.first, size: 16),
               ),
               Container(
                 width: 6,
@@ -133,22 +142,25 @@ class _StatBentoCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                GradientText(
-                  value,
-                  colors: colors,
-                  style: theme.textTheme.displayMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 38,
-                    height: 1.0,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: GradientText(
+                    value,
+                    colors: colors,
+                    style: theme.textTheme.displayMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 34,
+                      height: 1.0,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Text(
                   label,
                   maxLines: 2,
@@ -156,7 +168,7 @@ class _StatBentoCard extends StatelessWidget {
                   style: theme.textTheme.labelLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                     fontSize: 11,
-                    letterSpacing: 1.0,
+                    letterSpacing: 0.8,
                   ),
                 ),
                 const SizedBox(height: 2),

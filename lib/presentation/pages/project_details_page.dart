@@ -30,12 +30,16 @@ class ProjectDetailsPage extends StatelessWidget {
     final isFlutter = project.stackSummary.contains('Flutter');
     final accentColor = isFlutter ? AppColors.flutterBlue : AppColors.androidGreen;
 
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+    final isCompact = width < 380;
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 380,
+            expandedHeight: isMobile ? 240 : 380,
             pinned: true,
             backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
             leading: IconButton(
@@ -51,11 +55,19 @@ class ProjectDetailsPage extends StatelessWidget {
               ),
             ),
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                project.title,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
+              titlePadding: EdgeInsets.symmetric(horizontal: isMobile ? 56 : 32, vertical: 16),
+              title: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  project.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    fontSize: isMobile ? (isCompact ? 16 : 18) : 24,
+                  ),
                 ),
               ),
               background: Stack(
@@ -217,10 +229,13 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 56),
+      padding: EdgeInsets.only(bottom: isMobile ? 32 : 56),
       child: GlassContainer(
-        padding: const EdgeInsets.all(36),
+        padding: EdgeInsets.all(isMobile ? 20 : 36),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -238,7 +253,7 @@ class _Section extends StatelessWidget {
               Text(
                 content!,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  fontSize: 17,
+                  fontSize: isMobile ? 15 : 17,
                   height: 1.7,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
                 ),

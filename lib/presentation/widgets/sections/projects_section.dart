@@ -111,13 +111,16 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
     final isFlutter = widget.project.stackSummary.contains('Flutter');
     final accentColor = isFlutter ? AppColors.flutterBlue : AppColors.androidGreen;
 
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 60),
       child: MouseRegion(
         onEnter: (_) => setState(() => _isHovered = true),
         onExit: (_) => setState(() => _isHovered = false),
         child: GlassContainer(
-          padding: EdgeInsets.all(isDesktop ? 48 : 28),
+          padding: EdgeInsets.all(isDesktop ? 44 : (isMobile ? 18 : 26)),
           borderColor: _isHovered ? accentColor.withValues(alpha: 0.5) : null,
           glowColor: accentColor,
           child: Flex(
@@ -470,6 +473,9 @@ class _PrimaryAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 640;
+
     return Container(
       decoration: BoxDecoration(
         color: color,
@@ -486,22 +492,28 @@ class _PrimaryAction extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(100),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  letterSpacing: 1.2,
-                  fontSize: 12,
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 18 : 24,
+            vertical: isMobile ? 12 : 14,
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: 1.2,
+                    fontSize: 12,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              const Icon(Icons.arrow_forward_rounded, size: 16, color: Colors.white),
-            ],
+                const SizedBox(width: 8),
+                const Icon(Icons.arrow_forward_rounded, size: 16, color: Colors.white),
+              ],
+            ),
           ),
         ),
       ),
