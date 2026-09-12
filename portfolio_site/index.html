@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Jayajit Dutta | Senior Mobile Application Developer (Android, Kotlin, Flutter)</title>
+  <meta name="description" content="Senior Mobile Application Developer with 9+ years of experience architecting and deploying scalable Native Android (Kotlin, Jetpack Compose) and cross-platform Flutter applications." />
+  <meta name="keywords" content="Jayajit Dutta, Android Developer, Kotlin Developer, Flutter Developer, Jetpack Compose, Mobile App Architect, Clean Architecture, MVVM" />
+  <meta name="theme-color" content="#0a0d14" />
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Jayajit Dutta | Senior Mobile Application Developer" />
+  <meta property="og:description" content="Native Android (Kotlin, Jetpack Compose) & Flutter Specialist with 9+ years of building production enterprise apps." />
+  <meta property="og:image" content="assets/images/picture.jpg" />
+
+  <!-- Preconnect & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-base text-main antialiased selection-accent">
+
+  <!-- Ambient Particle Canvas for Hero Background -->
+  <canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+  <!-- Sticky Dynamic Navbar -->
+  <header id="mainNavbar" class="navbar-wrapper" role="banner">
+    <div class="nav-container">
+      <a href="#hero" class="brand-logo" aria-label="Jayajit Dutta Portfolio">
+        <div class="logo-avatar">
+          <img src="assets/images/picture.jpg" alt="Jayajit Dutta" width="40" height="40" />
+        </div>
+        <div class="logo-meta">
+          <span class="logo-title">Jayajit Dutta</span>
+          <span class="logo-subtitle">Sr. Mobile Developer</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="nav-menu" role="navigation" aria-label="Main Navigation">
+        <a href="#hero" class="nav-link active">Home</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#skills" class="nav-link">Skills</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <!-- Recruiter Actions -->
+      <div class="nav-actions">
+        <div class="status-pill hide-on-mobile">
+          <span class="status-dot"></span>
+          <span class="status-text">Available for Hire</span>
+        </div>
+        <a href="assets/resume/Jayajit_Dutta_CV.pdf" download="Jayajit_Dutta_CV.pdf" class="btn btn-primary btn-sm" id="navResumeBtn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Resume</span>
+        </a>
+
+        <!-- Mobile Drawer Toggle Button -->
+        <button class="menu-toggle" id="menuToggleBtn" aria-label="Toggle navigation menu" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Drawer -->
+    <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+      <nav class="mobile-nav-links">
+        <a href="#hero" class="mobile-link">Home</a>
+        <a href="#about" class="mobile-link">About</a>
+        <a href="#skills" class="mobile-link">Skills</a>
+        <a href="#projects" class="mobile-link">Projects</a>
+        <a href="#experience" class="mobile-link">Experience</a>
+        <a href="#contact" class="mobile-link">Contact</a>
+        <div class="drawer-divider"></div>
+        <a href="assets/resume/Jayajit_Dutta_CV.pdf" download class="btn btn-primary btn-block">Download CV (PDF)</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content" role="main">
+
+    <!-- HERO SECTION (Instant Render, High-Impact Recruiter Hook) -->
+    <section id="hero" class="hero-section">
+      <div class="container hero-container">
+        
+        <div class="hero-badge-wrap">
+          <div class="hero-badge neumorphic-pill">
+            <span class="badge-icon-sparkle">✦</span>
+            <span class="badge-text">9+ Years Building Production Mobile Apps</span>
+          </div>
+        </div>
+
+        <h1 class="hero-headline">
+          Crafting High-Performance <br class="hide-on-mobile" />
+          <span class="gradient-text">Native Android & Flutter</span> Apps
+        </h1>
+
+        <!-- Dynamic Typing/Swapping Tech Stack Effect -->
+        <div class="dynamic-stack-wrap">
+          <span class="stack-prefix">Specialized in</span>
+          <span class="dynamic-text-pill" id="dynamicStackText">Android & Kotlin</span>
+          <span class="cursor-blink">|</span>
+        </div>
+
+        <p class="hero-subtext">
+          Results-driven Senior Mobile Application Developer delivering scalable, clean architecture applications. 
+          Proven track record of improving runtime performance by <strong>20%</strong> and reducing crash rates by <strong>20%</strong> through disciplined Kotlin migration, Jetpack Compose, and Flutter cross-platform engineering.
+        </p>
+
+        <!-- CTA Buttons with tactile micro-interactions -->
+        <div class="hero-cta-group">
+          <a href="#projects" class="btn btn-primary btn-lg" id="viewProjectsBtn">
+            <span>Explore Projects</span>
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+
+          <a href="assets/resume/Jayajit_Dutta_CV.pdf" download="Jayajit_Dutta_CV.pdf" class="btn btn-secondary btn-lg" id="downloadCvBtn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Download CV</span>
+          </a>
+
+          <button class="btn btn-ghost btn-lg" id="copyEmailHeroBtn" data-email="jayajit1989@gmail.com">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>Copy Email</span>
+          </button>
+        </div>
+
+        <!-- Social Proof Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card neumorphic-card">
+            <div class="metric-value">9+</div>
+            <div class="metric-label">Years Experience</div>
+            <div class="metric-sub">Enterprise & Consumer</div>
+          </div>
+          <div class="metric-card neumorphic-card">
+            <div class="metric-value">20%</div>
+            <div class="metric-label">Speed Boost</div>
+            <div class="metric-sub">Runtime Optimization</div>
+          </div>
+          <div class="metric-card neumorphic-card">
+            <div class="metric-value">-20%</div>
+            <div class="metric-label">Crash Rate</div>
+            <div class="metric-sub">Java to Kotlin Migration</div>
+          </div>
+          <div class="metric-card neumorphic-card">
+            <div class="metric-value">10+</div>
+            <div class="metric-label">Production Apps</div>
+            <div class="metric-sub">Play Store & Enterprise</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ABOUT & ARCHITECTURE SNAPSHOT -->
+    <section id="about" class="section reveal">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge neumorphic-pill">Executive Summary</div>
+          <h2 class="section-title">Senior Engineer with Full Lifecycle Ownership</h2>
+          <p class="section-subtitle">
+            Leading engineering squads from whiteboard architecture to Google Play Store and App Store deployment.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <!-- Profile Card -->
+          <div class="about-profile-card neumorphic-card">
+            <div class="about-avatar-wrap">
+              <img src="assets/images/picture.jpg" alt="Jayajit Dutta" class="about-avatar" loading="lazy" />
+              <div class="avatar-tech-badge android-badge" title="Android Specialist">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993 0 .5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4111 13.8563 8 12 8s-3.5902.4111-5.1367 1.0507L4.841 5.4477a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
+              </div>
+              <div class="avatar-tech-badge flutter-badge" title="Flutter Specialist">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.314 0L2.3 12 6 15.7 21.686 0h-7.372zm.014 11.072L7.857 17.53 14.328 24H21.7l-6.457-6.457L21.7 11.072h-7.372z"/></svg>
+              </div>
+            </div>
+
+            <h3 class="about-name">Jayajit Dutta</h3>
+            <p class="about-role">Senior Mobile Application Developer</p>
+            <p class="about-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              Serampore, West Bengal, India
+            </p>
+
+            <div class="contact-pills-row">
+              <a href="mailto:jayajit1989@gmail.com" class="chip-action" title="Send Email">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <span>jayajit1989@gmail.com</span>
+              </a>
+              <a href="tel:+917980726164" class="chip-action" title="Call Phone">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                <span>+91 7980726164</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Narrative and Key Architectural Strengths -->
+          <div class="about-narrative-card neumorphic-card">
+            <h4 class="narrative-heading">Engineering Discipline & Architecture First</h4>
+            <p class="narrative-text">
+              Over the past 9 years, I have architected and deployed Native Android and cross-platform Flutter applications end-to-end. My core expertise centers on <strong>Clean Architecture</strong>, <strong>MVVM</strong>, <strong>Coroutines & Flow</strong>, and <strong>Riverpod/Provider</strong> state management.
+            </p>
+            <p class="narrative-text">
+              At <strong>Shyam Steel Industries</strong>, I spearheaded the complete codebase modernization from legacy Java to modern Kotlin, slashing app crash rates by 20% while elevating runtime rendering speed. I have led and mentored a 3-engineer Agile squad, conducting rigorous code reviews, optimizing offline-first SQLite/Room sync, and streamlining automated releases.
+            </p>
+
+            <div class="architecture-pills-wrap">
+              <span class="arch-tag">Clean Architecture</span>
+              <span class="arch-tag">MVVM</span>
+              <span class="arch-tag">Offline-First Sync</span>
+              <span class="arch-tag">Jetpack Compose</span>
+              <span class="arch-tag">Kotlin Coroutines</span>
+              <span class="arch-tag">Flutter & Riverpod</span>
+              <span class="arch-tag">REST APIs & Retrofit</span>
+              <span class="arch-tag">Room DB & SQLite</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS SECTION (Smooth Scroll Reveal) -->
+    <section id="skills" class="section reveal">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge neumorphic-pill">Core Competencies</div>
+          <h2 class="section-title">Technical Expertise & Tooling</h2>
+          <p class="section-subtitle">
+            Disciplined mobile architecture across Native Android, Modern Flutter, and Backend API integrations.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          
+          <!-- Category 1: Native Android -->
+          <div class="skill-category-card neumorphic-card">
+            <div class="category-header">
+              <div class="category-icon-box android-color">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993 0 .5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4111 13.8563 8 12 8s-3.5902.4111-5.1367 1.0507L4.841 5.4477a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
+              </div>
+              <h3 class="category-name">Native Android</h3>
+            </div>
+            <div class="skills-tag-wrap">
+              <span class="skill-chip">Kotlin</span>
+              <span class="skill-chip">Java</span>
+              <span class="skill-chip">Jetpack Compose</span>
+              <span class="skill-chip">Coroutines & Flow</span>
+              <span class="skill-chip">Android SDK</span>
+              <span class="skill-chip">WorkManager</span>
+              <span class="skill-chip">CameraX</span>
+            </div>
+          </div>
+
+          <!-- Category 2: Flutter & Cross-Platform -->
+          <div class="skill-category-card neumorphic-card">
+            <div class="category-header">
+              <div class="category-icon-box flutter-color">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.314 0L2.3 12 6 15.7 21.686 0h-7.372zm.014 11.072L7.857 17.53 14.328 24H21.7l-6.457-6.457L21.7 11.072h-7.372z"/></svg>
+              </div>
+              <h3 class="category-name">Cross-Platform (Flutter)</h3>
+            </div>
+            <div class="skills-tag-wrap">
+              <span class="skill-chip">Flutter SDK</span>
+              <span class="skill-chip">Dart</span>
+              <span class="skill-chip">Riverpod</span>
+              <span class="skill-chip">Provider</span>
+              <span class="skill-chip">Platform Channels</span>
+              <span class="skill-chip">Custom Renderers</span>
+              <span class="skill-chip">iOS Deployment</span>
+            </div>
+          </div>
+
+          <!-- Category 3: Architecture & State -->
+          <div class="skill-category-card neumorphic-card">
+            <div class="category-header">
+              <div class="category-icon-box arch-color">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              </div>
+              <h3 class="category-name">Architecture & Patterns</h3>
+            </div>
+            <div class="skills-tag-wrap">
+              <span class="skill-chip">Clean Architecture</span>
+              <span class="skill-chip">MVVM</span>
+              <span class="skill-chip">Repository Pattern</span>
+              <span class="skill-chip">Dependency Injection (Hilt/Koin)</span>
+              <span class="skill-chip">StateFlow & SharedFlow</span>
+              <span class="skill-chip">Offline Sync</span>
+            </div>
+          </div>
+
+          <!-- Category 4: Networking & Storage -->
+          <div class="skill-category-card neumorphic-card">
+            <div class="category-header">
+              <div class="category-icon-box storage-color">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+              </div>
+              <h3 class="category-name">Data & Networking</h3>
+            </div>
+            <div class="skills-tag-wrap">
+              <span class="skill-chip">Room DB</span>
+              <span class="skill-chip">SQLite / sqflite</span>
+              <span class="skill-chip">Retrofit</span>
+              <span class="skill-chip">Dio</span>
+              <span class="skill-chip">REST APIs</span>
+              <span class="skill-chip">RxJava</span>
+              <span class="skill-chip">Postman</span>
+            </div>
+          </div>
+
+          <!-- Category 5: Cloud & Hardware Integrations -->
+          <div class="skill-category-card neumorphic-card">
+            <div class="category-header">
+              <div class="category-icon-box cloud-color">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+              </div>
+              <h3 class="category-name">Cloud & Specialized</h3>
+            </div>
+            <div class="skills-tag-wrap">
+              <span class="skill-chip">Firebase Auth & Firestore</span>
+              <span class="skill-chip">FCM Push Notifications</span>
+              <span class="skill-chip">GPS & Geofencing</span>
+              <span class="skill-chip">Google ML Kit</span>
+              <span class="skill-chip">OpenCV</span>
+              <span class="skill-chip">Crashlytics</span>
+            </div>
+          </div>
+
+          <!-- Category 6: Team & Agile Leadership -->
+          <div class="skill-category-card neumorphic-card">
+            <div class="category-header">
+              <div class="category-icon-box team-color">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              </div>
+              <h3 class="category-name">Engineering Leadership</h3>
+            </div>
+            <div class="skills-tag-wrap">
+              <span class="skill-chip">Sprint Planning</span>
+              <span class="skill-chip">Squad Mentorship (3 Devs)</span>
+              <span class="skill-chip">Code Reviews</span>
+              <span class="skill-chip">Git & GitHub Actions</span>
+              <span class="skill-chip">CI/CD Automation</span>
+              <span class="skill-chip">Agile / Scrum</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS SECTION (Realistic Mobile Mockups, Tech Chips, CTAs) -->
+    <section id="projects" class="section reveal">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge neumorphic-pill">Production Portfolio</div>
+          <h2 class="section-title">Featured Mobile Applications</h2>
+          <p class="section-subtitle">
+            Production-grade native Android and Flutter applications built with Clean Architecture, offline synchronization, and responsive UI.
+          </p>
+
+          <!-- Interactive Filter Tabs -->
+          <div class="filter-tabs" role="tablist" aria-label="Filter Projects">
+            <button class="filter-btn active" data-filter="all">All Projects (6)</button>
+            <button class="filter-btn" data-filter="android">Native Android (3)</button>
+            <button class="filter-btn" data-filter="flutter">Flutter & Cross-Platform (3)</button>
+          </div>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+
+          <!-- PROJECT 1: Ghareka PMT -->
+          <article class="project-card neumorphic-card" data-category="android">
+            <div class="device-mockup-wrapper">
+              <div class="phone-frame">
+                <div class="phone-speaker"></div>
+                <div class="phone-camera"></div>
+                <div class="phone-screen">
+                  <img src="assets/images/ghareka_pmt.jpeg" alt="Ghareka PMT Mobile App Screenshot" class="phone-screenshot" loading="lazy" />
+                  <div class="phone-glass-glare"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-content">
+              <div class="project-meta-row">
+                <span class="project-tag tag-android">Native Android</span>
+                <span class="project-period">2025 – Present</span>
+              </div>
+
+              <h3 class="project-title">Ghareka PMT</h3>
+              <p class="project-summary">
+                Enterprise field CRM for project site check-ins, automated check-outs, GPS location tracking, and real-time daily attendance automation.
+              </p>
+
+              <div class="project-highlights">
+                <span class="highlight-item">✓ Sole / Lead Android developer owning architecture and delivery</span>
+                <span class="highlight-item">✓ Built with Jetpack Compose, Room DB & WorkManager background sync</span>
+              </div>
+
+              <div class="tech-stack-chips">
+                <span class="tech-chip">Android SDK</span>
+                <span class="tech-chip">Kotlin</span>
+                <span class="tech-chip">Jetpack Compose</span>
+                <span class="tech-chip">Clean Arch</span>
+                <span class="tech-chip">Room DB</span>
+                <span class="tech-chip">Retrofit</span>
+                <span class="tech-chip">WorkManager</span>
+              </div>
+
+              <div class="project-actions">
+                <a href="https://pmt.ghareka.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" aria-label="View Ghareka PMT Website">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  <span>Live Portal</span>
+                </a>
+                <a href="https://github.com/JayDutta7" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="View GitHub Repository">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                  <span>GitHub</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 2: Ghareka Consumer App -->
+          <article class="project-card neumorphic-card" data-category="flutter">
+            <div class="device-mockup-wrapper">
+              <div class="phone-frame">
+                <div class="phone-speaker"></div>
+                <div class="phone-camera"></div>
+                <div class="phone-screen">
+                  <img src="assets/images/ghareka.jpeg" alt="Ghareka Consumer App Screenshot" class="phone-screenshot" loading="lazy" />
+                  <div class="phone-glass-glare"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-content">
+              <div class="project-meta-row">
+                <span class="project-tag tag-flutter">Flutter Cross-Platform</span>
+                <span class="project-period">2025 – Present</span>
+              </div>
+
+              <h3 class="project-title">Ghareka Consumer App</h3>
+              <p class="project-summary">
+                Home construction milestone tracking mobile app with real-time photographic updates, timeline estimations, and homeowner dashboards.
+              </p>
+
+              <div class="project-highlights">
+                <span class="highlight-item">✓ Built cross-platform client with Flutter, Riverpod, and REST APIs</span>
+                <span class="highlight-item">✓ Integrated Firebase push notifications and offline data caching</span>
+              </div>
+
+              <div class="tech-stack-chips">
+                <span class="tech-chip">Flutter</span>
+                <span class="tech-chip">Dart</span>
+                <span class="tech-chip">Riverpod</span>
+                <span class="tech-chip">Clean Arch</span>
+                <span class="tech-chip">REST APIs</span>
+                <span class="tech-chip">Firebase</span>
+                <span class="tech-chip">iOS & Android</span>
+              </div>
+
+              <div class="project-actions">
+                <a href="https://play.google.com/store/apps/details?id=com.ghreka.consumerapp" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" aria-label="Download from Google Play Store">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a2.38 2.38 0 0 1-.61-1.636V3.45c0-.645.234-1.22.609-1.636zm11.603 11.603l2.673-2.674-12.02-6.94 9.347 9.614zm0-2.834L5.865 22.2l12.02-6.94-2.673-2.674zm1.414-1.414l3.187 1.84c1.05.606 1.05 1.594 0 2.2l-3.187 1.84-2.45-2.44 2.45-2.44z"/></svg>
+                  <span>Play Store</span>
+                </a>
+                <a href="https://apps.apple.com/app/id6467111338" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Download from Apple App Store">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.54c.66-.82 1.11-1.96.99-3.1-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.88-1 3 .01 0 .09.01.14.01 1.02 0 2.01-.53 2.67-1.35z"/></svg>
+                  <span>App Store</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 3: Retail CRM -->
+          <article class="project-card neumorphic-card" data-category="android">
+            <div class="device-mockup-wrapper">
+              <div class="phone-frame">
+                <div class="phone-speaker"></div>
+                <div class="phone-camera"></div>
+                <div class="phone-screen">
+                  <img src="assets/images/crm.jpeg" alt="Retail CRM App Screenshot" class="phone-screenshot" loading="lazy" />
+                  <div class="phone-glass-glare"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-content">
+              <div class="project-meta-row">
+                <span class="project-tag tag-android">Native Android</span>
+                <span class="project-period">2021 – 2024</span>
+              </div>
+
+              <h3 class="project-title">Retail CRM</h3>
+              <p class="project-summary">
+                Large-scale retail field management app featuring resilient offline data caching, bi-directional server synchronization, and automated dealer GPS workflows.
+              </p>
+
+              <div class="project-highlights">
+                <span class="highlight-item">✓ Designed offline-first caching reducing field connectivity downtime</span>
+                <span class="highlight-item">✓ Engineered with Kotlin, Room DB, RxJava, and Retrofit</span>
+              </div>
+
+              <div class="tech-stack-chips">
+                <span class="tech-chip">Kotlin</span>
+                <span class="tech-chip">MVVM</span>
+                <span class="tech-chip">Clean Arch</span>
+                <span class="tech-chip">Room DB</span>
+                <span class="tech-chip">Retrofit</span>
+                <span class="tech-chip">RxJava</span>
+                <span class="tech-chip">Coroutines</span>
+              </div>
+
+              <div class="project-actions">
+                <a href="https://github.com/JayDutta7" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="View on GitHub">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                  <span>GitHub</span>
+                </a>
+                <button class="btn btn-ghost btn-sm" onclick="alert('Enterprise deployment deployed internally across retail distribution networks.')">
+                  <span>Internal Release</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 4: Pariwar App -->
+          <article class="project-card neumorphic-card" data-category="flutter">
+            <div class="device-mockup-wrapper">
+              <div class="phone-frame">
+                <div class="phone-speaker"></div>
+                <div class="phone-camera"></div>
+                <div class="phone-screen">
+                  <img src="assets/images/pariwar.webp" alt="Pariwar Mobile App Screenshot" class="phone-screenshot" loading="lazy" />
+                  <div class="phone-glass-glare"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-content">
+              <div class="project-meta-row">
+                <span class="project-tag tag-flutter">Flutter Cross-Platform</span>
+                <span class="project-period">2024 – 2025</span>
+              </div>
+
+              <h3 class="project-title">Pariwar App</h3>
+              <p class="project-summary">
+                Multi-tier distributor and dealer collaboration platform featuring inventory management, purchase order flows, and live reward point tracking.
+              </p>
+
+              <div class="project-highlights">
+                <span class="highlight-item">✓ Built distributor workflows with Riverpod and real-time push</span>
+                <span class="highlight-item">✓ Released across iOS App Store and Google Play Store</span>
+              </div>
+
+              <div class="tech-stack-chips">
+                <span class="tech-chip">Flutter</span>
+                <span class="tech-chip">Dart</span>
+                <span class="tech-chip">Riverpod</span>
+                <span class="tech-chip">Firebase Push</span>
+                <span class="tech-chip">REST APIs</span>
+                <span class="tech-chip">Offline Sync</span>
+              </div>
+
+              <div class="project-actions">
+                <a href="https://play.google.com/store/apps/details?id=com.shyamsteel.pariwar" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" aria-label="Download from Google Play Store">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a2.38 2.38 0 0 1-.61-1.636V3.45c0-.645.234-1.22.609-1.636zm11.603 11.603l2.673-2.674-12.02-6.94 9.347 9.614zm0-2.834L5.865 22.2l12.02-6.94-2.673-2.674zm1.414-1.414l3.187 1.84c1.05.606 1.05 1.594 0 2.2l-3.187 1.84-2.45-2.44 2.45-2.44z"/></svg>
+                  <span>Play Store</span>
+                </a>
+                <a href="https://apps.apple.com/app/id1635952518" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Download from Apple App Store">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.54c.66-.82 1.11-1.96.99-3.1-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.88-1 3 .01 0 .09.01.14.01 1.02 0 2.01-.53 2.67-1.35z"/></svg>
+                  <span>App Store</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 5: Captain Logistics -->
+          <article class="project-card neumorphic-card" data-category="android">
+            <div class="device-mockup-wrapper">
+              <div class="phone-frame">
+                <div class="phone-speaker"></div>
+                <div class="phone-camera"></div>
+                <div class="phone-screen phone-placeholder-screen">
+                  <div class="placeholder-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                  </div>
+                  <span class="placeholder-text">Fleet Tracking UI</span>
+                  <div class="phone-glass-glare"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-content">
+              <div class="project-meta-row">
+                <span class="project-tag tag-android">Native Android</span>
+                <span class="project-period">2022 – 2024</span>
+              </div>
+
+              <h3 class="project-title">Captain Logistics</h3>
+              <p class="project-summary">
+                Mission-critical logistics and supply chain application enabling live GPS tracking, delivery dispatch validation, and driver manifest handling.
+              </p>
+
+              <div class="project-highlights">
+                <span class="highlight-item">✓ High-precision battery-optimized GPS tracking algorithms</span>
+                <span class="highlight-item">✓ Robust offline-first SQLite sync for remote delivery zones</span>
+              </div>
+
+              <div class="tech-stack-chips">
+                <span class="tech-chip">Android SDK</span>
+                <span class="tech-chip">Kotlin</span>
+                <span class="tech-chip">MVVM</span>
+                <span class="tech-chip">Clean Arch</span>
+                <span class="tech-chip">Room DB</span>
+                <span class="tech-chip">Retrofit</span>
+                <span class="tech-chip">RxJava</span>
+              </div>
+
+              <div class="project-actions">
+                <a href="https://github.com/JayDutta7" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="View on GitHub">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                  <span>GitHub</span>
+                </a>
+                <button class="btn btn-ghost btn-sm" onclick="alert('Enterprise logistics product with closed internal fleet distribution.')">
+                  <span>Enterprise Supply</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 6: Buildistan -->
+          <article class="project-card neumorphic-card" data-category="flutter">
+            <div class="device-mockup-wrapper">
+              <div class="phone-frame">
+                <div class="phone-speaker"></div>
+                <div class="phone-camera"></div>
+                <div class="phone-screen">
+                  <img src="assets/images/buildistan.jpeg" alt="Buildistan App Screenshot" class="phone-screenshot" loading="lazy" />
+                  <div class="phone-glass-glare"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-content">
+              <div class="project-meta-row">
+                <span class="project-tag tag-flutter">Flutter Cross-Platform</span>
+                <span class="project-period">2023 – Present</span>
+              </div>
+
+              <h3 class="project-title">Buildistan B2B</h3>
+              <p class="project-summary">
+                Construction procurement marketplace connecting buyers, contractors, and suppliers for bulk ordering, quotation negotiations, and trade fulfillment.
+              </p>
+
+              <div class="project-highlights">
+                <span class="highlight-item">✓ Built marketplace catalog, carts, and quote requests with Provider</span>
+                <span class="highlight-item">✓ Live on both Google Play Store and iOS App Store</span>
+              </div>
+
+              <div class="tech-stack-chips">
+                <span class="tech-chip">Flutter</span>
+                <span class="tech-chip">Dart</span>
+                <span class="tech-chip">Provider</span>
+                <span class="tech-chip">Clean Arch</span>
+                <span class="tech-chip">REST APIs</span>
+                <span class="tech-chip">B2B Commerce</span>
+              </div>
+
+              <div class="project-actions">
+                <a href="https://play.google.com/store/apps/details?id=com.buildistan.b2b" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" aria-label="Download from Google Play Store">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a2.38 2.38 0 0 1-.61-1.636V3.45c0-.645.234-1.22.609-1.636zm11.603 11.603l2.673-2.674-12.02-6.94 9.347 9.614zm0-2.834L5.865 22.2l12.02-6.94-2.673-2.674zm1.414-1.414l3.187 1.84c1.05.606 1.05 1.594 0 2.2l-3.187 1.84-2.45-2.44 2.45-2.44z"/></svg>
+                  <span>Play Store</span>
+                </a>
+                <a href="https://apps.apple.com/app/id6472875216" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Download from Apple App Store">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.54c.66-.82 1.11-1.96.99-3.1-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.88-1 3 .01 0 .09.01.14.01 1.02 0 2.01-.53 2.67-1.35z"/></svg>
+                  <span>App Store</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION (Timeline & Recruiter Highlights) -->
+    <section id="experience" class="section reveal">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge neumorphic-pill">Career History</div>
+          <h2 class="section-title">Work Experience</h2>
+          <p class="section-subtitle">
+            9+ years of progressive engineering leadership across industry leaders and software product companies.
+          </p>
+        </div>
+
+        <div class="timeline">
+
+          <!-- Experience 1 -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-card neumorphic-card">
+              <div class="timeline-header">
+                <div>
+                  <h3 class="timeline-role">Android Developer</h3>
+                  <h4 class="timeline-company">Shyam Steel Industries Ltd.</h4>
+                </div>
+                <div class="timeline-badge-wrap">
+                  <span class="current-badge">Present</span>
+                  <span class="timeline-period">Sep 2020 – Present</span>
+                </div>
+              </div>
+
+              <ul class="timeline-bullets">
+                <li>Architected and delivered multiple high-traffic flagship mobile applications, improving overall app runtime performance by <strong>20%</strong>.</li>
+                <li>Spearheaded code migration from legacy Java to modern Kotlin, reducing application crash rates by <strong>20%</strong> and improving codebase maintainability.</li>
+                <li>Led and mentored a 3-developer Agile/Scrum engineering squad, driving sprint planning, code reviews, and on-time delivery.</li>
+                <li>Expanded technical scope into Flutter, delivering cross-platform apps with Riverpod and Firebase while maintaining native architecture standards.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Experience 2 -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-card neumorphic-card">
+              <div class="timeline-header">
+                <div>
+                  <h3 class="timeline-role">Associate Consultant</h3>
+                  <h4 class="timeline-company">DCC Services Pvt Ltd.</h4>
+                </div>
+                <span class="timeline-period">Jan 2020 – Sep 2020</span>
+              </div>
+              <p class="timeline-desc">
+                Developed customized Android client solutions for small-to-medium businesses, focusing on responsive layouts, REST API integrations, and local SQLite data persistence.
+              </p>
+            </div>
+          </div>
+
+          <!-- Experience 3 -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-card neumorphic-card">
+              <div class="timeline-header">
+                <div>
+                  <h3 class="timeline-role">Android Developer</h3>
+                  <h4 class="timeline-company">Matrix Media Solution Pvt. Ltd.</h4>
+                </div>
+                <span class="timeline-period">Nov 2018 – Dec 2019</span>
+              </div>
+              <p class="timeline-desc">
+                Engineered third-party REST API integrations, payment gateways, and custom Android UI libraries for diverse client mobile products.
+              </p>
+            </div>
+          </div>
+
+          <!-- Experience 4 -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-card neumorphic-card">
+              <div class="timeline-header">
+                <div>
+                  <h3 class="timeline-role">Android Developer</h3>
+                  <h4 class="timeline-company">Nat IT Solved Pvt. Ltd.</h4>
+                </div>
+                <span class="timeline-period">Jul 2017 – Oct 2018</span>
+              </div>
+              <p class="timeline-desc">
+                Engineered native Android applications, implemented local database caching (SQLite/Room), and contributed to core business features.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- RECRUITER CONTACT & CALL TO ACTION -->
+    <section id="contact" class="section reveal">
+      <div class="container">
+        <div class="contact-box neumorphic-card">
+          <div class="contact-header">
+            <div class="section-badge neumorphic-pill">Get In Touch</div>
+            <h2 class="contact-title">Ready to Elevate Your Mobile Engineering?</h2>
+            <p class="contact-subtitle">
+              Looking for a Senior Android (Kotlin) or Flutter Developer who writes clean, scalable, crash-resilient code? Let's connect.
+            </p>
+          </div>
+
+          <div class="contact-methods-grid">
+            
+            <a href="mailto:jayajit1989@gmail.com" class="contact-method-card" id="emailContactCard">
+              <div class="method-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              </div>
+              <div class="method-info">
+                <span class="method-label">Direct Email</span>
+                <span class="method-value">jayajit1989@gmail.com</span>
+              </div>
+            </a>
+
+            <a href="tel:+917980726164" class="contact-method-card" id="phoneContactCard">
+              <div class="method-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              </div>
+              <div class="method-info">
+                <span class="method-label">Direct Phone / WhatsApp</span>
+                <span class="method-value">+91 7980726164</span>
+              </div>
+            </a>
+
+            <a href="https://www.linkedin.com/in/jayajit-dutta-7124b9125" target="_blank" rel="noopener noreferrer" class="contact-method-card" id="linkedinContactCard">
+              <div class="method-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              </div>
+              <div class="method-info">
+                <span class="method-label">LinkedIn</span>
+                <span class="method-value">linkedin.com/in/jayajit-dutta-7124b9125</span>
+              </div>
+            </a>
+
+            <a href="https://github.com/JayDutta7" target="_blank" rel="noopener noreferrer" class="contact-method-card" id="githubContactCard">
+              <div class="method-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              </div>
+              <div class="method-info">
+                <span class="method-label">GitHub</span>
+                <span class="method-value">github.com/JayDutta7</span>
+              </div>
+            </a>
+
+          </div>
+
+          <!-- Bottom Action Row -->
+          <div class="contact-cta-row">
+            <a href="assets/resume/Jayajit_Dutta_CV.pdf" download class="btn btn-primary btn-lg" id="footerDownloadResumeBtn">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Download Official CV (PDF)</span>
+            </a>
+            <button class="btn btn-secondary btn-lg" id="copyEmailFooterBtn" data-email="jayajit1989@gmail.com">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copy Email to Clipboard</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer-wrap">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <span class="footer-brand">Jayajit Dutta</span>
+        <span class="footer-copy">© 2026 Jayajit Dutta. Designed & Engineered with Vanilla Web Standards.</span>
+      </div>
+      <div class="footer-links">
+        <a href="#hero" class="footer-link">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TACTILE TOAST NOTIFICATION -->
+  <div id="toastNotification" class="toast-popup" role="status" aria-live="polite">
+    <div class="toast-icon">✓</div>
+    <div class="toast-message" id="toastMessage">Email copied to clipboard!</div>
+  </div>
+
+  <!-- JavaScript (Modular, Non-blocking) -->
+  <script src="js/app.js"></script>
+</body>
+</html>
