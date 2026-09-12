@@ -9,9 +9,13 @@
   <meta name="author" content="Jayajit Dutta">
   <meta name="theme-color" content="#6366F1">
 
-  <!-- Preconnect to Google Fonts for faster font loading -->
+  <!-- High-performance preconnect & font preloading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Preload hero image -->
+  <link rel="preload" href="assets/images/picture.jpg" as="image">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -118,17 +122,25 @@
     <div class="loading-text">Initializing Engine</div>
   </div>
 
+  <script src="flutter_bootstrap.js" async></script>
   <script>
-    window.addEventListener('load', function(ev) {
-      var loading = document.querySelector('#loading-indicator');
-      if (loading) {
-        loading.style.opacity = '0';
-        setTimeout(function() {
-          loading.remove();
-        }, 300);
-      }
+    window.addEventListener('load', function() {
+      // Ensure smooth removal when Flutter completes entrypoint initialization
+      var checkFlutterLoaded = setInterval(function() {
+        if (window._flutter && window._flutter.loader) {
+          clearInterval(checkFlutterLoaded);
+        }
+      }, 50);
+
+      // Fallback timer to hide loader cleanly if load takes place
+      setTimeout(function() {
+        var loading = document.querySelector('#loading-indicator');
+        if (loading) {
+          loading.style.opacity = '0';
+          setTimeout(function() { loading.remove(); }, 300);
+        }
+      }, 800);
     });
   </script>
-  <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
