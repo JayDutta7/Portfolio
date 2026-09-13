@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/distribution_helper.dart';
+import '../../core/utils/resume_download/resume_download.dart';
 import '../viewmodels/locale_viewmodel.dart';
 import '../viewmodels/profile_viewmodel.dart';
+import '../viewmodels/theme_viewmodel.dart';
 import '../widgets/common/mesh_background.dart';
 import '../widgets/common/nav_bar.dart';
+import '../widgets/common/voice_assistant_sheet.dart';
 import '../widgets/sections/about_section.dart';
 import '../widgets/sections/architecture_section.dart';
 import '../widgets/sections/contact_section.dart';
@@ -30,6 +33,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   final _heroKey = GlobalKey();
   final _aboutKey = GlobalKey();
   final _skillsKey = GlobalKey();
+  final _architectureKey = GlobalKey();
   final _experienceKey = GlobalKey();
   final _projectsKey = GlobalKey();
   final _educationKey = GlobalKey();
@@ -72,6 +76,23 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
   }
 
+  void _openVoiceAssistant() {
+    VoiceAssistantSheet.show(
+      context,
+      onScrollToProjects: () => _scrollTo(_projectsKey),
+      onScrollToArchitecture: () => _scrollTo(_architectureKey),
+      onScrollToSkills: () => _scrollTo(_skillsKey),
+      onScrollToExperience: () => _scrollTo(_experienceKey),
+      onScrollToAbout: () => _scrollTo(_aboutKey),
+      onScrollToContact: () => _scrollTo(_contactKey),
+      onDownloadResume: () {
+        final profile = ref.read(profileViewModelProvider);
+        downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
+      },
+      onToggleTheme: () => ref.read(themeProvider.notifier).toggle(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(profileViewModelProvider);
@@ -84,6 +105,22 @@ class _HomePageState extends ConsumerState<HomePage> {
         items: _getNavItems(currentLanguage),
         onNavTap: _scrollTo,
         onLogoTap: () => _scrollTo(_heroKey),
+        onVoiceTap: _openVoiceAssistant,
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _openVoiceAssistant,
+        backgroundColor: AppColors.secondary,
+        elevation: 6,
+        icon: const Icon(Icons.mic, color: Colors.white, size: 20),
+        label: Text(
+          'Voice Nav',
+          style: GoogleFonts.plusJakartaSans(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            fontSize: 12,
+            letterSpacing: 0.3,
+          ),
+        ),
       ),
       body: Stack(
         children: [
@@ -106,7 +143,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   StatsSection(profile: profile),
                   ExperienceSection(profile: profile, sectionKey: _experienceKey),
                   ProjectsSection(profile: profile, sectionKey: _projectsKey),
-                  ArchitectureSection(profile: profile),
+                  ArchitectureSection(profile: profile, sectionKey: _architectureKey),
                   SkillsSection(profile: profile, sectionKey: _skillsKey),
                   const SetupSection(),
                   AboutSection(profile: profile, sectionKey: _aboutKey),

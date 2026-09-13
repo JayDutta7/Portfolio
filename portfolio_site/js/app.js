@@ -848,6 +848,536 @@ Date:   Sep 13 2026
   }
 
   // ==========================================================================
+  // 9. Voice-Activated Navigation Engine
+  // ==========================================================================
+  function initVoiceNavigation() {
+    const triggerBtn = document.getElementById('voiceNavTrigger');
+    const mobileVoiceBtn = document.getElementById('mobileVoiceBtn');
+    const hud = document.getElementById('voiceHud');
+    const pulseIndicator = document.getElementById('voicePulseIndicator');
+    const statusTitle = document.getElementById('voiceStatusTitle');
+    const statusBadge = document.getElementById('voiceStatusBadge');
+    const transcriptEl = document.getElementById('voiceTranscript');
+    const muteToggle = document.getElementById('voiceMuteToggle');
+    const closeBtn = document.getElementById('voiceCloseBtn');
+    const chips = document.querySelectorAll('.voice-chip');
+
+    if (!hud) return;
+
+    let isListening = false;
+    let soundFeedbackEnabled = true;
+    let recognition = null;
+    let audioCtx = null;
+    let restartTimeout = null;
+
+    // Web Audio Synthesizer for futuristic feedback chimes
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) {
+          audioCtx = new AudioCtx();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playAudioChime(type) {
+      if (!soundFeedbackEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        if (type === 'start') {
+          // Ascending futuristic blip (440Hz -> 880Hz)
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'success') {
+          // Harmonic dual-bell chord
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(587.33, now); // D5
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
+          gain.gain.setValueAtTime(0.09, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'error') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.exponentialRampToValueAtTime(180, now + 0.18);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        }
+      } catch (e) {
+        // AudioContext ignored if blocked
+      }
+    }
+
+    function speakConfirmation(text) {
+      if (!soundFeedbackEnabled || !window.speechSynthesis) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.05;
+        utterance.pitch = 1.0;
+        utterance.volume = 0.55;
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {}
+    }
+
+    // Initialize Web Speech Recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        isListening = true;
+        updateUIState('listening');
+        playAudioChime('start');
+      };
+
+      recognition.onresult = (event) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const trans = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += trans;
+          } else {
+            interimTranscript += trans;
+          }
+        }
+
+        if (interimTranscript) {
+          hud.classList.add('speaking');
+          if (transcriptEl) {
+            transcriptEl.textContent = `Hearing: "${interimTranscript.trim()}"...`;
+          }
+        }
+
+        if (finalTranscript) {
+          hud.classList.remove('speaking');
+          executeVoiceCommand(finalTranscript.trim());
+        }
+      };
+
+      recognition.onerror = (event) => {
+        if (event.error === 'not-allowed') {
+          if (statusTitle) statusTitle.textContent = 'Microphone Access Blocked';
+          if (statusBadge) statusBadge.textContent = 'PERMISSION NEEDED';
+          if (transcriptEl) {
+            transcriptEl.textContent = 'Please enable microphone permissions in your browser.';
+          }
+          stopListening();
+        } else if (event.error === 'no-speech') {
+          if (transcriptEl) {
+            transcriptEl.textContent = 'No voice detected. Say "Go to projects" or "Skills"...';
+          }
+        }
+      };
+
+      recognition.onend = () => {
+        if (isListening) {
+          try {
+            restartTimeout = setTimeout(() => {
+              if (isListening) recognition.start();
+            }, 300);
+          } catch (e) {}
+        } else {
+          updateUIState('idle');
+        }
+      };
+    }
+
+    function updateUIState(state) {
+      if (state === 'listening') {
+        hud.classList.add('active', 'listening');
+        if (triggerBtn) triggerBtn.classList.add('listening');
+        if (statusTitle) statusTitle.textContent = 'Listening...';
+        if (statusBadge) statusBadge.textContent = 'ACTIVE';
+        if (transcriptEl) transcriptEl.textContent = 'Speak a command (e.g. "Go to projects", "Download CV")...';
+      } else if (state === 'executing') {
+        hud.classList.add('active');
+        hud.classList.remove('listening');
+        if (statusTitle) statusTitle.textContent = 'Command Recognized';
+        if (statusBadge) statusBadge.textContent = 'EXECUTING';
+      } else {
+        hud.classList.remove('listening');
+        if (triggerBtn) triggerBtn.classList.remove('listening');
+        if (statusTitle) statusTitle.textContent = 'Voice Assistant';
+        if (statusBadge) statusBadge.textContent = 'READY';
+      }
+    }
+
+    function startListening() {
+      if (!recognition) {
+        openHud();
+        if (statusTitle) statusTitle.textContent = 'Voice Engine Unavailable';
+        if (statusBadge) statusBadge.textContent = 'FALLBACK';
+        if (transcriptEl) transcriptEl.textContent = 'Speech recognition not supported in this browser. Click suggestion chips below!';
+        return;
+      }
+      openHud();
+      try {
+        isListening = true;
+        recognition.start();
+      } catch (e) {}
+    }
+
+    function stopListening() {
+      isListening = false;
+      clearTimeout(restartTimeout);
+      if (recognition) {
+        try {
+          recognition.stop();
+        } catch (e) {}
+      }
+      updateUIState('idle');
+    }
+
+    function toggleListening() {
+      if (isListening) {
+        stopListening();
+        if (transcriptEl) transcriptEl.textContent = 'Voice navigation paused. Click microphone to resume.';
+      } else {
+        startListening();
+      }
+    }
+
+    function openHud() {
+      hud.classList.add('active');
+      hud.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeHud() {
+      stopListening();
+      hud.classList.remove('active', 'listening', 'speaking');
+      hud.setAttribute('aria-hidden', 'true');
+    }
+
+    // Scroll & Highlight helper
+    function scrollToSection(selector, name) {
+      const el = document.querySelector(selector);
+      if (!el) return false;
+
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.classList.add('voice-highlight-target');
+      setTimeout(() => el.classList.remove('voice-highlight-target'), 2000);
+
+      if (transcriptEl) transcriptEl.textContent = `Navigated to ${name}!`;
+      updateUIState('executing');
+      playAudioChime('success');
+      speakConfirmation(`Navigating to ${name}`);
+
+      setTimeout(() => {
+        if (isListening) updateUIState('listening');
+      }, 1500);
+
+      return true;
+    }
+
+    // Natural Language Command Parser
+    function executeVoiceCommand(commandText) {
+      const cmd = commandText.toLowerCase().trim();
+      if (!cmd) return;
+
+      if (transcriptEl) {
+        transcriptEl.textContent = `"${commandText}"`;
+      }
+
+      // 1. Specific Projects
+      if (cmd.includes('ghareka pmt')) {
+        openSpecificCaseStudy('ghareka_pmt', 'Ghareka PMT');
+        return;
+      }
+      if (cmd.includes('ghareka')) {
+        openSpecificCaseStudy('ghareka', 'Ghareka App');
+        return;
+      }
+      if (cmd.includes('buildistan')) {
+        openSpecificCaseStudy('buildistan', 'Buildistan');
+        return;
+      }
+      if (cmd.includes('pariwar')) {
+        openSpecificCaseStudy('pariwar', 'Pariwar App');
+        return;
+      }
+      if (cmd.includes('crm') || cmd.includes('sales')) {
+        openSpecificCaseStudy('crm', 'Lead & Sales CRM');
+        return;
+      }
+      if (cmd.includes('staffer')) {
+        openSpecificCaseStudy('staffer', 'Staffer App');
+        return;
+      }
+      if (cmd.includes('massage') || cmd.includes('club')) {
+        openSpecificCaseStudy('massageclub', 'Massage Club');
+        return;
+      }
+      if (cmd.includes('captain') || cmd.includes('fleet') || cmd.includes('logistic')) {
+        openSpecificCaseStudy('captain', 'Captain Logistics');
+        return;
+      }
+      if (cmd.includes('drlife') || cmd.includes('doctor') || cmd.includes('health') || cmd.includes('telemedicine')) {
+        openSpecificCaseStudy('drlife', 'DrLife Telemedicine');
+        return;
+      }
+
+      // 2. Projects & Work section
+      if (cmd.includes('project') || cmd.includes('work') || cmd.includes('portfolio') || cmd.includes('case stud') || cmd.includes('app')) {
+        scrollToSection('#projects', 'Projects');
+        return;
+      }
+
+      // 3. Filter Tech Stack
+      if (cmd.includes('filter') || cmd.includes('tag') || cmd.includes('stack')) {
+        if (cmd.includes('flutter')) {
+          triggerFilter('Flutter');
+          return;
+        }
+        if (cmd.includes('kotlin')) {
+          triggerFilter('Kotlin');
+          return;
+        }
+        if (cmd.includes('android')) {
+          triggerFilter('Android SDK');
+          return;
+        }
+        if (cmd.includes('compose')) {
+          triggerFilter('Jetpack Compose');
+          return;
+        }
+        if (cmd.includes('clear') || cmd.includes('all') || cmd.includes('reset')) {
+          triggerFilter('all');
+          return;
+        }
+      }
+
+      // 4. Architecture
+      if (cmd.includes('architecture') || cmd.includes('system design') || cmd.includes('clean arch') || cmd.includes('layer') || cmd.includes('pipeline')) {
+        scrollToSection('#architecture', 'System Architecture');
+        return;
+      }
+
+      // 5. Skills
+      if (cmd.includes('skill') || cmd.includes('technolog') || cmd.includes('coroutine') || cmd.includes('dagger') || cmd.includes('hilt') || cmd.includes('tool')) {
+        scrollToSection('#skills', 'Technical Skills');
+        return;
+      }
+
+      // 6. Experience / Career Timeline
+      if (cmd.includes('experience') || cmd.includes('career') || cmd.includes('timeline') || cmd.includes('histor') || cmd.includes('job') || cmd.includes('shyam steel') || cmd.includes('compan')) {
+        scrollToSection('#timeline', 'Career Experience');
+        return;
+      }
+
+      // 7. About Me
+      if (cmd.includes('about') || cmd.includes('bio') || cmd.includes('who is') || cmd.includes('profile') || cmd.includes('background') || cmd.includes('summary')) {
+        scrollToSection('#about', 'About Me');
+        return;
+      }
+
+      // 8. Education
+      if (cmd.includes('education') || cmd.includes('degree') || cmd.includes('college') || cmd.includes('mca') || cmd.includes('bca') || cmd.includes('qualificat')) {
+        scrollToSection('#education', 'Education & Qualifications');
+        return;
+      }
+
+      // 9. Contact & Hire
+      if (cmd.includes('contact') || cmd.includes('hire') || cmd.includes('reach') || cmd.includes('touch') || cmd.includes('message')) {
+        scrollToSection('#contact', 'Contact Channels');
+        return;
+      }
+
+      // 10. Download Resume / CV
+      if (cmd.includes('resume') || cmd.includes('cv') || cmd.includes('download')) {
+        const resumeBtn = document.getElementById('headerResumeBtn');
+        if (resumeBtn) {
+          resumeBtn.click();
+          if (transcriptEl) transcriptEl.textContent = 'Downloading Jayajit Dutta Resume PDF...';
+          updateUIState('executing');
+          playAudioChime('success');
+          speakConfirmation('Downloading Resume');
+        }
+        return;
+      }
+
+      // 11. Email & Call
+      if (cmd.includes('email') || cmd.includes('mail')) {
+        window.location.href = 'mailto:jayajit1989@gmail.com';
+        if (transcriptEl) transcriptEl.textContent = 'Opening email to jayajit1989@gmail.com...';
+        playAudioChime('success');
+        speakConfirmation('Opening email client');
+        return;
+      }
+
+      if (cmd.includes('call') || cmd.includes('phone') || cmd.includes('telephone')) {
+        window.location.href = 'tel:+917980726164';
+        if (transcriptEl) transcriptEl.textContent = 'Initiating phone call...';
+        playAudioChime('success');
+        speakConfirmation('Calling Jayajit');
+        return;
+      }
+
+      // 12. Command Palette / Search
+      if (cmd.includes('search') || cmd.includes('find') || cmd.includes('palette') || cmd.includes('command')) {
+        const searchBtn = document.querySelector('.cmdk-trigger');
+        if (searchBtn) {
+          searchBtn.click();
+          if (transcriptEl) transcriptEl.textContent = 'Opening Command Palette...';
+          playAudioChime('success');
+          speakConfirmation('Opening Search');
+        }
+        return;
+      }
+
+      // 13. Top / Home
+      if (cmd.includes('top') || cmd.includes('home') || cmd.includes('start') || cmd.includes('overview') || cmd.includes('header')) {
+        scrollToSection('#hero', 'Overview');
+        return;
+      }
+
+      // 14. Close / Stop
+      if (cmd.includes('close') || cmd.includes('stop') || cmd.includes('exit') || cmd.includes('cancel') || cmd.includes('dismiss')) {
+        const csClose = document.getElementById('caseStudyClose');
+        if (csClose && document.getElementById('caseStudyBackdrop')?.classList.contains('open')) {
+          csClose.click();
+        }
+        closeHud();
+        playAudioChime('start');
+        speakConfirmation('Voice navigation closed');
+        return;
+      }
+
+      // 15. Unrecognized command feedback
+      if (transcriptEl) {
+        transcriptEl.textContent = `Unrecognized command: "${commandText}". Try saying "Go to projects" or "Skills".`;
+      }
+      playAudioChime('error');
+    }
+
+    function openSpecificCaseStudy(id, name) {
+      const trigger = document.querySelector(`[data-open-case-study="${id}"]`);
+      if (trigger) {
+        trigger.click();
+        if (transcriptEl) transcriptEl.textContent = `Opening Case Study: ${name}`;
+        updateUIState('executing');
+        playAudioChime('success');
+        speakConfirmation(`Opening ${name}`);
+      } else {
+        scrollToSection('#projects', 'Projects');
+      }
+    }
+
+    function triggerFilter(tech) {
+      const pills = document.querySelectorAll('.tech-filter-pill');
+      let found = false;
+      pills.forEach((p) => {
+        const val = p.getAttribute('data-filter-tech') || '';
+        if (tech === 'all' && (val === 'all' || val === '')) {
+          p.click();
+          found = true;
+        } else if (val.toLowerCase().includes(tech.toLowerCase())) {
+          p.click();
+          found = true;
+        }
+      });
+      if (found) {
+        scrollToSection('#projects', `Filtered by ${tech}`);
+      }
+    }
+
+    // Event Listeners
+    if (triggerBtn) {
+      triggerBtn.addEventListener('click', () => {
+        if (!hud.classList.contains('active')) {
+          startListening();
+        } else {
+          toggleListening();
+        }
+      });
+    }
+
+    if (mobileVoiceBtn) {
+      mobileVoiceBtn.addEventListener('click', () => {
+        if (!hud.classList.contains('active')) {
+          startListening();
+        } else {
+          toggleListening();
+        }
+      });
+    }
+
+    if (pulseIndicator) {
+      pulseIndicator.addEventListener('click', toggleListening);
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeHud);
+    }
+
+    if (muteToggle) {
+      muteToggle.addEventListener('click', () => {
+        soundFeedbackEnabled = !soundFeedbackEnabled;
+        muteToggle.classList.toggle('muted', !soundFeedbackEnabled);
+        muteToggle.title = soundFeedbackEnabled ? 'Audio Feedback On' : 'Audio Feedback Muted';
+        if (soundFeedbackEnabled) playAudioChime('start');
+      });
+    }
+
+    // Quick Chips click support
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const cmd = chip.getAttribute('data-voice-cmd');
+        if (cmd) executeVoiceCommand(cmd);
+      });
+    });
+
+    // Keyboard shortcut 'V' (when not in input/textarea)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && hud.classList.contains('active')) {
+        closeHud();
+        return;
+      }
+      const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+      if (activeTag === 'input' || activeTag === 'textarea' || document.activeElement?.isContentEditable) {
+        return;
+      }
+      if (e.key === 'v' || e.key === 'V') {
+        e.preventDefault();
+        if (!hud.classList.contains('active')) {
+          startListening();
+        } else {
+          toggleListening();
+        }
+      }
+    });
+  }
+
+  // ==========================================================================
   // Initialization Bootstrap
   // ==========================================================================
   document.addEventListener('DOMContentLoaded', () => {
@@ -859,5 +1389,6 @@ Date:   Sep 13 2026
     initApkModal();
     initPwa();
     initTypewriterGreeting();
+    initVoiceNavigation();
   });
 })();

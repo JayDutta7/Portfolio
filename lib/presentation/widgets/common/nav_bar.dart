@@ -21,11 +21,13 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
   final List<NavItem> items;
   final ValueChanged<GlobalKey> onNavTap;
   final VoidCallback? onLogoTap;
+  final VoidCallback? onVoiceTap;
 
   const NavBar({
     required this.items,
     required this.onNavTap,
     this.onLogoTap,
+    this.onVoiceTap,
     super.key,
   });
 
@@ -101,6 +103,15 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                             label: item.label.toUpperCase(),
                             onTap: () => onNavTap(item.sectionKey),
                           ),
+                        if (onVoiceTap != null) ...[
+                          const SizedBox(width: 4),
+                          IconButton(
+                            icon: const Icon(Icons.mic_rounded, size: 20),
+                            color: AppColors.secondary,
+                            tooltip: 'Voice Navigation',
+                            onPressed: onVoiceTap,
+                          ),
+                        ],
                         const SizedBox(width: 6),
                         const _LanguageSelector(),
                         const SizedBox(width: 6),
@@ -114,6 +125,13 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                           fileName: profile.resumeDownloadFileName,
                         ),
                       ] else ...[
+                        if (onVoiceTap != null && width >= 420)
+                          IconButton(
+                            icon: const Icon(Icons.mic_rounded, size: 20),
+                            color: AppColors.secondary,
+                            tooltip: 'Voice Navigation',
+                            onPressed: onVoiceTap,
+                          ),
                         const _LanguageSelector(),
                         const SizedBox(width: 2),
                         _ThemeToggle(
@@ -265,6 +283,31 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                           });
                         },
                       ),
+
+                      // Voice navigation link in drawer
+                      if (onVoiceTap != null)
+                        ListTile(
+                          dense: true,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                          leading: const Icon(Icons.mic_rounded, size: 20, color: AppColors.secondary),
+                          title: Text(
+                            'VOICE NAVIGATION',
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13.5,
+                              color: AppColors.secondary,
+                            ),
+                          ),
+                          trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 13),
+                          onTap: () {
+                            Navigator.of(sheetContext).pop();
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              Future.delayed(const Duration(milliseconds: 200), () {
+                                onVoiceTap?.call();
+                              });
+                            });
+                          },
+                        ),
 
                       // Section nav links
                       for (final item in items)

@@ -21,6 +21,10 @@
 		<string>mailto</string>
 		<string>tel</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Jayajit Dutta Portfolio uses the microphone for voice-activated navigation.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Jayajit Dutta Portfolio uses speech recognition to navigate to sections, search case studies, and download resumes via voice commands.</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

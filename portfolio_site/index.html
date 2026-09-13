@@ -89,6 +89,16 @@
 
       <!-- Header Actions -->
       <div class="header-actions">
+        <button class="voice-nav-trigger" id="voiceNavTrigger" aria-label="Start Voice Navigation (Press V)" title="Voice Navigation (V)">
+          <svg class="mic-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="22"></line>
+          </svg>
+          <span>Voice</span>
+          <span class="cmdk-kbd">V</span>
+        </button>
+
         <button class="cmdk-trigger" aria-label="Open Command Palette (Cmd+K)">
           <span>Search</span>
           <span class="cmdk-kbd">⌘K</span>
@@ -1508,12 +1518,69 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <span>Search</span>
       </button>
+      <button class="mobile-nav-btn" id="mobileVoiceBtn" aria-label="Voice Navigation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
+        <span>Voice</span>
+      </button>
       <a href="assets/resume/Jayajit_Dutta_CV.pdf" download class="mobile-nav-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
         <span>Resume</span>
       </a>
     </div>
   </nav>
+
+  <!-- ====================================================================
+       Voice Navigation Floating Hologram HUD
+       ==================================================================== -->
+  <aside class="voice-hud" id="voiceHud" role="region" aria-label="Voice Navigation Assistant" aria-hidden="true">
+    <div class="voice-hud-container">
+      <div class="voice-hud-top">
+        <div class="voice-status-wrap">
+          <button class="voice-pulse-indicator" id="voicePulseIndicator" aria-label="Toggle Listening State" title="Click to start/stop listening">
+            <span class="pulse-ring"></span>
+            <svg class="voice-hud-mic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
+          </button>
+          <div class="voice-status-text">
+            <div class="voice-title-row">
+              <span class="voice-title" id="voiceStatusTitle">Voice Assistant</span>
+              <span class="voice-badge" id="voiceStatusBadge">READY</span>
+            </div>
+            <div class="voice-transcript" id="voiceTranscript">Say "Go to Projects", "Open Ghareka", or "Download CV"...</div>
+          </div>
+        </div>
+
+        <div class="voice-equalizer" id="voiceEqualizer" aria-hidden="true">
+          <span class="eq-bar bar-1"></span>
+          <span class="eq-bar bar-2"></span>
+          <span class="eq-bar bar-3"></span>
+          <span class="eq-bar bar-4"></span>
+          <span class="eq-bar bar-5"></span>
+        </div>
+
+        <div class="voice-controls">
+          <button class="voice-action-btn" id="voiceMuteToggle" aria-label="Toggle Audio Response" title="Audio Chime & Speech Feedback On/Off">
+            <svg id="voiceSoundIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          </button>
+          <button class="voice-action-btn" id="voiceCloseBtn" aria-label="Close Voice Navigation" title="Close (ESC)">✕</button>
+        </div>
+      </div>
+
+      <div class="voice-suggestions-wrap">
+        <span class="voice-hint-label">Quick Commands:</span>
+        <div class="voice-chips-scroll">
+          <button class="voice-chip" data-voice-cmd="projects">"Go to Projects"</button>
+          <button class="voice-chip" data-voice-cmd="architecture">"Architecture"</button>
+          <button class="voice-chip" data-voice-cmd="skills">"Skills"</button>
+          <button class="voice-chip" data-voice-cmd="filter flutter">"Filter Flutter"</button>
+          <button class="voice-chip" data-voice-cmd="open ghareka">"Open Ghareka"</button>
+          <button class="voice-chip" data-voice-cmd="experience">"Experience"</button>
+          <button class="voice-chip" data-voice-cmd="download resume">"Download CV"</button>
+          <button class="voice-chip" data-voice-cmd="contact">"Contact"</button>
+          <button class="voice-chip" data-voice-cmd="dark mode">"Dark Mode"</button>
+        </div>
+      </div>
+    </div>
+  </aside>
 
   <!-- Interactive JavaScript Engine -->
   <script src="js/app.js?v=2.1"></script>
