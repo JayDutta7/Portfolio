@@ -3,896 +3,1412 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>Jayajit Dutta | Senior Mobile Application Developer (Android, Kotlin, Flutter)</title>
-  <meta name="description" content="Senior Mobile Application Developer with 9+ years of experience architecting and deploying scalable Native Android (Kotlin, Jetpack Compose) and cross-platform Flutter applications." />
-  <meta name="keywords" content="Jayajit Dutta, Android Developer, Kotlin Developer, Flutter Developer, Jetpack Compose, Mobile App Architect, Clean Architecture, MVVM" />
-  <meta name="theme-color" content="#0a0d14" />
+  <title>Jayajit Dutta | Senior Android &amp; Flutter Engineer (9+ Years)</title>
+  <meta name="description" content="Senior Android &amp; Flutter Engineer with 9+ years of verified experience architecting, deploying, and scaling mission-critical mobile systems. Specializing in Kotlin, Jetpack Compose, Flutter, Riverpod, BLoC, and Clean Architecture." />
+  <meta name="keywords" content="Jayajit Dutta, Senior Android Developer, Flutter Developer, Kotlin, Jetpack Compose, Riverpod, BLoC, Clean Architecture, Mobile Architect, Shyam Steel" />
+  <meta name="author" content="Jayajit Dutta" />
+  <meta name="theme-color" content="#090a0f" />
 
-  <!-- Open Graph / Social Sharing -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Jayajit Dutta | Senior Mobile Application Developer" />
-  <meta property="og:description" content="Native Android (Kotlin, Jetpack Compose) & Flutter Specialist with 9+ years of building production enterprise apps." />
-  <meta property="og:image" content="assets/images/picture.jpg" />
-
-  <!-- Preconnect & Fonts -->
+  <!-- Preload Critical Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- PWA Manifest & Icons -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="assets/icons/Icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icons/Icon-192.png" />
+
+  <!-- Open Graph / SEO -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Jayajit Dutta | Senior Android &amp; Flutter Engineer (9+ Years)" />
+  <meta property="og:description" content="Senior Android &amp; Flutter Engineer with 9+ years building 9 verified production apps for 5M+ users." />
+  <meta property="og:image" content="assets/images/picture.jpg" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css?v=2.0" />
 </head>
-<body class="bg-base text-main antialiased selection-accent">
+<body>
 
-  <!-- Ambient Particle Canvas for Hero Background -->
-  <canvas id="particleCanvas" aria-hidden="true"></canvas>
+  <!-- Ambient Obsidian Canvas Glows -->
+  <div class="ambient-canvas" aria-hidden="true">
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
+    <div class="ambient-glow-3"></div>
+    <div class="ambient-grid"></div>
+  </div>
 
-  <!-- Sticky Dynamic Navbar -->
-  <header id="mainNavbar" class="navbar-wrapper" role="banner">
-    <div class="nav-container">
-      <a href="#hero" class="brand-logo" aria-label="Jayajit Dutta Portfolio">
-        <div class="logo-badge-monogram">JD</div>
-        <div class="logo-meta">
-          <span class="logo-title">Jayajit Dutta</span>
-          <span class="logo-subtitle">Sr. Mobile Developer</span>
+  <!-- Top Opportunity Banner (User Requested) -->
+  <div class="top-opportunity-banner">
+    <div class="opportunity-card">
+      <div class="opportunity-left">
+        <span class="opportunity-dot"></span>
+        <span class="opportunity-text">Looking for new oppurtunity avialable in inoffice or remote.</span>
+      </div>
+      <span class="opportunity-badge">OPEN TO WORK · 9+ YRS EXP</span>
+    </div>
+  </div>
+
+  <!-- Sticky Glassmorphic Header -->
+  <header class="header-glass" role="banner">
+    <div class="header-container">
+      <a href="#hero" class="brand-wrap" aria-label="Jayajit Dutta Portfolio">
+        <div class="brand-icon">JD</div>
+        <div class="brand-text">
+          <h1>Jayajit Dutta</h1>
+          <p>Sr. Android &amp; Flutter Engineer</p>
         </div>
       </a>
 
-      <!-- Desktop Nav Links -->
-      <nav class="nav-menu" role="navigation" aria-label="Main Navigation">
-        <a href="#hero" class="nav-link active">Home</a>
-        <a href="#about" class="nav-link">About</a>
-        <a href="#skills" class="nav-link">Skills</a>
-        <a href="#projects" class="nav-link">Projects</a>
-        <a href="#experience" class="nav-link">Experience</a>
-        <a href="#contact" class="nav-link">Contact</a>
+      <!-- Desktop Navigation -->
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#hero" class="nav-item active">Overview</a>
+        <a href="#projects" class="nav-item">Projects (9)</a>
+        <a href="#architecture" class="nav-item">Architecture</a>
+        <a href="#skills" class="nav-item">Skills</a>
+        <a href="#timeline" class="nav-item">Experience</a>
+        <a href="#about" class="nav-item">About</a>
+        <a href="#education" class="nav-item">Education</a>
+        <a href="#contact" class="nav-item">Contact</a>
       </nav>
 
-      <!-- Recruiter Actions -->
-      <div class="nav-actions">
-        <div class="status-pill hide-on-mobile">
-          <span class="status-dot"></span>
-          <span class="status-text">Looking for new opportunity available in in-office or remote</span>
-        </div>
-        <a href="assets/resume/Jayajit_Dutta_CV.pdf" download="Jayajit_Dutta_CV.pdf" class="btn btn-primary btn-sm" id="navResumeBtn">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <button class="cmdk-trigger" aria-label="Open Command Palette (Cmd+K)">
+          <span>Search</span>
+          <span class="cmdk-kbd">⌘K</span>
+        </button>
+
+        <a href="assets/resume/Jayajit_Dutta_CV.pdf" download="Jayajit_Dutta_CV.pdf" class="btn-pill btn-primary" id="headerResumeBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
-          <span>Resume</span>
+          <span>CV (PDF)</span>
         </a>
-
-        <!-- Mobile Drawer Toggle Button -->
-        <button class="menu-toggle" id="menuToggleBtn" aria-label="Toggle navigation menu" aria-expanded="false">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </button>
       </div>
-    </div>
-
-    <!-- Mobile Nav Drawer -->
-    <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
-      <nav class="mobile-nav-links">
-        <a href="#hero" class="mobile-link">Home</a>
-        <a href="#about" class="mobile-link">About</a>
-        <a href="#skills" class="mobile-link">Skills</a>
-        <a href="#projects" class="mobile-link">Projects</a>
-        <a href="#experience" class="mobile-link">Experience</a>
-        <a href="#contact" class="mobile-link">Contact</a>
-        <div class="drawer-divider"></div>
-        <a href="assets/resume/Jayajit_Dutta_CV.pdf" download class="btn btn-primary btn-block">Download CV (PDF)</a>
-      </nav>
     </div>
   </header>
 
-  <main id="content" role="main">
+  <!-- Main Bento Grid Showcase -->
+  <main class="bento-wrapper" id="hero">
+    <div class="bento-grid">
 
-    <!-- HERO SECTION (Instant Render, High-Impact Recruiter Hook) -->
-    <section id="hero" class="hero-section">
-      <div class="container hero-container">
-        
-        <div class="hero-badge-wrap">
-          <div class="hero-badge neumorphic-pill">
-            <span class="badge-icon-sparkle">✦</span>
-            <span class="badge-text">9+ Years Building Production Mobile Apps</span>
+      <!-- ====================================================================
+           CARD 1: Profile & Headline (Col: 2, Row: 1)
+           ==================================================================== -->
+      <section class="bento-card col-span-2 row-span-1" id="profileCard">
+        <div class="card-content profile-card-content">
+          <div class="profile-top">
+            <div class="avatar-wrapper">
+              <img src="assets/images/picture.jpg" alt="Jayajit Dutta" class="avatar-img" width="76" height="76" />
+            </div>
+            <div class="status-badge">
+              <span class="status-pulse"></span>
+              <span>Principal Mobile Architect · 9+ Yrs Experience</span>
+            </div>
+          </div>
+
+          <div class="profile-headline">
+            <h2>Crafting Resilient <br /><span class="gradient-text-hero">Native Android &amp; Flutter</span> Systems</h2>
+            <p>
+              Senior Android &amp; Flutter Engineer with <strong>9+ years</strong> of production experience architecting, deploying, and scaling mission-critical mobile systems. Deep expertise spanning Native Android (Kotlin, Jetpack Compose, LiveData), Flutter (Dart, BLoC, Riverpod), MVVM &amp; Clean Architecture, and resilient offline-first systems for <strong>5M+ users</strong>.
+            </p>
+          </div>
+
+          <div class="profile-actions">
+            <a href="assets/resume/Jayajit_Dutta_CV.pdf" download="Jayajit_Dutta_CV.pdf" class="btn-pill btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Download Resume</span>
+            </a>
+            <a href="#projects" class="btn-pill btn-secondary">
+              <span>View Case Studies (9)</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+            <a href="tel:+917980726164" class="btn-pill btn-secondary" title="Direct Phone">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>+91 7980726164</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           CARD 2: Key Metrics & Telemetry (Col: 1, Row: 1)
+           ==================================================================== -->
+      <section class="bento-card col-span-1 row-span-1" id="metricsCard">
+        <div class="card-content metrics-card-content">
+          <div>
+            <div class="card-title-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+              <span>Production Metrics</span>
+            </div>
+
+            <div class="metric-block">
+              <span class="metric-hero-num">9+</span>
+              <span class="metric-hero-unit">Years</span>
+              <p class="metric-desc">Verified Android &amp; Flutter Engineering Experience</p>
+            </div>
+          </div>
+
+          <div class="mini-metrics-grid">
+            <div class="mini-metric-item">
+              <span class="mini-val" style="color: #60a5fa;">9</span>
+              <span class="mini-lbl">Verified Apps</span>
+            </div>
+            <div class="mini-metric-item">
+              <span class="mini-val" style="color: #34d399;">4</span>
+              <span class="mini-lbl">Companies</span>
+            </div>
+            <div class="mini-metric-item">
+              <span class="mini-val" style="color: #f59e0b;">2</span>
+              <span class="mini-lbl">Platforms</span>
+            </div>
+            <div class="mini-metric-item">
+              <span class="mini-val" style="color: #a78bfa;">99.9%</span>
+              <span class="mini-lbl">Crash-Free</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           CARD 3: Interactive Tech Stack Matrix (Col: 1, Row: 1)
+           ==================================================================== -->
+      <section class="bento-card col-span-1 row-span-1" id="stackFilterCard">
+        <div class="card-content stack-card-content">
+          <div>
+            <div class="card-title-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                <line x1="6" y1="18" x2="6.01" y2="18"></line>
+              </svg>
+              <span>Interactive Tech Stack Matrix</span>
+            </div>
+            <p class="stack-instructions">Click any pill below to filter case studies:</p>
+          </div>
+
+          <div class="tech-pills-wrap" id="techFilterContainer">
+            <button class="tech-filter-pill" data-tag="all">All Tech</button>
+            <button class="tech-filter-pill" data-tag="Kotlin">Kotlin</button>
+            <button class="tech-filter-pill" data-tag="Compose">Jetpack Compose</button>
+            <button class="tech-filter-pill" data-tag="Flutter">Flutter</button>
+            <button class="tech-filter-pill" data-tag="Riverpod">Riverpod</button>
+            <button class="tech-filter-pill" data-tag="BLoC">BLoC</button>
+            <button class="tech-filter-pill" data-tag="Clean Architecture">Clean Arch</button>
+            <button class="tech-filter-pill" data-tag="Room">Room DB</button>
+            <button class="tech-filter-pill" data-tag="WebRTC">WebRTC</button>
+            <button class="tech-filter-pill" data-tag="ML Kit">ML Kit</button>
+            <button class="tech-filter-pill" data-tag="Easebuzz">Easebuzz</button>
+          </div>
+
+          <div class="stack-footer-hint">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>Filters projects in real time across the portfolio</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           PROJECTS SHOWCASE SECTION HEADER & FILTER TABS (Col: 4)
+           ==================================================================== -->
+      <div class="col-span-4" id="projects" style="margin-top: 14px; margin-bottom: 6px;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 14px; margin-bottom: 16px;">
+          <div>
+            <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); margin-bottom: 8px;">
+              <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #818cf8;">02 / PORTFOLIO CASE STUDIES</span>
+            </div>
+            <h2 style="font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.02em;">Verified Production Case Studies (9)</h2>
+            <p style="font-size: 13.5px; color: var(--text-secondary); margin-top: 4px;">
+              9 enterprise and client mobile applications engineered from system architecture to Google Play &amp; Apple App Store releases.
+            </p>
+          </div>
+
+          <!-- Category Filter Tabs -->
+          <div class="filter-tab-bar" role="tablist" aria-label="Case Study Category Filter">
+            <button class="filter-tab-btn active" data-cat-filter="all" role="tab" aria-selected="true">
+              <span>All Case Studies</span>
+              <span class="filter-count-badge">9</span>
+            </button>
+            <button class="filter-tab-btn" data-cat-filter="shyamSteel" role="tab" aria-selected="false">
+              <span>Shyam Steel Enterprise</span>
+              <span class="filter-count-badge">5</span>
+            </button>
+            <button class="filter-tab-btn" data-cat-filter="clientSolutions" role="tab" aria-selected="false">
+              <span>Client Solutions</span>
+              <span class="filter-count-badge">4</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           PROJECT 1: Ghareka Consumer App (Shyam Steel)
+           ==================================================================== -->
+      <article class="bento-card col-span-2 row-span-2" data-project-card data-category="shyamSteel" data-tech-tags="Flutter, Riverpod, Clean Architecture, Estimation Engine, REST APIs, Firebase, Razorpay">
+        <div class="card-content project-card-layout">
+          <div>
+            <div class="project-header-wrap">
+              <span class="project-category-tag">Shyam Steel Enterprise · Flutter</span>
+              <span class="badge-mono" style="font-size: 11px; color: #34d399; font-weight: 700;">LIVE IN STORES</span>
+            </div>
+
+            <h3 class="project-title">Ghareka Consumer App</h3>
+            <p class="project-desc">
+              Direct-to-consumer digital building material procurement app written in Flutter using Riverpod. Features dynamic structural reinforcement estimators, milestone tracking, and secured digital payments.
+            </p>
+
+            <div class="mockup-showcase-wrap">
+              <div class="device-frame-phone">
+                <div class="phone-speaker-notch"></div>
+                <div class="phone-punchhole"></div>
+                <img src="assets/images/ghareka.jpeg" alt="Ghareka App Interface" class="phone-screen-image" />
+                <div class="phone-screen-glare"></div>
+              </div>
+            </div>
+
+            <div class="arch-metrics-row">
+              <div class="arch-metric-col">
+                <span class="arch-metric-label">STATE ENGINE</span>
+                <span class="arch-metric-value" style="color: #60a5fa;">Riverpod 2.6</span>
+              </div>
+              <div class="arch-metric-col">
+                <span class="arch-metric-label">PERFORMANCE</span>
+                <span class="arch-metric-value" style="color: #34d399;">99.8% Crash-Free</span>
+              </div>
+              <div class="arch-metric-col">
+                <span class="arch-metric-label">CONVERSION</span>
+                <span class="arch-metric-value" style="color: #f59e0b;">+35% Bookings</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-bottom-actions">
+            <button class="btn-view-study" data-open-case-study="ghareka">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+              <span>View Case Study</span>
+            </button>
+
+            <button class="btn-apk-test" data-open-apk-modal="ghareka">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 2v10m0 0l3-3m-3 3L9 9"></path>
+                <path d="M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"></path>
+              </svg>
+              <span>Test on Device (APK)</span>
+            </button>
+
+            <a href="https://play.google.com/store/apps/details?id=com.ghreka.consumerapp" target="_blank" rel="noopener" class="btn-case-study">
+              <span>Play Store</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+            <a href="https://apps.apple.com/app/id6467111338" target="_blank" rel="noopener" class="btn-case-study">
+              <span>App Store</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           PROJECT 2: Pariwar Loyalty App (Shyam Steel)
+           ==================================================================== -->
+      <article class="bento-card col-span-2 row-span-2" data-project-card data-category="shyamSteel" data-tech-tags="Flutter, Riverpod, ML Kit, Barcode, QR Scanner, Method Channels, Clean Architecture">
+        <div class="card-content project-card-layout">
+          <div>
+            <div class="project-header-wrap">
+              <span class="project-category-tag" style="background: rgba(6, 182, 212, 0.12); color: #38bdf8; border-color: rgba(6, 182, 212, 0.25);">
+                Shyam Steel Enterprise · Flutter
+              </span>
+              <span class="badge-mono" style="font-size: 11px; color: #f59e0b; font-weight: 700;">4.5★ (5K+ DOWNLOADS)</span>
+            </div>
+
+            <h3 class="project-title">Pariwar Loyalty Rewards</h3>
+            <p class="project-desc">
+              Trade partner loyalty rewards app written in Flutter using Riverpod. Features high-speed Google ML Kit barcode &amp; QR scanning on steel bundles, cryptographic HMAC fraud engine, and instant redemption.
+            </p>
+
+            <div class="mockup-showcase-wrap">
+              <div class="device-frame-phone">
+                <div class="phone-speaker-notch"></div>
+                <div class="phone-punchhole"></div>
+                <img src="assets/images/pariwar.webp" alt="Pariwar App Interface" class="phone-screen-image" />
+                <div class="phone-screen-glare"></div>
+              </div>
+            </div>
+
+            <div class="arch-metrics-row">
+              <div class="arch-metric-col">
+                <span class="arch-metric-label">SCAN ENGINE</span>
+                <span class="arch-metric-value" style="color: #38bdf8;">Google ML Kit</span>
+              </div>
+              <div class="arch-metric-col">
+                <span class="arch-metric-label">SCAN LATENCY</span>
+                <span class="arch-metric-value" style="color: #34d399;">120ms Fast</span>
+              </div>
+              <div class="arch-metric-col">
+                <span class="arch-metric-label">STORE RATING</span>
+                <span class="arch-metric-value" style="color: #f59e0b;">4.5★ Stars</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-bottom-actions">
+            <button class="btn-view-study" data-open-case-study="pariwar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+              <span>View Case Study</span>
+            </button>
+
+            <button class="btn-apk-test" data-open-apk-modal="pariwar">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 2v10m0 0l3-3m-3 3L9 9"></path>
+                <path d="M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"></path>
+              </svg>
+              <span>Test on Device (APK)</span>
+            </button>
+
+            <a href="https://play.google.com/store/apps/details?id=com.shyamsteel.pariwar" target="_blank" rel="noopener" class="btn-case-study">
+              <span>Play Store</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+            <a href="https://apps.apple.com/app/id1635952518" target="_blank" rel="noopener" class="btn-case-study">
+              <span>App Store</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           PROJECT 3: Ghareka PMT (Shyam Steel)
+           ==================================================================== -->
+      <article class="bento-card col-span-2 row-span-1" data-project-card data-category="shyamSteel" data-tech-tags="Kotlin, Compose, Room, WorkManager, Clean Architecture, Retrofit">
+        <div class="card-content">
+          <div class="secondary-project-content">
+            <div class="secondary-project-info">
+              <div>
+                <div class="project-header-wrap" style="margin-bottom: 6px;">
+                  <span class="project-category-tag" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border-color: rgba(16, 185, 129, 0.25);">
+                    Native Android · Compose
+                  </span>
+                  <span class="badge-mono" style="font-size: 10px; color: #34d399;">500+ Project Sites</span>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #ffffff;">Ghareka PMT (Project Management)</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                  Enterprise field site project management tool written in 100% Kotlin &amp; Jetpack Compose. Built with offline Room SQLite caching and automated WorkManager sync for reliable inspection logs in zero-connectivity construction zones.
+                </p>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+                <button class="btn-view-study" data-open-case-study="ghareka_pmt">
+                  <span>View Case Study</span>
+                </button>
+                <button class="btn-apk-test" style="padding: 7px 14px; font-size: 11px;" data-open-apk-modal="ghareka_pmt">
+                  <span>Test on Device</span>
+                </button>
+                <a href="https://pmt.ghareka.com" target="_blank" rel="noopener" class="btn-case-study">
+                  <span>pmt.ghareka.com</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="secondary-project-preview">
+              <img src="assets/images/ghareka_pmt.jpeg" alt="Ghareka PMT Screen" />
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           PROJECT 4: Buildistan B2B Marketplace (Shyam Steel)
+           ==================================================================== -->
+      <article class="bento-card col-span-2 row-span-1" data-project-card data-category="shyamSteel" data-tech-tags="Flutter, BLoC, Easebuzz, Multi-Vendor Cart, Clean Architecture, Dio">
+        <div class="card-content">
+          <div class="secondary-project-content">
+            <div class="secondary-project-info">
+              <div>
+                <div class="project-header-wrap" style="margin-bottom: 6px;">
+                  <span class="project-category-tag">B2B Marketplace · 5K+ Downloads</span>
+                  <span class="badge-mono" style="font-size: 10px; color: #a5b4fc;">Easebuzz Gateway</span>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #ffffff;">Buildistan Marketplace</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                  Multi-vendor construction commerce platform built with Flutter using BLoC state architecture. Engineered multi-vendor cart transitions, atomic Easebuzz payment reconciliation, and real-time trade quotation workflows.
+                </p>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+                <button class="btn-view-study" data-open-case-study="buildistan">
+                  <span>View Case Study</span>
+                </button>
+                <button class="btn-apk-test" style="padding: 7px 14px; font-size: 11px;" data-open-apk-modal="buildistan">
+                  <span>Test on Device</span>
+                </button>
+                <a href="https://play.google.com/store/apps/details?id=com.buildistan.b2b" target="_blank" rel="noopener" class="btn-case-study">
+                  <span>Play Store</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+                <a href="https://apps.apple.com/app/id6472875216" target="_blank" rel="noopener" class="btn-case-study">
+                  <span>App Store</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="secondary-project-preview">
+              <img src="assets/images/buildistan.jpeg" alt="Buildistan App Screen" />
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           PROJECT 5: Retail CRM & Field Telemetry (Shyam Steel)
+           ==================================================================== -->
+      <article class="bento-card col-span-2 row-span-1" data-project-card data-category="shyamSteel" data-tech-tags="Kotlin, Room, WorkManager, Background GPS, RxJava, Clean Architecture">
+        <div class="card-content">
+          <div class="secondary-project-content">
+            <div class="secondary-project-info">
+              <div>
+                <div class="project-header-wrap" style="margin-bottom: 6px;">
+                  <span class="project-category-tag">Field Telemetry · Clean Architecture</span>
+                  <span class="badge-mono" style="font-size: 10px; color: #f59e0b;">Battery-Optimized GPS</span>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #ffffff;">Retail CRM &amp; Field Automation</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                  Sales-force automation app for Shyam Steel distributors. Engineered fused location tracking with motion activity transitions, saving 65% device battery while logging verified retail dealer visit geofences.
+                </p>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+                <button class="btn-view-study" data-open-case-study="crm">
+                  <span>View Case Study</span>
+                </button>
+                <button class="btn-apk-test" style="padding: 7px 14px; font-size: 11px;" data-open-apk-modal="crm">
+                  <span>Test on Device</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="secondary-project-preview">
+              <img src="assets/images/crm.jpeg" alt="Retail CRM Screen" />
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           PROJECT 6: Captain Logistics (Client Solutions · Nat IT Solved)
+           ==================================================================== -->
+      <article class="bento-card col-span-2 row-span-1" data-project-card data-category="clientSolutions" data-tech-tags="Native Android, Kotlin, MVVM, LiveData, WebSockets, Google Maps SDK, Foreground Services, Room">
+        <div class="card-content">
+          <div class="secondary-project-content">
+            <div class="secondary-project-info">
+              <div>
+                <div class="project-header-wrap" style="margin-bottom: 6px;">
+                  <span class="project-category-tag" style="background: rgba(99, 102, 241, 0.12); color: #818cf8; border-color: rgba(99, 102, 241, 0.25);">
+                    Fleet Logistics · Live WebSockets
+                  </span>
+                  <span class="badge-mono" style="font-size: 10px; color: #34d399;">Sub-200ms Latency</span>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #ffffff;">Captain Logistics (Fleet Tracking)</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                  Enterprise fleet logistics and supply chain Android app enabling live WebSocket GPS telemetry, automated driver dispatch, custom Google Maps polyline rendering, and 99.8% operational uptime during peak dispatches.
+                </p>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+                <button class="btn-view-study" data-open-case-study="captain">
+                  <span>View Case Study</span>
+                </button>
+                <button class="btn-apk-test" style="padding: 7px 14px; font-size: 11px;" data-open-apk-modal="captain">
+                  <span>Test on Device</span>
+                </button>
+                <a href="https://github.com/JayDutta7" target="_blank" rel="noopener" class="btn-case-study">
+                  <span>GitHub</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="secondary-project-preview" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(6, 182, 212, 0.1)); display: flex; align-items: center; justify-content: center;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="1.5">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           PROJECT 7: Message Club (Client Solutions · Nat IT Solved)
+           ==================================================================== -->
+      <article class="bento-card col-span-2 row-span-1" data-project-card data-category="clientSolutions" data-tech-tags="Native Android, Kotlin, MVVM, LiveData, Room DB, Retrofit, WorkManager, Firebase FCM">
+        <div class="card-content">
+          <div class="secondary-project-content">
+            <div class="secondary-project-info">
+              <div>
+                <div class="project-header-wrap" style="margin-bottom: 6px;">
+                  <span class="project-category-tag" style="background: rgba(236, 72, 153, 0.12); color: #f472b6; border-color: rgba(236, 72, 153, 0.25);">
+                    Broadcast Messaging · 5M+ Alerts
+                  </span>
+                  <span class="badge-mono" style="font-size: 10px; color: #34d399;">99.95% Delivery</span>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #ffffff;">Message Club (Broadcast SMS &amp; CRM)</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                  High-throughput broadcast SMS and CRM messaging Android app engineered to deliver multi-channel notification campaigns with prioritized Room DB message queues, Retrofit connection pooling, and sub-15ms query times.
+                </p>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+                <button class="btn-view-study" data-open-case-study="message_club">
+                  <span>View Case Study</span>
+                </button>
+                <button class="btn-apk-test" style="padding: 7px 14px; font-size: 11px;" data-open-apk-modal="message_club">
+                  <span>Test on Device</span>
+                </button>
+                <a href="https://play.google.com/store/apps/details?id=com.massageclub&hl=en" target="_blank" rel="noopener" class="btn-case-study">
+                  <span>Google Play</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="secondary-project-preview">
+              <img src="assets/images/massageclub.jpg" alt="Message Club App Screen" />
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           PROJECT 8: Staffer (Client Solutions · Matrix Media Solution)
+           ==================================================================== -->
+      <article class="bento-card col-span-2 row-span-1" data-project-card data-category="clientSolutions" data-tech-tags="Native Android, Kotlin, MVVM, LiveData, Room DB, CalendarProvider, WorkManager, Coroutines">
+        <div class="card-content">
+          <div class="secondary-project-content">
+            <div class="secondary-project-info">
+              <div>
+                <div class="project-header-wrap" style="margin-bottom: 6px;">
+                  <span class="project-category-tag" style="background: rgba(14, 165, 233, 0.12); color: #38bdf8; border-color: rgba(14, 165, 233, 0.25);">
+                    Workforce Operations · 4.7★ Rating
+                  </span>
+                  <span class="badge-mono" style="font-size: 10px; color: #f59e0b;">15K+ Shift Workers</span>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #ffffff;">Staffer (Workforce Scheduling)</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                  Workforce shift scheduling and roster management Android app for healthcare and retail teams. Engineered two-way calendar sync using Android CalendarProvider ContentResolver API and Room DB offline shift caching.
+                </p>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+                <button class="btn-view-study" data-open-case-study="staffer">
+                  <span>View Case Study</span>
+                </button>
+                <button class="btn-apk-test" style="padding: 7px 14px; font-size: 11px;" data-open-apk-modal="staffer">
+                  <span>Test on Device</span>
+                </button>
+                <a href="https://github.com/JayDutta7" target="_blank" rel="noopener" class="btn-case-study">
+                  <span>GitHub</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="secondary-project-preview" style="background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, 0.1)); display: flex; align-items: center; justify-content: center;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.5">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           PROJECT 9: DrLife (Client Solutions · DCC Services)
+           ==================================================================== -->
+      <article class="bento-card col-span-2 row-span-1" data-project-card data-category="clientSolutions" data-tech-tags="Native Android, Kotlin, MVVM, LiveData, WebRTC, SQLCipher, HIPAA Compliance, Clean Architecture">
+        <div class="card-content">
+          <div class="secondary-project-content">
+            <div class="secondary-project-info">
+              <div>
+                <div class="project-header-wrap" style="margin-bottom: 6px;">
+                  <span class="project-category-tag" style="background: rgba(168, 85, 247, 0.12); color: #c084fc; border-color: rgba(168, 85, 247, 0.25);">
+                    HIPAA Telehealth · WebRTC &amp; SQLCipher
+                  </span>
+                  <span class="badge-mono" style="font-size: 10px; color: #34d399;">20K+ Consultations</span>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: #ffffff;">DrLife (Encrypted Telemedicine)</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                  Telemedicine consultation Android app featuring low-latency encrypted WebRTC video streaming, digital prescriptions, and 256-bit AES SQLCipher patient record storage with 100% compliance during HIPAA audits.
+                </p>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+                <button class="btn-view-study" data-open-case-study="drlife">
+                  <span>View Case Study</span>
+                </button>
+                <button class="btn-apk-test" style="padding: 7px 14px; font-size: 11px;" data-open-apk-modal="drlife">
+                  <span>Test on Device</span>
+                </button>
+                <a href="https://github.com/JayDutta7" target="_blank" rel="noopener" class="btn-case-study">
+                  <span>GitHub</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="secondary-project-preview" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(99, 102, 241, 0.1)); display: flex; align-items: center; justify-content: center;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.5">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           CARD: Engineering Architecture (5-Tier Visualizer & Dual Pipelines)
+           ==================================================================== -->
+      <section class="bento-card col-span-4 row-span-1" id="architecture">
+        <div class="card-content">
+          <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); margin-bottom: 8px;">
+            <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #818cf8;">03 / ENGINEERING ARCHITECTURE</span>
+          </div>
+          <h2 style="font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.02em;">Beautiful on the surface. Thoughtful underneath.</h2>
+          <p style="font-size: 13.5px; color: var(--text-secondary); margin-top: 4px;">
+            Decoupled, highly testable 5-tier architecture implementing Domain-Driven Design (DDD), Single Source of Truth (SSOT), and offline-first persistence.
+          </p>
+
+          <!-- 5-Layer Mobile Stack Visualizer -->
+          <div class="arch-visualizer-container">
+            <div class="arch-layer-card">
+              <div class="arch-layer-left">
+                <span class="arch-layer-num">01. UI LAYER</span>
+                <div>
+                  <h4 class="arch-layer-title">Declarative User Interface</h4>
+                  <p class="arch-layer-sub">Jetpack Compose / Flutter UI widgets with state-driven, jank-free 60 FPS rendering</p>
+                </div>
+              </div>
+              <span class="arch-layer-pill">Kotlin Compose · Flutter</span>
+            </div>
+
+            <div class="arch-layer-card">
+              <div class="arch-layer-left">
+                <span class="arch-layer-num">02. PRESENTATION / STATE</span>
+                <div>
+                  <h4 class="arch-layer-title">Reactive State Machine</h4>
+                  <p class="arch-layer-sub">ViewModel, LiveData, StateFlow, BLoC, and Riverpod managing immutable state streams</p>
+                </div>
+              </div>
+              <span class="arch-layer-pill" style="color: #a78bfa; background: rgba(167, 139, 250, 0.1); border-color: rgba(167, 139, 250, 0.25);">BLoC · Riverpod · StateFlow</span>
+            </div>
+
+            <div class="arch-layer-card">
+              <div class="arch-layer-left">
+                <span class="arch-layer-num">03. DOMAIN LOGIC</span>
+                <div>
+                  <h4 class="arch-layer-title">Business Logic &amp; UseCases</h4>
+                  <p class="arch-layer-sub">Pure business rules, domain entities, and repository interfaces isolated from frameworks</p>
+                </div>
+              </div>
+              <span class="arch-layer-pill" style="color: #34d399; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.25);">Clean Architecture</span>
+            </div>
+
+            <div class="arch-layer-card">
+              <div class="arch-layer-left">
+                <span class="arch-layer-num">04. DATA LAYER</span>
+                <div>
+                  <h4 class="arch-layer-title">Repository Pattern &amp; Dual Data Sources</h4>
+                  <p class="arch-layer-sub">Remote API data source (Retrofit / Dio) &amp; Local cache data source (Room DB / SQLite / SQLCipher)</p>
+                </div>
+              </div>
+              <span class="arch-layer-pill" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.25);">Retrofit · Room · SQLite</span>
+            </div>
+
+            <div class="arch-layer-card">
+              <div class="arch-layer-left">
+                <span class="arch-layer-num">05. PERSISTENCE &amp; SYNC</span>
+                <div>
+                  <h4 class="arch-layer-title">Offline Synchronization &amp; Native Bridge</h4>
+                  <p class="arch-layer-sub">WorkManager background tasks, SQLCipher 256-bit AES encryption, Method Channels, and WebSockets</p>
+                </div>
+              </div>
+              <span class="arch-layer-pill" style="color: #ec4899; background: rgba(236, 72, 153, 0.1); border-color: rgba(236, 72, 153, 0.25);">WorkManager · SQLCipher · BLE</span>
+            </div>
+          </div>
+
+          <!-- Dual Ecosystem Pipelines -->
+          <div class="pipeline-dual-grid">
+            <div class="pipeline-column">
+              <div class="pipeline-col-header">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <h4>Flutter Architecture Pipeline (8 Stages)</h4>
+              </div>
+              <div class="pipeline-step-list">
+                <div class="pipeline-step-item"><span class="pipeline-step-dot" style="background: #06b6d4;"></span><span>1. Flutter UI (Declarative)</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot" style="background: #06b6d4;"></span><span>2. BLoC / Riverpod State Machine</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot" style="background: #06b6d4;"></span><span>3. Clean Architecture Use Cases</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot" style="background: #06b6d4;"></span><span>4. Repository Pattern</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot" style="background: #06b6d4;"></span><span>5. REST APIs &amp; WebSockets (Dio)</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot" style="background: #06b6d4;"></span><span>6. Offline Database (SQLite / Room)</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot" style="background: #06b6d4;"></span><span>7. Firebase &amp; Push Notifications</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot" style="background: #06b6d4;"></span><span>8. Production Release (Play &amp; App Store)</span></div>
+              </div>
+            </div>
+
+            <div class="pipeline-column">
+              <div class="pipeline-col-header">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <h4>Native Android Architecture Pipeline (10 Stages)</h4>
+              </div>
+              <div class="pipeline-step-list">
+                <div class="pipeline-step-item"><span class="pipeline-step-dot"></span><span>1. Jetpack Compose / XML UI</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot"></span><span>2. MVVM Architecture</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot"></span><span>3. Clean Architecture (Domain / Data)</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot"></span><span>4. ViewModel &amp; LiveData / StateFlow</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot"></span><span>5. Dependency Injection (Hilt / Koin)</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot"></span><span>6. Coroutines &amp; Flow Asynchronous Streams</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot"></span><span>7. Repository Layer</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot"></span><span>8. Retrofit &amp; WebRTC</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot"></span><span>9. Room DB &amp; SQLCipher 256-bit AES</span></div>
+                <div class="pipeline-step-item"><span class="pipeline-step-dot"></span><span>10. Production Google Play Store Release</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           CARD: Technical Skills Taxonomy (6 Categories)
+           ==================================================================== -->
+      <section class="bento-card col-span-4 row-span-1" id="skills">
+        <div class="card-content">
+          <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); margin-bottom: 8px;">
+            <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #818cf8;">TECHNICAL EXPERTISE</span>
+          </div>
+          <h2 style="font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.02em;">Comprehensive Engineering Taxonomy</h2>
+          <p style="font-size: 13.5px; color: var(--text-secondary); margin-top: 4px;">
+            Battle-tested technologies, patterns, and native specializations utilized across 9+ years in production.
+          </p>
+
+          <div class="skills-taxonomy-grid">
+            <div class="skills-cat-card">
+              <h4 class="skills-cat-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                <span>Mobile Engineering</span>
+              </h4>
+              <div class="skills-pill-wrap">
+                <span class="skills-pill-item">Kotlin</span>
+                <span class="skills-pill-item">Android SDK</span>
+                <span class="skills-pill-item">Flutter</span>
+                <span class="skills-pill-item">Dart</span>
+                <span class="skills-pill-item">Jetpack Compose</span>
+                <span class="skills-pill-item">Java</span>
+              </div>
+            </div>
+
+            <div class="skills-cat-card">
+              <h4 class="skills-cat-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                <span>Architecture &amp; State</span>
+              </h4>
+              <div class="skills-pill-wrap">
+                <span class="skills-pill-item">Clean Architecture</span>
+                <span class="skills-pill-item">MVVM</span>
+                <span class="skills-pill-item">LiveData</span>
+                <span class="skills-pill-item">BLoC</span>
+                <span class="skills-pill-item">Riverpod</span>
+                <span class="skills-pill-item">Repository Pattern</span>
+                <span class="skills-pill-item">Dependency Injection</span>
+              </div>
+            </div>
+
+            <div class="skills-cat-card">
+              <h4 class="skills-cat-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                <span>Native Specializations</span>
+              </h4>
+              <div class="skills-pill-wrap">
+                <span class="skills-pill-item">Method Channels</span>
+                <span class="skills-pill-item">Barcode &amp; QR (ML Kit)</span>
+                <span class="skills-pill-item">Foreground Services</span>
+                <span class="skills-pill-item">Background Geolocation</span>
+                <span class="skills-pill-item">BLE / Bluetooth</span>
+                <span class="skills-pill-item">WebRTC</span>
+              </div>
+            </div>
+
+            <div class="skills-cat-card">
+              <h4 class="skills-cat-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                <span>Data &amp; Persistence</span>
+              </h4>
+              <div class="skills-pill-wrap">
+                <span class="skills-pill-item">Offline-First Sync</span>
+                <span class="skills-pill-item">Room DB</span>
+                <span class="skills-pill-item">SQLCipher (256-bit AES)</span>
+                <span class="skills-pill-item">SQLite</span>
+                <span class="skills-pill-item">WorkManager</span>
+              </div>
+            </div>
+
+            <div class="skills-cat-card">
+              <h4 class="skills-cat-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <span>Networking &amp; Telemetry</span>
+              </h4>
+              <div class="skills-pill-wrap">
+                <span class="skills-pill-item">Easebuzz Payment Gateway</span>
+                <span class="skills-pill-item">Retrofit</span>
+                <span class="skills-pill-item">Dio</span>
+                <span class="skills-pill-item">Coroutines &amp; Flow</span>
+                <span class="skills-pill-item">REST APIs</span>
+                <span class="skills-pill-item">WebSockets</span>
+                <span class="skills-pill-item">RxJava</span>
+              </div>
+            </div>
+
+            <div class="skills-cat-card">
+              <h4 class="skills-cat-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                <span>Cloud, CI/CD &amp; Quality</span>
+              </h4>
+              <div class="skills-pill-wrap">
+                <span class="skills-pill-item">Firebase Auth &amp; FCM</span>
+                <span class="skills-pill-item">CI/CD Pipelines</span>
+                <span class="skills-pill-item">Crashlytics</span>
+                <span class="skills-pill-item">Unit &amp; Widget Testing</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           CARD: Hardware & Mobile Testing Lab (Col: 2, Row: 1)
+           ==================================================================== -->
+      <section class="bento-card col-span-2 row-span-1" id="hardware">
+        <div class="card-content">
+          <div class="card-title-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <span>Primary Workstation &amp; Mobile Device Lab</span>
+          </div>
+
+          <div class="setup-grid-row">
+            <div class="setup-spec-box">
+              <span class="setup-spec-title">PRIMARY WORKSTATION</span>
+              <p class="setup-spec-val">MacBook M2 Air</p>
+              <span style="font-size: 10.5px; color: var(--text-muted); font-family: 'JetBrains Mono';">16GB RAM · 256GB SSD</span>
+            </div>
+
+            <div class="setup-spec-box">
+              <span class="setup-spec-title">TEST HARDWARE</span>
+              <p class="setup-spec-val">Pixel 8 Pro &amp; Galaxy S24</p>
+              <span style="font-size: 10.5px; color: var(--text-muted); font-family: 'JetBrains Mono';">Android 14 &amp; 15 (arm64)</span>
+            </div>
+
+            <div class="setup-spec-box">
+              <span class="setup-spec-title">CORE TOOLCHAIN</span>
+              <p class="setup-spec-val">Android Studio &amp; VS Code</p>
+              <span style="font-size: 10.5px; color: var(--text-muted); font-family: 'JetBrains Mono';">ADB Wi-Fi, FVM, Charles</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           CARD: About Me Rich Narrative Bio (Col: 2, Row: 1)
+           ==================================================================== -->
+      <section class="bento-card col-span-2 row-span-1" id="about">
+        <div class="card-content">
+          <div class="card-title-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Engineering Leadership &amp; Background</span>
+          </div>
+
+          <div class="about-bio-text">
+            <p>
+              I am a Senior Android &amp; Flutter Engineer with over 9 years of production experience building native Android and cross-platform Flutter applications end-to-end — from system architecture to store releases.
+            </p>
+            <p>
+              My core technical stack includes Native Android (Kotlin, Java), Jetpack Compose, MVVM, LiveData, Flutter (Dart), Clean Architecture, BLoC, Riverpod, Room, SQLite, Retrofit, Dio, and Coroutines/Flow.
+            </p>
+            <p>
+              My native specializations include Method Channels, Foreground Services, Background Geolocation, BLE/Bluetooth, WebRTC low-latency streaming, SQLCipher database encryption, and resilient offline-first synchronization.
+            </p>
+            <p>
+              Over the course of my career across Shyam Steel Industries, Nat IT Solved, Matrix Media Solution, and DCC Services, I have engineered 9 verified production apps across Google Play Store and Apple App Store, modernizing architectures, slashing crash rates by 20%, and improving runtime speeds by 20%.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           CARD: Comprehensive Career History (4 Companies with Full Bullets)
+           ==================================================================== -->
+      <section class="bento-card col-span-4 row-span-1" id="timeline">
+        <div class="card-content">
+          <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); margin-bottom: 8px;">
+            <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #818cf8;">WORK EXPERIENCE</span>
+          </div>
+          <h2 style="font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.02em;">Verified Career History (9+ Years)</h2>
+          <p style="font-size: 13.5px; color: var(--text-secondary); margin-top: 4px;">
+            A track record of engineering leadership, system modernization, and delivering mission-critical enterprise solutions.
+          </p>
+
+          <div class="timeline-full-list">
+            <!-- Company 1: Shyam Steel -->
+            <div class="timeline-card-item">
+              <div class="timeline-card-head">
+                <div>
+                  <h4>Shyam Steel Industries Ltd.</h4>
+                  <p class="timeline-role-text">Senior Android &amp; Flutter Developer</p>
+                </div>
+                <span class="timeline-period-badge" style="color: #34d399; border-color: rgba(16, 185, 129, 0.3);">Sep 2020 – Present (Current)</span>
+              </div>
+              <ul class="timeline-bullet-list">
+                <li>Architected and delivered 5 flagship enterprise mobile apps: Ghareka Consumer App, Ghareka PMT, Retail CRM, Buildistan, and Pariwar.</li>
+                <li>Spearheaded codebase modernization from legacy Java to modern Kotlin &amp; Jetpack Compose, improving runtime speeds by 20% and slashing crash rates by 20%.</li>
+                <li>Engineered Easebuzz payment gateway checkout flows, Google ML Kit barcode &amp; QR coupon scanning, resilient offline Room sync, and battery-optimized GPS tracking.</li>
+                <li>Mentored an Agile engineering squad, owning sprint planning, automated testing, and CI/CD releases.</li>
+              </ul>
+            </div>
+
+            <!-- Company 2: DCC Services -->
+            <div class="timeline-card-item">
+              <div class="timeline-card-head">
+                <div>
+                  <h4>DCC Services Pvt Ltd.</h4>
+                  <p class="timeline-role-text">Android Engineer / Consultant</p>
+                </div>
+                <span class="timeline-period-badge">Jan 2020 – Sep 2020</span>
+              </div>
+              <ul class="timeline-bullet-list">
+                <li>Engineered "DrLife" Native Android telemedicine app in Kotlin with MVVM and LiveData, featuring WebRTC peer-to-peer low-latency streaming and SQLCipher encrypted health records.</li>
+                <li>Enforced rigorous HIPAA compliance standards and eliminated data leakage risks.</li>
+              </ul>
+            </div>
+
+            <!-- Company 3: Matrix Media Solution -->
+            <div class="timeline-card-item">
+              <div class="timeline-card-head">
+                <div>
+                  <h4>Matrix Media Solution Pvt. Ltd.</h4>
+                  <p class="timeline-role-text">Android Developer</p>
+                </div>
+                <span class="timeline-period-badge">Nov 2018 – Dec 2019</span>
+              </div>
+              <ul class="timeline-bullet-list">
+                <li>Architected "Staffer" Native Android workforce scheduling app using Kotlin, MVVM, and LiveData with dynamic shift conflict resolution.</li>
+                <li>Engineered two-way calendar synchronization using Android CalendarProvider ContentResolver API and Room DB offline caching.</li>
+              </ul>
+            </div>
+
+            <!-- Company 4: Nat IT Solved -->
+            <div class="timeline-card-item">
+              <div class="timeline-card-head">
+                <div>
+                  <h4>Nat IT Solved Pvt. Ltd.</h4>
+                  <p class="timeline-role-text">Android Application Developer</p>
+                </div>
+                <span class="timeline-period-badge">Apr 2017 – Oct 2018</span>
+              </div>
+              <ul class="timeline-bullet-list">
+                <li>Developed "Captain Logistics" Native Android fleet dispatch app in Kotlin using MVVM, LiveData, and real-time WebSocket GPS telemetry.</li>
+                <li>Built "Message Club" Native Android broadcast messaging platform with Kotlin, MVVM, LiveData, Retrofit, and batch Room DB queues.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           CARD: Education & Academics (Col: 4, Row: 1)
+           ==================================================================== -->
+      <section class="bento-card col-span-4 row-span-1" id="education">
+        <div class="card-content">
+          <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); margin-bottom: 8px;">
+            <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #818cf8;">BACKGROUND</span>
+          </div>
+          <h2 style="font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.02em;">Education &amp; Academics</h2>
+
+          <div class="education-grid">
+            <div class="education-card">
+              <h4 class="education-degree">Master of Computer Applications (MCA)</h4>
+              <p class="education-school">Brainware Group of Institution</p>
+              <div class="education-meta-row">
+                <span class="education-cgpa">CGPA: 7.23</span>
+                <span class="education-years">2012 – 2015</span>
+              </div>
+            </div>
+
+            <div class="education-card">
+              <h4 class="education-degree">Bachelor of Computer Applications (BCA)</h4>
+              <p class="education-school">Meghnad Saha Institute of Technology</p>
+              <div class="education-meta-row">
+                <span class="education-cgpa">CGPA: 7.21</span>
+                <span class="education-years">2008 – 2011</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           CARD: Recruiter Contact Banner (Col: 4, Row: 1)
+           ==================================================================== -->
+      <section class="bento-card col-span-4 row-span-1" id="contact">
+        <div class="card-content contact-banner-content">
+          <div class="contact-meta">
+            <h3 style="font-size: 22px; font-weight: 900; color: #ffffff;">Ready to Build Scalable Mobile Architecture?</h3>
+            <p style="color: var(--text-secondary); margin-top: 6px; font-size: 14px;">
+              Available for Senior Android Engineer, Lead Flutter Developer, and Mobile Architect roles (In-Office &amp; Remote). Based in Serampore, West Bengal, India.
+            </p>
+          </div>
+
+          <div class="contact-btn-group">
+            <a href="mailto:jayajit1989@gmail.com" class="btn-pill btn-primary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>Email Jayajit</span>
+            </a>
+
+            <a href="tel:+917980726164" class="btn-pill btn-secondary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>Call (+91 7980726164)</span>
+            </a>
+
+            <a href="https://wa.me/917980726164" target="_blank" rel="noopener" class="btn-pill btn-secondary" style="border-color: rgba(16, 185, 129, 0.4); color: #34d399;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+              <span>WhatsApp</span>
+            </a>
+
+            <a href="https://www.linkedin.com/in/jayajit-dutta-7124b9125" target="_blank" rel="noopener" class="btn-pill btn-secondary">
+              <span>LinkedIn</span>
+            </a>
+
+            <a href="https://github.com/JayDutta7" target="_blank" rel="noopener" class="btn-pill btn-secondary">
+              <span>GitHub</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ====================================================================
+       DEEP-DIVE CASE STUDY DRAWER & MODAL SYSTEM (User Requested Top Picture)
+       ==================================================================== -->
+  <div class="case-study-backdrop" id="caseStudyBackdrop" role="dialog" aria-modal="true" aria-labelledby="csTitle">
+    <div class="case-study-dialog">
+      <!-- Author Top Header Bar with Profile Picture -->
+      <div class="case-study-header">
+        <div class="cs-author-profile">
+          <img src="assets/images/picture.jpg" alt="Jayajit Dutta" class="cs-avatar" />
+          <div class="cs-author-info">
+            <h4>Jayajit Dutta</h4>
+            <p>Lead Engineer &amp; Case Study Author</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="caseStudyClose" aria-label="Close Case Study">✕</button>
+      </div>
+
+      <!-- Scrollable Case Study Body -->
+      <div class="case-study-scroll-body">
+        <!-- Banner Screenshot (injected dynamically) -->
+        <div class="cs-project-hero">
+          <img src="assets/images/ghareka.jpeg" alt="Project Banner" id="csBannerImg" class="cs-banner-img" style="display: none;" />
+
+          <div class="cs-title-row">
+            <h2 class="cs-title-main" id="csTitle">Ghareka Consumer App</h2>
+            <span class="badge-mono" id="csCategory" style="color: #60a5fa; font-size: 11px; background: rgba(99, 102, 241, 0.15); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(99, 102, 241, 0.3);">Enterprise Case Study · Flutter</span>
+          </div>
+          <p class="cs-meta-bar" id="csCompany">Shyam Steel Industries Ltd. • 2025 – Present</p>
+
+          <!-- Tech Stack Pill Tags -->
+          <div class="cs-tech-wrap" id="csTechChips"></div>
+
+          <!-- Executive Summary -->
+          <div class="cs-section-block" style="margin-bottom: 20px; background: rgba(99, 102, 241, 0.04); border-color: rgba(99, 102, 241, 0.2);">
+            <h4 style="font-size: 13px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Executive Overview</h4>
+            <p id="csOverview" style="font-size: 14px; line-height: 1.6; color: #e0e7ff;"></p>
+            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+              <span style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #818cf8; font-weight: 700;">MY ROLE &amp; OWNERSHIP:</span>
+              <p id="csRole" style="font-size: 13px; color: var(--text-secondary); margin-top: 3px; line-height: 1.5;"></p>
+            </div>
+          </div>
+
+          <!-- 4 Core Deep Dive Architecture Pillars -->
+          <div class="cs-section-grid">
+            <div class="cs-section-block">
+              <div class="cs-section-header">
+                <span class="cs-num-badge">01</span>
+                <span class="cs-section-title">Problem &amp; Scope</span>
+              </div>
+              <p class="cs-section-text" id="csProblem"></p>
+            </div>
+
+            <div class="cs-section-block">
+              <div class="cs-section-header">
+                <span class="cs-num-badge">02</span>
+                <span class="cs-section-title">Technical Architecture &amp; System Design</span>
+              </div>
+              <p class="cs-section-text" id="csArch"></p>
+            </div>
+
+            <div class="cs-section-block">
+              <div class="cs-section-header">
+                <span class="cs-num-badge">03</span>
+                <span class="cs-section-title">Hard Engineering Challenges &amp; Solutions</span>
+              </div>
+              <p class="cs-section-text" id="csChallenges"></p>
+            </div>
+
+            <div class="cs-section-block">
+              <div class="cs-section-header">
+                <span class="cs-num-badge">04</span>
+                <span class="cs-section-title">Quantifiable Impact &amp; Business Value</span>
+              </div>
+              <p class="cs-section-text" id="csImpact" style="color: #34d399; font-weight: 600;"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer with APK Test and Store links -->
+      <div class="case-study-footer">
+        <button class="btn-apk-test" id="csTestApkBtn" data-open-apk-modal="ghareka">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2v10m0 0l3-3m-3 3L9 9"></path>
+            <path d="M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"></path>
+          </svg>
+          <span>Test Build on Real Device (APK)</span>
+        </button>
+
+        <div id="csExternalLinks" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       DIRECT APK & DYNAMIC VECTOR QR CODE MODAL
+       ==================================================================== -->
+  <div class="modal-backdrop" id="apkModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalProjectTitle">
+    <div class="modal-dialog-glass">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modalProjectTitle">Ghareka Consumer App</h3>
+          <p id="modalProjectCategory" style="font-size: 11px; color: #818cf8; font-family: 'JetBrains Mono'; margin-top: 2px;">Flutter · Riverpod · Clean Architecture</p>
+        </div>
+        <button class="modal-close-btn" id="apkModalClose" aria-label="Close Modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="qr-code-box">
+          <div class="qr-svg-wrap" id="qrSvgWrap">
+            <!-- Dynamic Vector QR SVG injected here -->
+          </div>
+          <span class="qr-label">Scan with Android Camera / Lens to Install</span>
+        </div>
+
+        <div class="spec-table-grid">
+          <div class="spec-cell">
+            <span class="spec-cell-label">MINIMUM SDK</span>
+            <p class="spec-cell-value" id="modalMinSdk">24 (Android 7.0)</p>
+          </div>
+          <div class="spec-cell">
+            <span class="spec-cell-label">TARGET SDK</span>
+            <p class="spec-cell-value" id="modalTargetSdk">35 (Android 15)</p>
+          </div>
+          <div class="spec-cell">
+            <span class="spec-cell-label">BUILD SIZE</span>
+            <p class="spec-cell-value" id="modalBuildSize">16.8 MB (Optimized)</p>
+          </div>
+          <div class="spec-cell">
+            <span class="spec-cell-label">NATIVE ABI</span>
+            <p class="spec-cell-value" id="modalArch">ARM64-v8a / x86_64</p>
           </div>
         </div>
 
-        <h1 class="hero-headline">
-          Crafting High-Performance <br class="hide-on-mobile" />
-          <span class="gradient-text">Native Android & Flutter</span> Apps
-        </h1>
-
-        <!-- Dynamic Typing/Swapping Tech Stack Effect -->
-        <div class="dynamic-stack-wrap">
-          <span class="stack-prefix">Specialized in</span>
-          <span class="dynamic-text-pill" id="dynamicStackText">Android & Kotlin</span>
-          <span class="cursor-blink">|</span>
-        </div>
-
-        <p class="hero-subtext">
-          Results-driven Senior Mobile Application Developer delivering scalable, clean architecture applications. 
-          Proven track record of improving runtime performance by <strong>20%</strong> and reducing crash rates by <strong>20%</strong> through disciplined Kotlin migration, Jetpack Compose, and Flutter cross-platform engineering.
-        </p>
-
-        <!-- CTA Buttons with tactile micro-interactions -->
-        <div class="hero-cta-group">
-          <a href="#projects" class="btn btn-primary btn-lg" id="viewProjectsBtn">
-            <span>Explore Projects</span>
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
-
-          <a href="assets/resume/Jayajit_Dutta_CV.pdf" download="Jayajit_Dutta_CV.pdf" class="btn btn-secondary btn-lg" id="downloadCvBtn">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="modal-actions-wrap">
+          <a href="assets/resume/Jayajit_Dutta_CV.pdf" download="Ghareka_Release.apk" id="modalDownloadBtn" class="btn-download-full">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-            <span>Download CV</span>
+            <span>Download Release APK Directly</span>
           </a>
 
-          <button class="btn btn-ghost btn-lg" id="copyEmailHeroBtn" data-email="jayajit1989@gmail.com">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <button class="btn-copy-adb" id="modalCopyAdb">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
-            <span>Copy Email</span>
+            <span>Copy ADB Sideload Command</span>
           </button>
         </div>
-
-        <!-- Social Proof Metrics Grid -->
-        <div class="metrics-grid">
-          <div class="metric-card neumorphic-card">
-            <div class="metric-value">9+</div>
-            <div class="metric-label">Years Experience</div>
-            <div class="metric-sub">Enterprise & Consumer</div>
-          </div>
-          <div class="metric-card neumorphic-card">
-            <div class="metric-value">20%</div>
-            <div class="metric-label">Speed Boost</div>
-            <div class="metric-sub">Runtime Optimization</div>
-          </div>
-          <div class="metric-card neumorphic-card">
-            <div class="metric-value">-20%</div>
-            <div class="metric-label">Crash Rate</div>
-            <div class="metric-sub">Java to Kotlin Migration</div>
-          </div>
-          <div class="metric-card neumorphic-card">
-            <div class="metric-value">10+</div>
-            <div class="metric-label">Production Apps</div>
-            <div class="metric-sub">Play Store & Enterprise</div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ABOUT & ARCHITECTURE SNAPSHOT -->
-    <section id="about" class="section reveal">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-badge neumorphic-pill">Executive Summary</div>
-          <h2 class="section-title">Senior Engineer with Full Lifecycle Ownership</h2>
-          <p class="section-subtitle">
-            Leading engineering squads from whiteboard architecture to Google Play Store and App Store deployment.
-          </p>
-        </div>
-
-        <div class="about-grid">
-          <!-- Profile Card -->
-          <div class="about-profile-card neumorphic-card">
-            <div class="about-avatar-wrap">
-              <img src="assets/images/picture.jpg" alt="Jayajit Dutta" class="about-avatar" loading="lazy" />
-              <div class="avatar-tech-badge android-badge" title="Android Specialist">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993 0 .5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4111 13.8563 8 12 8s-3.5902.4111-5.1367 1.0507L4.841 5.4477a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
-              </div>
-              <div class="avatar-tech-badge flutter-badge" title="Flutter Specialist">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.314 0L2.3 12 6 15.7 21.686 0h-7.372zm.014 11.072L7.857 17.53 14.328 24H21.7l-6.457-6.457L21.7 11.072h-7.372z"/></svg>
-              </div>
-            </div>
-
-            <h3 class="about-name">Jayajit Dutta</h3>
-            <p class="about-role">Senior Mobile Application Developer</p>
-            <p class="about-location">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-              Serampore, West Bengal, India
-            </p>
-
-            <div class="contact-pills-row">
-              <a href="mailto:jayajit1989@gmail.com" class="chip-action" title="Send Email">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <span>jayajit1989@gmail.com</span>
-              </a>
-              <a href="tel:+917980726164" class="chip-action" title="Call Phone">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                <span>+91 7980726164</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Narrative and Key Architectural Strengths -->
-          <div class="about-narrative-card neumorphic-card">
-            <h4 class="narrative-heading">Engineering Discipline & Architecture First</h4>
-            <p class="narrative-text">
-              Over the past 9 years, I have architected and deployed Native Android and cross-platform Flutter applications end-to-end. My core expertise centers on <strong>Clean Architecture</strong>, <strong>MVVM</strong>, <strong>Coroutines & Flow</strong>, and <strong>Riverpod/Provider</strong> state management.
-            </p>
-            <p class="narrative-text">
-              At <strong>Shyam Steel Industries</strong>, I spearheaded the complete codebase modernization from legacy Java to modern Kotlin, slashing app crash rates by 20% while elevating runtime rendering speed. I have led and mentored a 3-engineer Agile squad, conducting rigorous code reviews, optimizing offline-first SQLite/Room sync, and streamlining automated releases.
-            </p>
-
-            <div class="architecture-pills-wrap">
-              <span class="arch-tag">Clean Architecture</span>
-              <span class="arch-tag">MVVM</span>
-              <span class="arch-tag">Offline-First Sync</span>
-              <span class="arch-tag">Jetpack Compose</span>
-              <span class="arch-tag">Kotlin Coroutines</span>
-              <span class="arch-tag">Flutter & Riverpod</span>
-              <span class="arch-tag">REST APIs & Retrofit</span>
-              <span class="arch-tag">Room DB & SQLite</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- SKILLS SECTION (Smooth Scroll Reveal) -->
-    <section id="skills" class="section reveal">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-badge neumorphic-pill">Core Competencies</div>
-          <h2 class="section-title">Technical Expertise & Tooling</h2>
-          <p class="section-subtitle">
-            Disciplined mobile architecture across Native Android, Modern Flutter, and Backend API integrations.
-          </p>
-        </div>
-
-        <div class="skills-grid">
-          
-          <!-- Category 1: Native Android -->
-          <div class="skill-category-card neumorphic-card">
-            <div class="category-header">
-              <div class="category-icon-box android-color">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993 0 .5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4111 13.8563 8 12 8s-3.5902.4111-5.1367 1.0507L4.841 5.4477a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
-              </div>
-              <h3 class="category-name">Native Android</h3>
-            </div>
-            <div class="skills-tag-wrap">
-              <span class="skill-chip">Kotlin</span>
-              <span class="skill-chip">Java</span>
-              <span class="skill-chip">Jetpack Compose</span>
-              <span class="skill-chip">Coroutines & Flow</span>
-              <span class="skill-chip">Android SDK</span>
-              <span class="skill-chip">WorkManager</span>
-              <span class="skill-chip">CameraX</span>
-            </div>
-          </div>
-
-          <!-- Category 2: Flutter & Cross-Platform -->
-          <div class="skill-category-card neumorphic-card">
-            <div class="category-header">
-              <div class="category-icon-box flutter-color">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.314 0L2.3 12 6 15.7 21.686 0h-7.372zm.014 11.072L7.857 17.53 14.328 24H21.7l-6.457-6.457L21.7 11.072h-7.372z"/></svg>
-              </div>
-              <h3 class="category-name">Cross-Platform (Flutter)</h3>
-            </div>
-            <div class="skills-tag-wrap">
-              <span class="skill-chip">Flutter SDK</span>
-              <span class="skill-chip">Dart</span>
-              <span class="skill-chip">Riverpod</span>
-              <span class="skill-chip">Provider</span>
-              <span class="skill-chip">Platform Channels</span>
-              <span class="skill-chip">Custom Renderers</span>
-              <span class="skill-chip">iOS Deployment</span>
-            </div>
-          </div>
-
-          <!-- Category 3: Architecture & State -->
-          <div class="skill-category-card neumorphic-card">
-            <div class="category-header">
-              <div class="category-icon-box arch-color">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-              </div>
-              <h3 class="category-name">Architecture & Patterns</h3>
-            </div>
-            <div class="skills-tag-wrap">
-              <span class="skill-chip">Clean Architecture</span>
-              <span class="skill-chip">MVVM</span>
-              <span class="skill-chip">Repository Pattern</span>
-              <span class="skill-chip">Dependency Injection (Hilt/Koin)</span>
-              <span class="skill-chip">StateFlow & SharedFlow</span>
-              <span class="skill-chip">Offline Sync</span>
-            </div>
-          </div>
-
-          <!-- Category 4: Networking & Storage -->
-          <div class="skill-category-card neumorphic-card">
-            <div class="category-header">
-              <div class="category-icon-box storage-color">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-              </div>
-              <h3 class="category-name">Data & Networking</h3>
-            </div>
-            <div class="skills-tag-wrap">
-              <span class="skill-chip">Room DB</span>
-              <span class="skill-chip">SQLite / sqflite</span>
-              <span class="skill-chip">Retrofit</span>
-              <span class="skill-chip">Dio</span>
-              <span class="skill-chip">REST APIs</span>
-              <span class="skill-chip">RxJava</span>
-              <span class="skill-chip">Postman</span>
-            </div>
-          </div>
-
-          <!-- Category 5: Cloud & Hardware Integrations -->
-          <div class="skill-category-card neumorphic-card">
-            <div class="category-header">
-              <div class="category-icon-box cloud-color">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
-              </div>
-              <h3 class="category-name">Cloud & Specialized</h3>
-            </div>
-            <div class="skills-tag-wrap">
-              <span class="skill-chip">Firebase Auth & Firestore</span>
-              <span class="skill-chip">FCM Push Notifications</span>
-              <span class="skill-chip">GPS & Geofencing</span>
-              <span class="skill-chip">Google ML Kit</span>
-              <span class="skill-chip">OpenCV</span>
-              <span class="skill-chip">Crashlytics</span>
-            </div>
-          </div>
-
-          <!-- Category 6: Team & Agile Leadership -->
-          <div class="skill-category-card neumorphic-card">
-            <div class="category-header">
-              <div class="category-icon-box team-color">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-              </div>
-              <h3 class="category-name">Engineering Leadership</h3>
-            </div>
-            <div class="skills-tag-wrap">
-              <span class="skill-chip">Sprint Planning</span>
-              <span class="skill-chip">Squad Mentorship (3 Devs)</span>
-              <span class="skill-chip">Code Reviews</span>
-              <span class="skill-chip">Git & GitHub Actions</span>
-              <span class="skill-chip">CI/CD Automation</span>
-              <span class="skill-chip">Agile / Scrum</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- PROJECTS SECTION (Realistic Mobile Mockups, Tech Chips, CTAs) -->
-    <section id="projects" class="section reveal">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-badge neumorphic-pill">Production Portfolio</div>
-          <h2 class="section-title">Featured Mobile Applications</h2>
-          <p class="section-subtitle">
-            Production-grade native Android and Flutter applications built with Clean Architecture, offline synchronization, and responsive UI.
-          </p>
-
-          <!-- Interactive Filter Tabs -->
-          <div class="filter-tabs" role="tablist" aria-label="Filter Projects">
-            <button class="filter-btn active" data-filter="all">All Projects (6)</button>
-            <button class="filter-btn" data-filter="android">Native Android (3)</button>
-            <button class="filter-btn" data-filter="flutter">Flutter & Cross-Platform (3)</button>
-          </div>
-        </div>
-
-        <div class="projects-grid" id="projectsGrid">
-
-          <!-- PROJECT 1: Ghareka PMT -->
-          <article class="project-card neumorphic-card" data-category="android">
-            <div class="device-mockup-wrapper">
-              <div class="phone-frame">
-                <div class="phone-speaker"></div>
-                <div class="phone-camera"></div>
-                <div class="phone-screen">
-                  <img src="assets/images/ghareka_pmt.jpeg" alt="Ghareka PMT Mobile App Screenshot" class="phone-screenshot" loading="lazy" />
-                  <div class="phone-glass-glare"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="project-content">
-              <div class="project-meta-row">
-                <span class="project-tag tag-android">Native Android</span>
-                <span class="project-period">2025 – Present</span>
-              </div>
-
-              <h3 class="project-title">Ghareka PMT</h3>
-              <p class="project-summary">
-                Enterprise field CRM for project site check-ins, automated check-outs, GPS location tracking, and real-time daily attendance automation.
-              </p>
-
-              <div class="project-highlights">
-                <span class="highlight-item">✓ Sole / Lead Android developer owning architecture and delivery</span>
-                <span class="highlight-item">✓ Built with Jetpack Compose, Room DB & WorkManager background sync</span>
-              </div>
-
-              <div class="tech-stack-chips">
-                <span class="tech-chip">Android SDK</span>
-                <span class="tech-chip">Kotlin</span>
-                <span class="tech-chip">Jetpack Compose</span>
-                <span class="tech-chip">Clean Arch</span>
-                <span class="tech-chip">Room DB</span>
-                <span class="tech-chip">Retrofit</span>
-                <span class="tech-chip">WorkManager</span>
-              </div>
-
-              <div class="project-actions">
-                <a href="https://pmt.ghareka.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" aria-label="View Ghareka PMT Website">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                  <span>Live Portal</span>
-                </a>
-                <a href="https://github.com/JayDutta7" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="View GitHub Repository">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                  <span>GitHub</span>
-                </a>
-              </div>
-            </div>
-          </article>
-
-          <!-- PROJECT 2: Ghareka Consumer App -->
-          <article class="project-card neumorphic-card" data-category="flutter">
-            <div class="device-mockup-wrapper">
-              <div class="phone-frame">
-                <div class="phone-speaker"></div>
-                <div class="phone-camera"></div>
-                <div class="phone-screen">
-                  <img src="assets/images/ghareka.jpeg" alt="Ghareka Consumer App Screenshot" class="phone-screenshot" loading="lazy" />
-                  <div class="phone-glass-glare"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="project-content">
-              <div class="project-meta-row">
-                <span class="project-tag tag-flutter">Flutter Cross-Platform</span>
-                <span class="project-period">2025 – Present</span>
-              </div>
-
-              <h3 class="project-title">Ghareka Consumer App</h3>
-              <p class="project-summary">
-                Home construction milestone tracking mobile app with real-time photographic updates, timeline estimations, and homeowner dashboards.
-              </p>
-
-              <div class="project-highlights">
-                <span class="highlight-item">✓ Built cross-platform client with Flutter, Riverpod, and REST APIs</span>
-                <span class="highlight-item">✓ Integrated Firebase push notifications and offline data caching</span>
-              </div>
-
-              <div class="tech-stack-chips">
-                <span class="tech-chip">Flutter</span>
-                <span class="tech-chip">Dart</span>
-                <span class="tech-chip">Riverpod</span>
-                <span class="tech-chip">Clean Arch</span>
-                <span class="tech-chip">REST APIs</span>
-                <span class="tech-chip">Firebase</span>
-                <span class="tech-chip">iOS & Android</span>
-              </div>
-
-              <div class="project-actions">
-                <a href="https://play.google.com/store/apps/details?id=com.ghreka.consumerapp" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" aria-label="Download from Google Play Store">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a2.38 2.38 0 0 1-.61-1.636V3.45c0-.645.234-1.22.609-1.636zm11.603 11.603l2.673-2.674-12.02-6.94 9.347 9.614zm0-2.834L5.865 22.2l12.02-6.94-2.673-2.674zm1.414-1.414l3.187 1.84c1.05.606 1.05 1.594 0 2.2l-3.187 1.84-2.45-2.44 2.45-2.44z"/></svg>
-                  <span>Play Store</span>
-                </a>
-                <a href="https://apps.apple.com/app/id6467111338" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Download from Apple App Store">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.54c.66-.82 1.11-1.96.99-3.1-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.88-1 3 .01 0 .09.01.14.01 1.02 0 2.01-.53 2.67-1.35z"/></svg>
-                  <span>App Store</span>
-                </a>
-              </div>
-            </div>
-          </article>
-
-          <!-- PROJECT 3: Retail CRM -->
-          <article class="project-card neumorphic-card" data-category="android">
-            <div class="device-mockup-wrapper">
-              <div class="phone-frame">
-                <div class="phone-speaker"></div>
-                <div class="phone-camera"></div>
-                <div class="phone-screen">
-                  <img src="assets/images/crm.jpeg" alt="Retail CRM App Screenshot" class="phone-screenshot" loading="lazy" />
-                  <div class="phone-glass-glare"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="project-content">
-              <div class="project-meta-row">
-                <span class="project-tag tag-android">Native Android</span>
-                <span class="project-period">2021 – 2024</span>
-              </div>
-
-              <h3 class="project-title">Retail CRM</h3>
-              <p class="project-summary">
-                Large-scale retail field management app featuring resilient offline data caching, bi-directional server synchronization, and automated dealer GPS workflows.
-              </p>
-
-              <div class="project-highlights">
-                <span class="highlight-item">✓ Designed offline-first caching reducing field connectivity downtime</span>
-                <span class="highlight-item">✓ Engineered with Kotlin, Room DB, RxJava, and Retrofit</span>
-              </div>
-
-              <div class="tech-stack-chips">
-                <span class="tech-chip">Kotlin</span>
-                <span class="tech-chip">MVVM</span>
-                <span class="tech-chip">Clean Arch</span>
-                <span class="tech-chip">Room DB</span>
-                <span class="tech-chip">Retrofit</span>
-                <span class="tech-chip">RxJava</span>
-                <span class="tech-chip">Coroutines</span>
-              </div>
-
-              <div class="project-actions">
-                <a href="https://github.com/JayDutta7" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="View on GitHub">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                  <span>GitHub</span>
-                </a>
-                <button class="btn btn-ghost btn-sm" onclick="alert('Enterprise deployment deployed internally across retail distribution networks.')">
-                  <span>Internal Release</span>
-                </button>
-              </div>
-            </div>
-          </article>
-
-          <!-- PROJECT 4: Pariwar App -->
-          <article class="project-card neumorphic-card" data-category="flutter">
-            <div class="device-mockup-wrapper">
-              <div class="phone-frame">
-                <div class="phone-speaker"></div>
-                <div class="phone-camera"></div>
-                <div class="phone-screen">
-                  <img src="assets/images/pariwar.webp" alt="Pariwar Mobile App Screenshot" class="phone-screenshot" loading="lazy" />
-                  <div class="phone-glass-glare"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="project-content">
-              <div class="project-meta-row">
-                <span class="project-tag tag-flutter">Flutter Cross-Platform</span>
-                <span class="project-period">2024 – 2025</span>
-              </div>
-
-              <h3 class="project-title">Pariwar App</h3>
-              <p class="project-summary">
-                Trade partner loyalty rewards and distributor platform featuring high-speed industrial barcode & QR coupon scanning on steel bundles, cryptographic fraud prevention, and instant reward redemption.
-              </p>
-
-              <div class="project-highlights">
-                <span class="highlight-item">✓ 4.5★ rating with 5K+ downloads across iOS and Android</span>
-                <span class="highlight-item">✓ Real-time barcode & QR scanning engine using Google ML Kit</span>
-              </div>
-
-              <div class="tech-stack-chips">
-                <span class="tech-chip">Flutter</span>
-                <span class="tech-chip">Dart</span>
-                <span class="tech-chip">Barcode & QR</span>
-                <span class="tech-chip">Google ML Kit</span>
-                <span class="tech-chip">Riverpod</span>
-                <span class="tech-chip">HMAC Fraud Engine</span>
-              </div>
-
-              <div class="project-actions">
-                <a href="https://play.google.com/store/apps/details?id=com.shyamsteel.pariwar" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" aria-label="Download from Google Play Store">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a2.38 2.38 0 0 1-.61-1.636V3.45c0-.645.234-1.22.609-1.636zm11.603 11.603l2.673-2.674-12.02-6.94 9.347 9.614zm0-2.834L5.865 22.2l12.02-6.94-2.673-2.674zm1.414-1.414l3.187 1.84c1.05.606 1.05 1.594 0 2.2l-3.187 1.84-2.45-2.44 2.45-2.44z"/></svg>
-                  <span>Play Store</span>
-                </a>
-                <a href="https://apps.apple.com/app/id1635952518" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Download from Apple App Store">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.54c.66-.82 1.11-1.96.99-3.1-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.88-1 3 .01 0 .09.01.14.01 1.02 0 2.01-.53 2.67-1.35z"/></svg>
-                  <span>App Store</span>
-                </a>
-              </div>
-            </div>
-          </article>
-
-          <!-- PROJECT 5: Captain Logistics -->
-          <article class="project-card neumorphic-card" data-category="android">
-            <div class="device-mockup-wrapper">
-              <div class="phone-frame">
-                <div class="phone-speaker"></div>
-                <div class="phone-camera"></div>
-                <div class="phone-screen phone-placeholder-screen">
-                  <div class="placeholder-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                  </div>
-                  <span class="placeholder-text">Fleet Tracking UI</span>
-                  <div class="phone-glass-glare"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="project-content">
-              <div class="project-meta-row">
-                <span class="project-tag tag-android">Native Android</span>
-                <span class="project-period">2022 – 2024</span>
-              </div>
-
-              <h3 class="project-title">Captain Logistics</h3>
-              <p class="project-summary">
-                Mission-critical logistics and supply chain application enabling live GPS tracking, delivery dispatch validation, and driver manifest handling.
-              </p>
-
-              <div class="project-highlights">
-                <span class="highlight-item">✓ High-precision battery-optimized GPS tracking algorithms</span>
-                <span class="highlight-item">✓ Robust offline-first SQLite sync for remote delivery zones</span>
-              </div>
-
-              <div class="tech-stack-chips">
-                <span class="tech-chip">Android SDK</span>
-                <span class="tech-chip">Kotlin</span>
-                <span class="tech-chip">MVVM</span>
-                <span class="tech-chip">Clean Arch</span>
-                <span class="tech-chip">Room DB</span>
-                <span class="tech-chip">Retrofit</span>
-                <span class="tech-chip">RxJava</span>
-              </div>
-
-              <div class="project-actions">
-                <a href="https://github.com/JayDutta7" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="View on GitHub">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                  <span>GitHub</span>
-                </a>
-                <button class="btn btn-ghost btn-sm" onclick="alert('Enterprise logistics product with closed internal fleet distribution.')">
-                  <span>Enterprise Supply</span>
-                </button>
-              </div>
-            </div>
-          </article>
-
-          <!-- PROJECT 6: Buildistan -->
-          <article class="project-card neumorphic-card" data-category="flutter">
-            <div class="device-mockup-wrapper">
-              <div class="phone-frame">
-                <div class="phone-speaker"></div>
-                <div class="phone-camera"></div>
-                <div class="phone-screen">
-                  <img src="assets/images/buildistan.jpeg" alt="Buildistan App Screenshot" class="phone-screenshot" loading="lazy" />
-                  <div class="phone-glass-glare"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="project-content">
-              <div class="project-meta-row">
-                <span class="project-tag tag-flutter">Flutter Cross-Platform</span>
-                <span class="project-period">2023 – Present</span>
-              </div>
-
-              <h3 class="project-title">Buildistan B2B</h3>
-              <p class="project-summary">
-                High-throughput B2B building materials procurement marketplace connecting bulk contractors, suppliers, and distributors with dynamic multi-vendor cart management and secure Easebuzz payment gateway processing.
-              </p>
-
-              <div class="project-highlights">
-                <span class="highlight-item">✓ 5K+ downloads with BLoC & Easebuzz payment gateway</span>
-                <span class="highlight-item">✓ Live on both Google Play Store and iOS App Store</span>
-              </div>
-
-              <div class="tech-stack-chips">
-                <span class="tech-chip">Flutter</span>
-                <span class="tech-chip">Dart</span>
-                <span class="tech-chip">BLoC</span>
-                <span class="tech-chip">Easebuzz Gateway</span>
-                <span class="tech-chip">Clean Arch</span>
-                <span class="tech-chip">B2B Commerce</span>
-              </div>
-
-              <div class="project-actions">
-                <a href="https://play.google.com/store/apps/details?id=com.buildistan.b2b" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" aria-label="Download from Google Play Store">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a2.38 2.38 0 0 1-.61-1.636V3.45c0-.645.234-1.22.609-1.636zm11.603 11.603l2.673-2.674-12.02-6.94 9.347 9.614zm0-2.834L5.865 22.2l12.02-6.94-2.673-2.674zm1.414-1.414l3.187 1.84c1.05.606 1.05 1.594 0 2.2l-3.187 1.84-2.45-2.44 2.45-2.44z"/></svg>
-                  <span>Play Store</span>
-                </a>
-                <a href="https://apps.apple.com/app/id6472875216" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Download from Apple App Store">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.54c.66-.82 1.11-1.96.99-3.1-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.88-1 3 .01 0 .09.01.14.01 1.02 0 2.01-.53 2.67-1.35z"/></svg>
-                  <span>App Store</span>
-                </a>
-              </div>
-            </div>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- EXPERIENCE SECTION (Timeline & Recruiter Highlights) -->
-    <section id="experience" class="section reveal">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-badge neumorphic-pill">Career History</div>
-          <h2 class="section-title">Work Experience</h2>
-          <p class="section-subtitle">
-            9+ years of progressive engineering leadership across industry leaders and software product companies.
-          </p>
-        </div>
-
-        <div class="timeline">
-
-          <!-- Experience 1 -->
-          <div class="timeline-item">
-            <div class="timeline-marker"></div>
-            <div class="timeline-card neumorphic-card">
-              <div class="timeline-header">
-                <div>
-                  <h3 class="timeline-role">Android Developer</h3>
-                  <h4 class="timeline-company">Shyam Steel Industries Ltd.</h4>
-                </div>
-                <div class="timeline-badge-wrap">
-                  <span class="current-badge">Present</span>
-                  <span class="timeline-period">Sep 2020 – Present</span>
-                </div>
-              </div>
-
-              <ul class="timeline-bullets">
-                <li>Architected and delivered multiple high-traffic flagship mobile applications, improving overall app runtime performance by <strong>20%</strong>.</li>
-                <li>Spearheaded code migration from legacy Java to modern Kotlin, reducing application crash rates by <strong>20%</strong> and improving codebase maintainability.</li>
-                <li>Led and mentored a 3-developer Agile/Scrum engineering squad, driving sprint planning, code reviews, and on-time delivery.</li>
-                <li>Expanded technical scope into Flutter, delivering cross-platform apps with Riverpod and Firebase while maintaining native architecture standards.</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Experience 2 -->
-          <div class="timeline-item">
-            <div class="timeline-marker"></div>
-            <div class="timeline-card neumorphic-card">
-              <div class="timeline-header">
-                <div>
-                  <h3 class="timeline-role">Associate Consultant</h3>
-                  <h4 class="timeline-company">DCC Services Pvt Ltd.</h4>
-                </div>
-                <span class="timeline-period">Jan 2020 – Sep 2020</span>
-              </div>
-              <p class="timeline-desc">
-                Developed customized Android client solutions for small-to-medium businesses, focusing on responsive layouts, REST API integrations, and local SQLite data persistence.
-              </p>
-            </div>
-          </div>
-
-          <!-- Experience 3 -->
-          <div class="timeline-item">
-            <div class="timeline-marker"></div>
-            <div class="timeline-card neumorphic-card">
-              <div class="timeline-header">
-                <div>
-                  <h3 class="timeline-role">Android Developer</h3>
-                  <h4 class="timeline-company">Matrix Media Solution Pvt. Ltd.</h4>
-                </div>
-                <span class="timeline-period">Nov 2018 – Dec 2019</span>
-              </div>
-              <p class="timeline-desc">
-                Engineered third-party REST API integrations, payment gateways, and custom Android UI libraries for diverse client mobile products.
-              </p>
-            </div>
-          </div>
-
-          <!-- Experience 4 -->
-          <div class="timeline-item">
-            <div class="timeline-marker"></div>
-            <div class="timeline-card neumorphic-card">
-              <div class="timeline-header">
-                <div>
-                  <h3 class="timeline-role">Android Developer</h3>
-                  <h4 class="timeline-company">Nat IT Solved Pvt. Ltd.</h4>
-                </div>
-                <span class="timeline-period">Apr 2017 – Oct 2018</span>
-              </div>
-              <p class="timeline-desc">
-                Engineered native Android applications, implemented local database caching (SQLite/Room), and contributed to core business features.
-              </p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- RECRUITER CONTACT & CALL TO ACTION -->
-    <section id="contact" class="section reveal">
-      <div class="container">
-        <div class="contact-box neumorphic-card">
-          <div class="contact-header">
-            <div class="section-badge neumorphic-pill">Get In Touch</div>
-            <h2 class="contact-title">Ready to Elevate Your Mobile Engineering?</h2>
-            <p class="contact-subtitle">
-              Looking for a Senior Android (Kotlin) or Flutter Developer who writes clean, scalable, crash-resilient code? Let's connect.
-            </p>
-          </div>
-
-          <div class="contact-methods-grid">
-            
-            <a href="mailto:jayajit1989@gmail.com" class="contact-method-card" id="emailContactCard">
-              <div class="method-icon-wrap">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-              </div>
-              <div class="method-info">
-                <span class="method-label">Direct Email</span>
-                <span class="method-value">jayajit1989@gmail.com</span>
-              </div>
-            </a>
-
-            <a href="tel:+917980726164" class="contact-method-card" id="phoneContactCard">
-              <div class="method-icon-wrap">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-              </div>
-              <div class="method-info">
-                <span class="method-label">Direct Phone / WhatsApp</span>
-                <span class="method-value">+91 7980726164</span>
-              </div>
-            </a>
-
-            <a href="https://www.linkedin.com/in/jayajit-dutta-7124b9125" target="_blank" rel="noopener noreferrer" class="contact-method-card" id="linkedinContactCard">
-              <div class="method-icon-wrap">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-              </div>
-              <div class="method-info">
-                <span class="method-label">LinkedIn</span>
-                <span class="method-value">linkedin.com/in/jayajit-dutta-7124b9125</span>
-              </div>
-            </a>
-
-            <a href="https://github.com/JayDutta7" target="_blank" rel="noopener noreferrer" class="contact-method-card" id="githubContactCard">
-              <div class="method-icon-wrap">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-              </div>
-              <div class="method-info">
-                <span class="method-label">GitHub</span>
-                <span class="method-value">github.com/JayDutta7</span>
-              </div>
-            </a>
-
-          </div>
-
-          <!-- Bottom Action Row -->
-          <div class="contact-cta-row">
-            <a href="assets/resume/Jayajit_Dutta_CV.pdf" download class="btn btn-primary btn-lg" id="footerDownloadResumeBtn">
-              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              <span>Download Official CV (PDF)</span>
-            </a>
-            <button class="btn btn-secondary btn-lg" id="copyEmailFooterBtn" data-email="jayajit1989@gmail.com">
-              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              <span>Copy Email to Clipboard</span>
-            </button>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="footer-wrap">
-    <div class="container footer-container">
-      <div class="footer-left">
-        <div class="footer-brand-row" style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-          <div class="logo-badge-monogram" style="width: 28px; height: 28px; font-size: 11px; border-radius: 8px;">JD</div>
-          <span class="footer-brand" style="font-size: 1rem; font-weight: 800; letter-spacing: 0.5px;">Jayajit Dutta</span>
-        </div>
-        <span class="footer-copy">© 2026 Jayajit Dutta. Senior Mobile Application Developer.</span>
-      </div>
-      <div class="footer-links">
-        <a href="#hero" class="footer-link">Back to Top ↑</a>
       </div>
     </div>
-  </footer>
-
-  <!-- TACTILE TOAST NOTIFICATION -->
-  <div id="toastNotification" class="toast-popup" role="status" aria-live="polite">
-    <div class="toast-icon">✓</div>
-    <div class="toast-message" id="toastMessage">Email copied to clipboard!</div>
   </div>
 
-  <!-- JavaScript (Modular, Non-blocking) -->
-  <script src="js/app.js"></script>
+  <!-- ====================================================================
+       COMMAND PALETTE (CMD+K) MODAL
+       ==================================================================== -->
+  <div class="cmdk-backdrop" id="cmdkBackdrop" role="dialog" aria-modal="true" aria-label="Command Palette">
+    <div class="cmdk-dialog">
+      <div class="cmdk-search-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted);">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" class="cmdk-search-input" id="cmdkInput" placeholder="Type a command or jump to section..." autocomplete="off" spellcheck="false" />
+        <span class="cmdk-kbd">ESC</span>
+      </div>
+
+      <div class="cmdk-list" id="cmdkList">
+        <div class="cmdk-group-title">Quick Actions</div>
+        <div class="cmdk-item" data-action="download-cv">
+          <div class="cmdk-item-left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Download Official Resume (PDF)</span>
+          </div>
+          <span class="cmdk-badge">Resume</span>
+        </div>
+        <div class="cmdk-item" data-action="call">
+          <div class="cmdk-item-left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span>Call Jayajit (+91 7980726164)</span>
+          </div>
+          <span class="cmdk-badge">Phone</span>
+        </div>
+        <div class="cmdk-item" data-action="email">
+          <div class="cmdk-item-left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>Send Direct Email</span>
+          </div>
+          <span class="cmdk-badge">jayajit1989@gmail.com</span>
+        </div>
+
+        <div class="cmdk-group-title" style="margin-top: 10px;">Sections &amp; Projects</div>
+        <div class="cmdk-item" data-action="#projects">
+          <div class="cmdk-item-left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>Jump to Production Case Studies</span>
+          </div>
+          <span class="cmdk-badge">9 Projects</span>
+        </div>
+        <div class="cmdk-item" data-action="#architecture">
+          <div class="cmdk-item-left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+            <span>Mobile Engineering Architecture</span>
+          </div>
+          <span class="cmdk-badge">5 Layers</span>
+        </div>
+        <div class="cmdk-item" data-action="#skills">
+          <div class="cmdk-item-left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+            <span>Technical Skills Taxonomy</span>
+          </div>
+          <span class="cmdk-badge">6 Categories</span>
+        </div>
+        <div class="cmdk-item" data-action="#timeline">
+          <div class="cmdk-item-left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>Verified Career History</span>
+          </div>
+          <span class="cmdk-badge">4 Companies</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PWA Install Toast -->
+  <aside class="pwa-toast" id="pwaToast" role="alert" aria-live="polite">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #6366f1, #06b6d4); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; color: white;">JD</div>
+      <div>
+        <p style="font-size: 12.5px; font-weight: 700; color: #ffffff;">Install Jayajit's Portfolio App</p>
+        <p style="font-size: 11px; color: var(--text-muted);">Offline access &amp; instant native performance</p>
+      </div>
+    </div>
+    <div style="display: flex; gap: 6px;">
+      <button id="pwaInstallBtn" class="btn-pill btn-primary" style="padding: 6px 12px; font-size: 11px;">Install</button>
+      <button id="pwaDismissBtn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 4px;">✕</button>
+    </div>
+  </aside>
+
+  <!-- Mobile Bottom Floating Navigation Bar -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
+    <div class="mobile-bar-actions">
+      <a href="#hero" class="mobile-nav-btn active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Home</span>
+      </a>
+      <a href="#projects" class="mobile-nav-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        <span>Projects</span>
+      </a>
+      <a href="#architecture" class="mobile-nav-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect></svg>
+        <span>Arch</span>
+      </a>
+      <button class="mobile-nav-btn" data-open-cmdk>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <span>Search</span>
+      </button>
+      <a href="assets/resume/Jayajit_Dutta_CV.pdf" download class="mobile-nav-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <span>Resume</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Interactive JavaScript Engine -->
+  <script src="js/app.js?v=2.0"></script>
 </body>
 </html>
