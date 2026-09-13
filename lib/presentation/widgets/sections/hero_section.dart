@@ -32,131 +32,137 @@ class HeroSection extends ConsumerWidget {
     final currentLanguage = ref.watch(localeProvider);
 
     final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 600;
     final headlineFontSize = isDesktop ? 64.0 : (width < 380 ? 30.0 : (width < 600 ? 36.0 : 48.0));
     final headlineLetterSpacing = isDesktop ? -2.5 : (width < 600 ? -1.0 : -1.8);
+
+    final textContent = Column(
+      crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      children: [
+        PulseBadge(
+          label: currentLanguage.heroBadge,
+          dotColor: AppColors.primary,
+        ),
+        SizedBox(height: isMobile ? 14 : 18),
+        _TypewriterGreeting(
+          text: currentLanguage.heroGreeting,
+          isDesktop: isDesktop,
+          isDark: isDark,
+        ),
+        SizedBox(height: isMobile ? 14 : 18),
+        GradientText(
+          currentLanguage.heroHeadline,
+          colors: isDark
+              ? AppColors.heroTitleGradient
+              : AppColors.heroTitleGradientLight,
+          textAlign: isDesktop ? TextAlign.left : TextAlign.center,
+          style: theme.textTheme.displayLarge?.copyWith(
+            fontSize: headlineFontSize,
+            fontWeight: FontWeight.w900,
+            height: 1.08,
+            letterSpacing: headlineLetterSpacing,
+          ),
+        ),
+        SizedBox(height: isMobile ? 16 : 24),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 580),
+          child: Text(
+            profile.heroIntro,
+            textAlign: isDesktop ? TextAlign.left : TextAlign.center,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontSize: isMobile ? 16 : 18,
+              height: 1.65,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.75),
+            ),
+          ),
+        ),
+        SizedBox(height: isMobile ? 28 : 48),
+        Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
+          children: [
+            _PrimaryCTAButton(
+              label: currentLanguage.downloadCv,
+              icon: Icons.download_rounded,
+              onPressed: () async {
+                try {
+                  await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Download failed: $e')),
+                    );
+                  }
+                }
+              },
+            ),
+            _SecondaryCTAButton(
+              label: currentLanguage.exploreWork,
+              icon: Icons.arrow_downward_rounded,
+              onPressed: onViewWork,
+            ),
+          ],
+        ),
+        SizedBox(height: isMobile ? 24 : 36),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
+          children: [
+            _SocialPill(
+              icon: Icons.code_rounded,
+              label: 'GitHub',
+              onTap: () => LaunchHelper.openUrl(profile.githubUrl),
+            ),
+            _SocialPill(
+              icon: Icons.work_rounded,
+              label: 'LinkedIn',
+              onTap: () => LaunchHelper.openUrl(profile.linkedInUrl),
+            ),
+            _SocialPill(
+              icon: Icons.email_rounded,
+              label: 'Email',
+              onTap: () => LaunchHelper.sendEmail(profile.email),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    final avatarShowcase = Center(
+      child: _HeroOrbitAvatarShowcase(profile: profile),
+    );
 
     return SizedBox(
       key: sectionKey,
       width: double.infinity,
       child: SectionWrapper(
-        verticalPadding: isDesktop ? 100 : 48,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flex(
-              direction: isDesktop ? Axis.horizontal : Axis.vertical,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _maybeExpanded(
-                  expand: isDesktop,
-                  flex: 6,
-                  child: Column(
-                    crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-                    children: [
-                      PulseBadge(
-                        label: currentLanguage.heroBadge,
-                        dotColor: AppColors.primary,
-                      ),
-                      const SizedBox(height: 18),
-                      _TypewriterGreeting(
-                        text: currentLanguage.heroGreeting,
-                        isDesktop: isDesktop,
-                        isDark: isDark,
-                      ),
-                      const SizedBox(height: 18),
-                      GradientText(
-                        currentLanguage.heroHeadline,
-                        colors: isDark
-                            ? AppColors.heroTitleGradient
-                            : AppColors.heroTitleGradientLight,
-                        textAlign: isDesktop ? TextAlign.left : TextAlign.center,
-                        style: theme.textTheme.displayLarge?.copyWith(
-                          fontSize: headlineFontSize,
-                          fontWeight: FontWeight.w900,
-                          height: 1.08,
-                          letterSpacing: headlineLetterSpacing,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 580),
-                        child: Text(
-                          profile.heroIntro,
-                          textAlign: isDesktop ? TextAlign.left : TextAlign.center,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontSize: 18,
-                            height: 1.65,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.75),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 48),
-                      Wrap(
-                        spacing: 16,
-                        runSpacing: 16,
-                        alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
-                        children: [
-                          _PrimaryCTAButton(
-                            label: currentLanguage.downloadCv,
-                            icon: Icons.download_rounded,
-                            onPressed: () async {
-                              try {
-                                await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
-                              } catch (e) {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Download failed: $e')),
-                                  );
-                                }
-                              }
-                            },
-                          ),
-                          _SecondaryCTAButton(
-                            label: currentLanguage.exploreWork,
-                            icon: Icons.arrow_downward_rounded,
-                            onPressed: onViewWork,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 36),
-                      Wrap(
-                        spacing: 12,
-                        runSpacing: 12,
-                        alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
-                        children: [
-                          _SocialPill(
-                            icon: Icons.code_rounded,
-                            label: 'GitHub',
-                            onTap: () => LaunchHelper.openUrl(profile.githubUrl),
-                          ),
-                          _SocialPill(
-                            icon: Icons.work_rounded,
-                            label: 'LinkedIn',
-                            onTap: () => LaunchHelper.openUrl(profile.linkedInUrl),
-                          ),
-                          _SocialPill(
-                            icon: Icons.email_rounded,
-                            label: 'Email',
-                            onTap: () => LaunchHelper.sendEmail(profile.email),
-                          ),
-                        ],
-                      ),
-                    ],
+        verticalPadding: isDesktop ? 100 : 28,
+        child: isDesktop
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: 6,
+                    child: textContent,
                   ),
-                ),
-                if (isDesktop) const SizedBox(width: 60),
-                if (!isDesktop) const SizedBox(height: 48),
-                _maybeExpanded(
-                  expand: isDesktop,
-                  flex: 5,
-                  child: Center(
-                    child: _HeroOrbitAvatarShowcase(profile: profile),
+                  const SizedBox(width: 60),
+                  Expanded(
+                    flex: 5,
+                    child: avatarShowcase,
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // On mobile/tablet: Display the animated orbit avatar prominently at the top
+                  avatarShowcase,
+                  const SizedBox(height: 28),
+                  textContent,
+                ],
+              ),
       ),
     );
   }
@@ -283,10 +289,15 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    const double canvasSize = 420.0;
-    const double centerCoord = canvasSize / 2;
-    const double orbitRadius = 162.0;
-    const double avatarSize = 228.0;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isMobile = screenWidth < 600;
+
+    final double canvasSize = isMobile ? 320.0 : 420.0;
+    final double centerCoord = canvasSize / 2;
+    final double orbitRadius = isMobile ? 120.0 : 162.0;
+    final double avatarSize = isMobile ? 164.0 : 228.0;
+    final double badgeSize = isMobile ? 36.0 : 46.0;
+    final double iconSize = isMobile ? 20.0 : 26.0;
 
     return FittedBox(
       fit: BoxFit.scaleDown,
@@ -299,7 +310,7 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
           children: [
             // 1. Orbital track & radar ring background
             CustomPaint(
-              size: const Size(canvasSize, canvasSize),
+              size: Size(canvasSize, canvasSize),
               painter: _OrbitTrackPainter(
                 orbitRadius: orbitRadius,
                 isDark: isDark,
@@ -313,8 +324,8 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
                 return Transform.scale(
                   scale: _pulseAnimation.value,
                   child: Container(
-                    width: avatarSize + 36,
-                    height: avatarSize + 36,
+                    width: avatarSize + (isMobile ? 24 : 36),
+                    height: avatarSize + (isMobile ? 24 : 36),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
@@ -332,58 +343,67 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
               },
             ),
 
-            // 3. Circular Avatar with neon multi-gradient border
-            Container(
-              width: avatarSize,
-              height: avatarSize,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const SweepGradient(
-                  colors: [
-                    Color(0xFF8B5CF6),
-                    Color(0xFF06B6D4),
-                    Color(0xFFEC4899),
-                    Color(0xFF3B82F6),
-                    Color(0xFF8B5CF6),
-                  ],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.45),
-                    blurRadius: 36,
-                    spreadRadius: 2,
-                    offset: const Offset(0, 8),
-                  ),
-                  BoxShadow(
-                    color: const Color(0xFF06B6D4).withValues(alpha: 0.25),
-                    blurRadius: 24,
-                    spreadRadius: -4,
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(4.0),
+            // 3. Circular Avatar with neon multi-gradient border (tap to pause/resume orbit)
+            GestureDetector(
+              onTap: () {
+                if (_orbitController.isAnimating) {
+                  _orbitController.stop();
+                } else {
+                  _orbitController.repeat();
+                }
+              },
               child: Container(
+                width: avatarSize,
+                height: avatarSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isDark ? const Color(0xFF0A0D14) : Colors.white,
-                  border: Border.all(
-                    color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.8),
-                    width: 2.0,
+                  gradient: const SweepGradient(
+                    colors: [
+                      Color(0xFF8B5CF6),
+                      Color(0xFF06B6D4),
+                      Color(0xFFEC4899),
+                      Color(0xFF3B82F6),
+                      Color(0xFF8B5CF6),
+                    ],
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF8B5CF6).withValues(alpha: 0.45),
+                      blurRadius: isMobile ? 24 : 36,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 6),
+                    ),
+                    BoxShadow(
+                      color: const Color(0xFF06B6D4).withValues(alpha: 0.25),
+                      blurRadius: isMobile ? 16 : 24,
+                      spreadRadius: -4,
+                    ),
+                  ],
                 ),
-                child: ClipOval(
-                  child: Image.asset(
-                    widget.profile.profilePicture,
-                    fit: BoxFit.cover,
-                    width: avatarSize,
-                    height: avatarSize,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
-                      child: const Center(
-                        child: Icon(
-                          Icons.person_rounded,
-                          size: 90,
-                          color: AppColors.primary,
+                padding: const EdgeInsets.all(3.5),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isDark ? const Color(0xFF0A0D14) : Colors.white,
+                    border: Border.all(
+                      color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.8),
+                      width: 2.0,
+                    ),
+                  ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      widget.profile.profilePicture,
+                      fit: BoxFit.cover,
+                      width: avatarSize,
+                      height: avatarSize,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
+                        child: Center(
+                          child: Icon(
+                            Icons.person_rounded,
+                            size: isMobile ? 64 : 90,
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
                     ),
@@ -405,79 +425,86 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
                     final x = centerCoord + orbitRadius * math.cos(angle);
                     final y = centerCoord + orbitRadius * math.sin(angle);
                     final isHovered = _hoveredBadgeIndex == index;
-                    const badgeSize = 46.0;
 
                     return Positioned(
                       left: x - badgeSize / 2,
                       top: y - badgeSize / 2,
-                      child: MouseRegion(
-                        onEnter: (_) {
+                      child: GestureDetector(
+                        onTap: () {
                           setState(() {
-                            _hoveredBadgeIndex = index;
+                            _hoveredBadgeIndex = (_hoveredBadgeIndex == index) ? null : index;
                           });
                         },
-                        onExit: (_) {
-                          setState(() {
-                            if (_hoveredBadgeIndex == index) {
-                              _hoveredBadgeIndex = null;
-                            }
-                          });
-                        },
-                        cursor: SystemMouseCursors.click,
-                        child: Tooltip(
-                          message: badge.name,
-                          textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF0F172A).withValues(alpha: 0.95),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: badge.color.withValues(alpha: 0.6),
-                              width: 1,
+                        child: MouseRegion(
+                          onEnter: (_) {
+                            setState(() {
+                              _hoveredBadgeIndex = index;
+                            });
+                          },
+                          onExit: (_) {
+                            setState(() {
+                              if (_hoveredBadgeIndex == index) {
+                                _hoveredBadgeIndex = null;
+                              }
+                            });
+                          },
+                          cursor: SystemMouseCursors.click,
+                          child: Tooltip(
+                            triggerMode: TooltipTriggerMode.tap,
+                            message: badge.name,
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
                             ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: badge.glowColor.withValues(alpha: 0.4),
-                                blurRadius: 10,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0F172A).withValues(alpha: 0.95),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: badge.color.withValues(alpha: 0.6),
+                                width: 1,
                               ),
-                            ],
-                          ),
-                          child: AnimatedScale(
-                            duration: const Duration(milliseconds: 180),
-                            scale: isHovered ? 1.28 : 1.0,
-                            child: Container(
-                              width: badgeSize,
-                              height: badgeSize,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isDark
-                                    ? const Color(0xFF0B0F19)
-                                    : const Color(0xFFFFFFFF),
-                                border: Border.all(
-                                  color: isHovered
-                                      ? badge.color
-                                      : badge.color.withValues(alpha: 0.55),
-                                  width: isHovered ? 2.2 : 1.5,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: badge.glowColor.withValues(alpha: 0.4),
+                                  blurRadius: 10,
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: badge.glowColor.withValues(alpha: isHovered ? 0.65 : 0.35),
-                                    blurRadius: isHovered ? 18 : 10,
-                                    spreadRadius: isHovered ? 2 : 0.5,
+                              ],
+                            ),
+                            child: AnimatedScale(
+                              duration: const Duration(milliseconds: 180),
+                              scale: isHovered ? 1.28 : 1.0,
+                              child: Container(
+                                width: badgeSize,
+                                height: badgeSize,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isDark
+                                      ? const Color(0xFF0B0F19)
+                                      : const Color(0xFFFFFFFF),
+                                  border: Border.all(
+                                    color: isHovered
+                                        ? badge.color
+                                        : badge.color.withValues(alpha: 0.55),
+                                    width: isHovered ? 2.2 : 1.5,
                                   ),
-                                ],
-                              ),
-                              child: Center(
-                                child: SizedBox(
-                                  width: 26,
-                                  height: 26,
-                                  child: CustomPaint(
-                                    painter: _TechLogoPainter(
-                                      type: badge.type,
-                                      color: badge.color,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: badge.glowColor.withValues(alpha: isHovered ? 0.65 : 0.35),
+                                      blurRadius: isHovered ? 18 : 10,
+                                      spreadRadius: isHovered ? 2 : 0.5,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: SizedBox(
+                                    width: iconSize,
+                                    height: iconSize,
+                                    child: CustomPaint(
+                                      painter: _TechLogoPainter(
+                                        type: badge.type,
+                                        color: badge.color,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -905,7 +932,6 @@ class _TypewriterGreetingState extends State<_TypewriterGreeting> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text('👋 ', style: TextStyle(fontSize: 22)),
                 GradientText(
                   displayedText.isEmpty ? ' ' : displayedText,
                   colors: widget.isDark
@@ -1156,15 +1182,4 @@ class _SocialPillState extends State<_SocialPill> {
       ),
     );
   }
-}
-
-Widget _maybeExpanded({
-  required bool expand,
-  required int flex,
-  required Widget child,
-}) {
-  if (expand) {
-    return Expanded(flex: flex, child: child);
-  }
-  return child;
 }

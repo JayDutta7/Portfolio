@@ -2287,6 +2287,24 @@ code, pre, .font-mono, .badge-mono, .metric-val {
   .mobile-bottom-bar {
     display: block;
   }
+  .profile-top {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+  .avatar-orbit-container {
+    margin: 0 auto;
+  }
+  .profile-headline {
+    text-align: center;
+  }
+  .typewriter-greeting-container {
+    justify-content: center;
+  }
+  .profile-actions {
+    justify-content: center;
+  }
   .profile-headline h2 {
     font-size: 22px;
   }
