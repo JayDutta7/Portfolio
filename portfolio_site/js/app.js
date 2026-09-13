@@ -767,11 +767,6 @@ Date:   Sep 13 2026
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if (toast) {
-        setTimeout(() => {
-          toast.classList.add('visible');
-        }, 2500);
-      }
     });
 
     if (installBtn) {

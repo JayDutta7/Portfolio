@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,7 +5,6 @@ import '../../core/theme/app_colors.dart';
 import '../../core/utils/distribution_helper.dart';
 import '../viewmodels/locale_viewmodel.dart';
 import '../viewmodels/profile_viewmodel.dart';
-import '../widgets/common/app_download_dialog.dart';
 import '../widgets/common/mesh_background.dart';
 import '../widgets/common/nav_bar.dart';
 import '../widgets/sections/about_section.dart';
@@ -29,8 +27,6 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  static bool _promptDialogShown = false;
-
   final _heroKey = GlobalKey();
   final _aboutKey = GlobalKey();
   final _skillsKey = GlobalKey();
@@ -43,16 +39,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     super.initState();
     DistributionHelper.init();
-    if (kIsWeb && !_promptDialogShown) {
-      _promptDialogShown = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Future.delayed(const Duration(milliseconds: 1400), () {
-          if (mounted) {
-            AppDownloadDialog.show(context);
-          }
-        });
-      });
-    }
   }
 
   List<NavItem> _getNavItems(AppLanguage lang) => [

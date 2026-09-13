@@ -66,7 +66,7 @@ class _ModernToolkitPalette extends StatelessWidget {
     final categories = [
       {
         'title': 'MOBILE DEVELOPMENT',
-        'items': ['Android SDK', 'Flutter', 'Jetpack Compose', 'Kotlin', 'Dart'],
+        'items': ['Android SDK', 'Flutter', 'Kotlin', 'Jetpack Compose', 'Coroutines', 'Dagger / Hilt', 'Dart'],
         'color': AppColors.primary,
         'icon': Icons.smartphone_rounded,
       },
@@ -109,13 +109,13 @@ class _ModernToolkitPalette extends StatelessWidget {
         final double aspect;
         if (width >= 1150) {
           columns = 3;
-          aspect = 1.35;
+          aspect = 1.28;
         } else if (width >= 640) {
           columns = 2;
-          aspect = 1.45;
+          aspect = 1.35;
         } else {
           columns = 1;
-          aspect = 1.6;
+          aspect = 1.35;
         }
 
         return GridView.builder(

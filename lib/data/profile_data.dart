@@ -431,7 +431,7 @@ class ProfileData {
       SkillCategory(
         title: 'Mobile Engineering',
         iconAsset: 'mobile',
-        skills: ['Kotlin', 'Android SDK', 'Flutter', 'Dart', 'Jetpack Compose', 'Java'],
+        skills: ['Kotlin', 'Android SDK', 'Flutter', 'Dart', 'Jetpack Compose', 'Coroutines', 'Dagger / Hilt', 'Java'],
       ),
       SkillCategory(
         title: 'Architecture & State',
@@ -568,7 +568,7 @@ class ProfileData {
       SkillCategory(
         title: 'মোবাইল ইঞ্জিনিয়ারিং',
         iconAsset: 'mobile',
-        skills: ['Kotlin', 'Android SDK', 'Flutter', 'Dart', 'Jetpack Compose', 'Java'],
+        skills: ['Kotlin', 'Android SDK', 'Flutter', 'Dart', 'Jetpack Compose', 'Coroutines', 'Dagger / Hilt', 'Java'],
       ),
       SkillCategory(
         title: 'আর্কিটেকচার ও স্টেট',
@@ -683,7 +683,7 @@ class ProfileData {
       SkillCategory(
         title: 'मोबाइल इंजीनियरिंग',
         iconAsset: 'mobile',
-        skills: ['Kotlin', 'Android SDK', 'Flutter', 'Dart', 'Jetpack Compose', 'Java'],
+        skills: ['Kotlin', 'Android SDK', 'Flutter', 'Dart', 'Jetpack Compose', 'Coroutines', 'Dagger / Hilt', 'Java'],
       ),
       SkillCategory(
         title: 'आर्किटेक्चर और स्टेट',
