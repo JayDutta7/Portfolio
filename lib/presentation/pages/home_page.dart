@@ -65,6 +65,19 @@ class _HomePageState extends ConsumerState<HomePage> {
   void _scrollTo(GlobalKey key) {
     final ctx = key.currentContext;
     if (ctx != null) {
+      final renderObject = ctx.findRenderObject() as RenderBox?;
+      if (renderObject != null) {
+        final scrollable = Scrollable.of(ctx);
+        final position = scrollable.position;
+        final offset = renderObject.localToGlobal(Offset.zero, ancestor: scrollable.context.findRenderObject()).dy;
+        final target = (position.pixels + offset - 85).clamp(0.0, position.maxScrollExtent);
+        position.animateTo(
+          target,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOutCubic,
+        );
+        return;
+      }
       Scrollable.ensureVisible(
         ctx,
         duration: const Duration(milliseconds: 600),
@@ -84,6 +97,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       appBar: NavBar(
         items: _getNavItems(currentLanguage),
         onNavTap: _scrollTo,
+        onLogoTap: () => _scrollTo(_heroKey),
       ),
       body: Stack(
         children: [

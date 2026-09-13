@@ -14,6 +14,14 @@ enum AppLanguage {
 }
 
 extension AppLanguageX on AppLanguage {
+  String get navHome {
+    switch (this) {
+      case AppLanguage.bengali: return 'হোম';
+      case AppLanguage.hindi: return 'होम';
+      case AppLanguage.english: return 'HOME';
+    }
+  }
+
   String get navWork {
     switch (this) {
       case AppLanguage.bengali: return 'কাজ';

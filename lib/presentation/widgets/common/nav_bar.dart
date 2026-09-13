@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../core/utils/resume_download/resume_download.dart';
@@ -19,14 +20,15 @@ class NavItem {
 class NavBar extends ConsumerWidget implements PreferredSizeWidget {
   final List<NavItem> items;
   final ValueChanged<GlobalKey> onNavTap;
+  final VoidCallback? onLogoTap;
 
   const NavBar({
     required this.items,
     required this.onNavTap,
+    this.onLogoTap,
     super.key,
   });
 
-  @override
   @override
   Size get preferredSize => const Size.fromHeight(80);
 
@@ -45,7 +47,10 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
       bottom: false,
       child: Container(
         height: preferredSize.height,
-        padding: EdgeInsets.symmetric(horizontal: isDesktop ? hPad : (width < 360 ? 8 : 14), vertical: 10),
+        padding: EdgeInsets.symmetric(
+          horizontal: isDesktop ? hPad : (width < 360 ? 6 : 10),
+          vertical: 8,
+        ),
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1300),
@@ -73,10 +78,13 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                       ),
                     ],
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: isDesktop ? 18 : (width < 360 ? 8 : 12), vertical: 6),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isDesktop ? 18 : (width < 360 ? 6 : 10),
+                    vertical: 4,
+                  ),
                   child: Row(
                     children: [
-                      const Flexible(child: _Logo()),
+                      Flexible(child: _Logo(onTap: onLogoTap)),
                       if (isDesktop && width >= 1150) ...[
                         const SizedBox(width: 14),
                         Flexible(
@@ -106,14 +114,17 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                           fileName: profile.resumeDownloadFileName,
                         ),
                       ] else ...[
+                        const _LanguageSelector(),
+                        const SizedBox(width: 2),
                         _ThemeToggle(
                           isDark: themeController.isDark,
                           onToggle: themeController.toggle,
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 2),
                         IconButton(
                           icon: const Icon(Icons.menu_rounded, size: 24),
-                          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                          constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                          tooltip: 'Navigation Menu',
                           onPressed: () => _openMobileMenu(context, ref, profile),
                         ),
                       ],
@@ -134,117 +145,220 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       isScrollControlled: true,
+      useSafeArea: true,
       builder: (sheetContext) {
         final theme = Theme.of(context);
         final isDark = theme.brightness == Brightness.dark;
         final currentLanguage = ref.watch(localeProvider);
 
         return ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Container(
               decoration: BoxDecoration(
                 color: isDark
-                    ? AppColors.darkSurface.withValues(alpha: 0.95)
-                    : Colors.white.withValues(alpha: 0.95),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                    ? AppColors.darkSurface.withValues(alpha: 0.96)
+                    : Colors.white.withValues(alpha: 0.96),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
                 border: Border.all(color: theme.dividerColor, width: 1),
               ),
-              padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 48,
-                    height: 5,
-                    margin: const EdgeInsets.only(bottom: 24),
-                    decoration: BoxDecoration(
-                      color: theme.dividerColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: SafeArea(
+                top: false,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 28),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      PulseBadge(
-                        label: currentLanguage.availableBadge,
-                        dotColor: AppColors.emerald,
-                      ),
-                      const _LanguageSelector(),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  for (final item in items)
-                    ListTile(
-                      contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                      title: Text(
-                        item.label.toUpperCase(),
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14,
+                      // Drag Handle
+                      Center(
+                        child: Container(
+                          width: 44,
+                          height: 4,
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: theme.dividerColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                      trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
-                      onTap: () {
-                        Navigator.of(sheetContext).pop();
-                        onNavTap(item.sectionKey);
-                      },
-                    ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(colors: AppColors.primaryGradient),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.35),
-                            blurRadius: 16,
-                            offset: const Offset(0, 4),
+
+                      // Full Opportunity Announcement Pill
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? AppColors.emerald.withValues(alpha: 0.12)
+                              : AppColors.emerald.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppColors.emerald.withValues(alpha: 0.3),
                           ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: AppColors.emerald,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                currentLanguage.availableBadge,
+                                style: GoogleFonts.jetBrainsMono(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: isDark
+                                      ? const Color(0xFF34D399)
+                                      : const Color(0xFF047857),
+                                  letterSpacing: 0.2,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Status Badge & Language Selector Row (Zero overflow)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: PulseBadge(
+                              label: currentLanguage.navBadge,
+                              dotColor: AppColors.emerald,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const _LanguageSelector(),
                         ],
                       ),
-                      child: ElevatedButton.icon(
-                        onPressed: () async {
-                          Navigator.of(sheetContext).pop();
-                          try {
-                            await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
-                          } catch (e) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Download failed: $e')),
-                              );
-                            }
-                          }
-                        },
-                        icon: const Icon(Icons.download_rounded, size: 18, color: Colors.white),
-                        label: Text(
-                          currentLanguage.downloadCv.toUpperCase(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1.4,
-                            fontSize: 13,
-                            color: Colors.white,
+                      const SizedBox(height: 12),
+                      const Divider(height: 1),
+                      const SizedBox(height: 6),
+
+                      // Home nav link
+                      ListTile(
+                        dense: true,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                        leading: const Icon(Icons.home_rounded, size: 20, color: AppColors.primary),
+                        title: Text(
+                          currentLanguage.navHome.toUpperCase(),
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 13.5,
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 13),
+                        onTap: () {
+                          Navigator.of(sheetContext).pop();
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Future.delayed(const Duration(milliseconds: 200), () {
+                              onLogoTap?.call();
+                            });
+                          });
+                        },
+                      ),
+
+                      // Section nav links
+                      for (final item in items)
+                        ListTile(
+                          dense: true,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                          leading: Icon(
+                            _iconForNavItem(item.label, currentLanguage),
+                            size: 19,
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                          ),
+                          title: Text(
+                            item.label.toUpperCase(),
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13.5,
+                            ),
+                          ),
+                          trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 13),
+                          onTap: () {
+                            Navigator.of(sheetContext).pop();
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              Future.delayed(const Duration(milliseconds: 200), () {
+                                onNavTap(item.sectionKey);
+                              });
+                            });
+                          },
+                        ),
+                      const SizedBox(height: 16),
+
+                      // Resume Download Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(colors: AppColors.primaryGradient),
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withValues(alpha: 0.35),
+                                blurRadius: 14,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              Navigator.of(sheetContext).pop();
+                              try {
+                                await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
+                              } catch (e) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Download failed: $e')),
+                                  );
+                                }
+                              }
+                            },
+                            icon: const Icon(Icons.download_rounded, size: 18, color: Colors.white),
+                            label: Text(
+                              currentLanguage.downloadCv.toUpperCase(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 1.2,
+                                fontSize: 12.5,
+                                color: Colors.white,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
         );
       },
     );
+  }
+
+  IconData _iconForNavItem(String label, AppLanguage lang) {
+    if (label == lang.navWork.toUpperCase()) return Icons.work_outline_rounded;
+    if (label == lang.navExperience.toUpperCase()) return Icons.timeline_rounded;
+    if (label == lang.navEngineering.toUpperCase()) return Icons.terminal_rounded;
+    if (label == lang.navAbout.toUpperCase()) return Icons.person_outline_rounded;
+    return Icons.navigation_rounded;
   }
 }
 
@@ -324,7 +438,9 @@ class _LanguageSelector extends ConsumerWidget {
 }
 
 class _Logo extends StatelessWidget {
-  const _Logo();
+  final VoidCallback? onTap;
+  const _Logo({this.onTap});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -332,51 +448,57 @@ class _Logo extends StatelessWidget {
     final isVeryCompact = width < 360;
     final isCompact = width < 500;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: AppColors.primaryGradient),
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.4),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+    return MouseRegion(
+      cursor: onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(colors: AppColors.primaryGradient),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.4),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: const Center(
-            child: Text(
-              'JD',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w900,
-                fontSize: 13,
-                letterSpacing: -0.5,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Flexible(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              'JAYAJIT DUTTA',
-              maxLines: 1,
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w900,
-                letterSpacing: isVeryCompact ? 0.8 : (isCompact ? 1.2 : 2.0),
-                fontSize: isVeryCompact ? 11.5 : (isCompact ? 12.5 : 14),
+              child: const Center(
+                child: Text(
+                  'JD',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 13,
+                    letterSpacing: -0.5,
+                  ),
+                ),
               ),
             ),
-          ),
+            const SizedBox(width: 8),
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'JAYAJIT DUTTA',
+                  maxLines: 1,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: isVeryCompact ? 0.8 : (isCompact ? 1.2 : 2.0),
+                    fontSize: isVeryCompact ? 11.5 : (isCompact ? 12.5 : 14),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

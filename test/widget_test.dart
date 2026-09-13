@@ -70,4 +70,38 @@ void main() {
     expect(find.text('DOWNLOAD RESUME'), findsWidgets);
     expect(find.textContaining('Android'), findsWidgets);
   });
+
+  testWidgets('Mobile menu opens, displays nav items, and navigates without overflow', (tester) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() => tester.view.resetPhysicalSize());
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: PortfolioApp(),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    // Find the mobile menu icon button
+    final menuButton = find.byIcon(Icons.menu_rounded);
+    expect(menuButton, findsOneWidget);
+
+    // Tap the menu button to open the mobile bottom sheet
+    await tester.tap(menuButton);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    // Verify items in mobile sheet
+    expect(find.widgetWithText(ListTile, 'HOME'), findsOneWidget);
+    expect(find.widgetWithText(ListTile, 'WORK'), findsOneWidget);
+    expect(find.widgetWithText(ListTile, 'EXPERIENCE'), findsOneWidget);
+
+    // Tap on WORK
+    await tester.tap(find.widgetWithText(ListTile, 'WORK'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+  });
 }
