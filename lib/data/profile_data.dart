@@ -418,7 +418,7 @@ class ProfileData {
     linkedInUrl: linkedInUrl,
     githubUrl: githubUrl,
     heroIntro:
-        'Senior Android & Flutter Engineer with 9+ years of production experience architecting, deploying, and scaling mission-critical mobile systems. Deep expertise spanning Native Android (Kotlin, Jetpack Compose, LiveData), Flutter (Dart, BLoC, Riverpod), MVVM & Clean Architecture, and resilient offline-first systems.',
+        'Senior Android & Flutter Engineer — 9+ years building, deploying, and scaling mission-critical mobile systems, with deep expertise across Native Android and Flutter.',
     aboutMe:
         'I am a Senior Android & Flutter Engineer with over 9 years of production experience building native Android and cross-platform Flutter applications end-to-end — from system architecture to store releases.\n\nMy core technical stack includes Native Android (Kotlin, Java), Jetpack Compose, MVVM, LiveData, Flutter (Dart), Clean Architecture, BLoC, Riverpod, Room, SQLite, Retrofit, Dio, and Coroutines/Flow.\n\nMy native specializations include Method Channels, Foreground Services, Background Geolocation, BLE/Bluetooth, WebRTC low-latency streaming, SQLCipher database encryption, and resilient offline-first synchronization.\n\nOver the course of my career across Shyam Steel Industries, Nat IT Solved, Matrix Media Solution, and DCC Services, I have engineered 9 verified production apps across Google Play Store and Apple App Store, modernizing architectures, slashing crash rates by 20%, and improving runtime speeds by 20%.',
     profilePicture: profilePicture,
