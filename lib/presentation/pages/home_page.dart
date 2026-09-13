@@ -107,20 +107,13 @@ class _HomePageState extends ConsumerState<HomePage> {
         onLogoTap: () => _scrollTo(_heroKey),
         onVoiceTap: _openVoiceAssistant,
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: _openVoiceAssistant,
         backgroundColor: AppColors.secondary,
         elevation: 6,
-        icon: const Icon(Icons.mic, color: Colors.white, size: 20),
-        label: Text(
-          'Voice Nav',
-          style: GoogleFonts.plusJakartaSans(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-            fontSize: 12,
-            letterSpacing: 0.3,
-          ),
-        ),
+        shape: const CircleBorder(),
+        tooltip: 'Voice Navigation',
+        child: const Icon(Icons.mic_rounded, color: Colors.white, size: 24),
       ),
       body: Stack(
         children: [
