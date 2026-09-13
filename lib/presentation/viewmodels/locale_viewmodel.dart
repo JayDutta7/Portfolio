@@ -88,9 +88,9 @@ extension AppLanguageX on AppLanguage {
 
   String get availableBadge {
     switch (this) {
-      case AppLanguage.bengali: return 'নতুন সুযোগের সন্ধান • ইন-অফিস বা রিমোট উপলব্ধ';
-      case AppLanguage.hindi: return 'नए अवसर की तलाश • इन-ऑफिस या रिमोट में उपलब्ध';
-      case AppLanguage.english: return 'Looking for new opportunity available in in-office or remote';
+      case AppLanguage.bengali: return 'নতুন সুযোগের জন্য উপলব্ধ';
+      case AppLanguage.hindi: return 'नए अवसरों के लिए उपलब्ध';
+      case AppLanguage.english: return 'Available for new opportunities';
     }
   }
 
