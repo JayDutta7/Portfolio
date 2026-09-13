@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/launch_helper.dart';
 import '../../domain/models/profile_models.dart';
@@ -34,197 +35,390 @@ class ProjectDetailsPage extends StatelessWidget {
     final isMobile = width < 640;
     final isCompact = width < 380;
 
+    final isShyamSteel = project.category == ProjectCategory.shyamSteel ||
+        project.company.toLowerCase().contains('shyam steel');
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: isMobile ? 240 : 380,
-            pinned: true,
-            backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-            leading: IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurface : Colors.white,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: theme.dividerColor),
-                ),
-                child: const Icon(Icons.arrow_back_rounded, size: 18),
-              ),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: EdgeInsets.symmetric(horizontal: isMobile ? 56 : 32, vertical: 16),
-              title: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  project.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    fontSize: isMobile ? (isCompact ? 16 : 18) : 24,
+      body: SelectionArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              expandedHeight: isMobile ? 260 : 360,
+              pinned: true,
+              backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+              leading: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                tooltip: 'Back to Case Studies',
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkSurface : Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: theme.dividerColor),
                   ),
+                  child: const Icon(Icons.arrow_back_rounded, size: 18),
                 ),
               ),
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          accentColor.withValues(alpha: 0.8),
-                          isDark ? AppColors.darkBackground : AppColors.lightBackground,
-                        ],
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Opacity(
-                      opacity: 0.15,
-                      child: Icon(
-                        isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
-                        size: 180,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: SectionWrapper(
-              verticalPadding: 60,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _Section(title: '01 — OVERVIEW', content: project.overview),
-                  _Section(
-                    title: '02 — THE CHALLENGE',
-                    content: project.technicalChallenge ??
-                        'Architecting a robust, scalable mobile solution engineered for seamless offline operation, high data throughput, and low battery consumption.',
-                  ),
-                  _Section(title: '03 — MY ROLE & RESPONSIBILITIES', content: project.myRole),
-                  if (project.architecture != null)
-                    _Section(title: '04 — ARCHITECTURE & PATTERNS', content: project.architecture!),
-                  _Section(
-                    title: '05 — TECHNOLOGY STACK',
-                    child: Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
-                      children: [
-                        for (final tech in project.techStack)
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 48 : 32,
+                  vertical: 16,
+                ),
+                title: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.bottomLeft,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
-                              color: accentColor.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+                              color: isShyamSteel
+                                  ? const Color(0xFFF59E0B).withValues(alpha: 0.25)
+                                  : accentColor.withValues(alpha: 0.25),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: isShyamSteel
+                                    ? const Color(0xFFF59E0B)
+                                    : accentColor,
+                              ),
                             ),
                             child: Text(
-                              tech,
-                              style: theme.textTheme.labelLarge?.copyWith(
-                                color: accentColor,
+                              isShyamSteel ? 'SHYAM STEEL ENTERPRISE' : 'CLIENT SOLUTION',
+                              style: GoogleFonts.jetBrainsMono(
+                                fontSize: 9,
                                 fontWeight: FontWeight.w800,
+                                color: isShyamSteel ? const Color(0xFFF59E0B) : accentColor,
+                                letterSpacing: 0.8,
                               ),
                             ),
                           ),
-                      ],
-                    ),
+                          const SizedBox(width: 8),
+                          Text(
+                            project.company,
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        project.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          fontSize: isMobile ? (isCompact ? 16 : 18) : 24,
+                        ),
+                      ),
+                    ],
                   ),
-                  if (project.keyFeatures.isNotEmpty)
-                    _Section(
-                      title: '06 — KEY FEATURES',
+                ),
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            accentColor.withValues(alpha: 0.85),
+                            isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 20,
+                      bottom: 20,
+                      child: Opacity(
+                        opacity: 0.12,
+                        child: Icon(
+                          isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
+                          size: isMobile ? 140 : 220,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SectionWrapper(
+                verticalPadding: isMobile ? 32 : 56,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Top summary bar
+                    GlassContainer(
+                      padding: EdgeInsets.all(isMobile ? 18 : 28),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          for (final feature in project.keyFeatures)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(2),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.emerald.withValues(alpha: 0.2),
-                                      shape: BoxShape.circle,
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: accentColor.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(
+                                  isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
+                                  color: accentColor,
+                                  size: 24,
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      project.myRole,
+                                      style: theme.textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                      ),
                                     ),
-                                    child: const Icon(Icons.check_rounded, size: 14, color: AppColors.emerald),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '${project.company} • ${project.stackSummary}',
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (project.links.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                for (final link in project.links)
+                                  OutlinedButton.icon(
+                                    onPressed: () => LaunchHelper.openUrl(link.url),
+                                    icon: Icon(_linkIcon(link.type), size: 14),
+                                    label: Text(
+                                      link.label,
+                                      style: GoogleFonts.jetBrainsMono(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: accentColor,
+                                      side: BorderSide(color: accentColor.withValues(alpha: 0.4)),
+                                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
                                   ),
-                                  const SizedBox(width: 14),
+                              ],
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+
+                    // 01 Problem & Scope
+                    _Section(
+                      badge: '01',
+                      title: 'PROBLEM & SCOPE',
+                      accentColor: accentColor,
+                      content: project.effectiveProblemScope,
+                    ),
+
+                    // 02 Technical Architecture
+                    _Section(
+                      badge: '02',
+                      title: 'TECHNICAL ARCHITECTURE',
+                      accentColor: accentColor,
+                      content: project.effectiveTechnicalArchitecture,
+                    ),
+
+                    // 03 Hard Engineering Challenges & Solutions
+                    _Section(
+                      badge: '03',
+                      title: 'HARD ENGINEERING CHALLENGES & SOLUTIONS',
+                      accentColor: accentColor,
+                      content: project.effectiveHardChallenges,
+                    ),
+
+                    // 04 Quantifiable Impact & Business Value
+                    _Section(
+                      badge: '04',
+                      title: 'QUANTIFIABLE IMPACT & BUSINESS VALUE',
+                      accentColor: const Color(0xFF10B981),
+                      content: project.effectiveQuantifiableImpact,
+                    ),
+
+                    // 05 Technology Stack (JetBrains Mono Badges)
+                    _Section(
+                      badge: '05',
+                      title: 'ENGINEERING STACK & ECOSYSTEM',
+                      accentColor: accentColor,
+                      child: Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: [
+                          for (final tech in project.techStack)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                              decoration: BoxDecoration(
+                                color: accentColor.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+                              ),
+                              child: Text(
+                                tech,
+                                style: GoogleFonts.jetBrainsMono(
+                                  color: isDark ? Colors.white : AppColors.darkBackground,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+
+                    // 06 Key Features & Architectural Capabilities
+                    if (project.keyFeatures.isNotEmpty)
+                      _Section(
+                        badge: '06',
+                        title: 'ARCHITECTURAL CAPABILITIES & HIGHLIGHTS',
+                        accentColor: accentColor,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (final feature in project.keyFeatures)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 2),
+                                      padding: const EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.emerald.withValues(alpha: 0.2),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(Icons.check_rounded, size: 12, color: AppColors.emerald),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        feature,
+                                        style: theme.textTheme.bodyLarge?.copyWith(
+                                          fontSize: 15,
+                                          height: 1.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+
+                    // 07 Live Deployments & Internal Artifacts
+                    _Section(
+                      badge: '07',
+                      title: 'PRODUCTION STATUS & VERIFICATION',
+                      accentColor: accentColor,
+                      child: project.links.isNotEmpty
+                          ? Wrap(
+                              spacing: 16,
+                              runSpacing: 14,
+                              children: [
+                                for (final link in project.links)
+                                  ElevatedButton.icon(
+                                    onPressed: () => LaunchHelper.openUrl(link.url),
+                                    icon: Icon(_linkIcon(link.type), size: 18, color: Colors.white),
+                                    label: Text(
+                                      link.label.toUpperCase(),
+                                      style: GoogleFonts.jetBrainsMono(
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                        letterSpacing: 1.1,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: accentColor,
+                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                      elevation: 0,
+                                    ),
+                                  ),
+                              ],
+                            )
+                          : Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.surface.withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: theme.dividerColor),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.verified_user_rounded, color: AppColors.emerald, size: 22),
+                                  const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
-                                      feature,
-                                      style: theme.textTheme.bodyLarge?.copyWith(
-                                        fontSize: 16,
+                                      'Enterprise Internal Production Application — Distributed securely to active enterprise field force, dealer network, and certified engineers via MDM and private internal releases.',
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                                        height: 1.5,
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                        ],
-                      ),
                     ),
-                  _Section(
-                    title: '07 — SOLUTION & RESULT',
-                    content: project.solution ??
-                        'Successfully deployed to production with high user retention, excellent stability metrics, and zero-downtime performance.',
-                  ),
-                  if (project.links.isNotEmpty)
-                    _Section(
-                      title: '08 — LIVE APPLICATIONS & LINKS',
-                      child: Wrap(
-                        spacing: 16,
-                        runSpacing: 16,
-                        children: [
-                          for (final link in project.links)
-                            ElevatedButton.icon(
-                              onPressed: () => LaunchHelper.openUrl(link.url),
-                              icon: Icon(_linkIcon(link.type), size: 18, color: Colors.white),
-                              label: Text(
-                                link.label.toUpperCase(),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                  letterSpacing: 1.2,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: accentColor,
-                                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                elevation: 0,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 class _Section extends StatelessWidget {
+  final String badge;
   final String title;
+  final Color accentColor;
   final String? content;
   final Widget? child;
 
-  const _Section({required this.title, this.content, this.child});
+  const _Section({
+    required this.badge,
+    required this.title,
+    required this.accentColor,
+    this.content,
+    this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -233,32 +427,58 @@ class _Section extends StatelessWidget {
     final isMobile = width < 640;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: isMobile ? 32 : 56),
+      padding: EdgeInsets.only(bottom: isMobile ? 24 : 36),
       child: GlassContainer(
-        padding: EdgeInsets.all(isMobile ? 20 : 36),
+        padding: EdgeInsets.all(isMobile ? 18 : 28),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: AppColors.primary,
-                letterSpacing: 2,
-                fontWeight: FontWeight.w900,
-                fontSize: 12,
-              ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: accentColor.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: accentColor.withValues(alpha: 0.4)),
+                  ),
+                  child: Text(
+                    badge,
+                    style: GoogleFonts.jetBrainsMono(
+                      color: accentColor,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 11,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             if (content != null)
               Text(
                 content!,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  fontSize: isMobile ? 15 : 17,
+                  fontSize: isMobile ? 14 : 16,
                   height: 1.7,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.88),
                 ),
               ),
-            if (child != null) child!,
+            if (child != null) ...[
+              if (content != null) const SizedBox(height: 14),
+              child!,
+            ],
           ],
         ),
       ),

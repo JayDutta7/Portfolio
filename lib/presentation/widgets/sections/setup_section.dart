@@ -14,7 +14,7 @@ class SetupSection extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final specs = [
-      {'label': 'MACHINE', 'value': 'MacBook M3 Max · 64GB RAM · 1TB SSD', 'icon': Icons.laptop_mac_rounded},
+      {'label': 'MACHINE', 'value': 'MacBook M2 Air · 16GB RAM · 256GB SSD', 'icon': Icons.laptop_mac_rounded},
       {'label': 'DISPLAY', 'value': '32" 4K LG UltraFine + 27" Dell Vertical', 'icon': Icons.desktop_windows_rounded},
       {'label': 'PERIPHERALS', 'value': 'Keychron Q1 Pro · Logitech MX Master 3S', 'icon': Icons.keyboard_rounded},
       {'label': 'NETWORK', 'value': '300 Mbps Fiber · Wi-Fi 6 Mesh', 'icon': Icons.wifi_rounded},
@@ -78,7 +78,7 @@ class SetupSection extends StatelessWidget {
                     Container(width: 12, height: 12, decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF27C93F))),
                     Expanded(
                       child: Text(
-                        'jayajit@macbook-pro ~ % neofetch',
+                        'jayajit@macbook-air ~ % neofetch',
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.labelSmall?.copyWith(
                           fontFamily: 'monospace',

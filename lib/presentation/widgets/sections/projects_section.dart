@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/launch_helper.dart';
 import '../../../core/utils/responsive.dart';
@@ -9,23 +10,189 @@ import '../common/gradient_text.dart';
 import '../common/section_wrapper.dart';
 import '../../pages/project_details_page.dart';
 
-class ProjectsSection extends StatelessWidget {
+enum ProjectFilterType { all, shyamSteel, clientSolutions }
+
+class ProjectsSection extends StatefulWidget {
   final Profile profile;
   final GlobalKey? sectionKey;
+
   const ProjectsSection({required this.profile, this.sectionKey, super.key});
 
   @override
+  State<ProjectsSection> createState() => _ProjectsSectionState();
+}
+
+class _ProjectsSectionState extends State<ProjectsSection> {
+  ProjectFilterType _activeFilter = ProjectFilterType.all;
+
+  List<Project> get _filteredProjects {
+    switch (_activeFilter) {
+      case ProjectFilterType.all:
+        return widget.profile.projects;
+      case ProjectFilterType.shyamSteel:
+        return widget.profile.projects
+            .where((p) => p.category == ProjectCategory.shyamSteel)
+            .toList();
+      case ProjectFilterType.clientSolutions:
+        return widget.profile.projects
+            .where((p) => p.category == ProjectCategory.clientSolutions)
+            .toList();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SectionWrapper(
-      sectionKey: sectionKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const _RichSectionHeader(title: 'MOBILE APPLICATIONS & PRODUCTS', index: '01'),
-          const SizedBox(height: 56),
-          for (final project in profile.projects)
-            _ProductShowcaseCard(project: project),
+    final shyamCount = widget.profile.projects
+        .where((p) => p.category == ProjectCategory.shyamSteel)
+        .length;
+    final clientCount = widget.profile.projects
+        .where((p) => p.category == ProjectCategory.clientSolutions)
+        .length;
+    final totalCount = widget.profile.projects.length;
+
+    return SelectionArea(
+      child: SectionWrapper(
+        sectionKey: widget.sectionKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _RichSectionHeader(
+              title: 'VERIFIED ENTERPRISE & CLIENT CASE STUDIES',
+              index: '01',
+            ),
+            const SizedBox(height: 28),
+
+            // Interactive Filter Bar
+            _FilterTabsBar(
+              activeFilter: _activeFilter,
+              totalCount: totalCount,
+              shyamCount: shyamCount,
+              clientCount: clientCount,
+              onFilterChanged: (filter) {
+                setState(() => _activeFilter = filter);
+              },
+            ),
+
+            const SizedBox(height: 48),
+
+            // Filtered Projects List
+            for (final project in _filteredProjects)
+              _ProductShowcaseCard(
+                key: ValueKey(project.title),
+                project: project,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterTabsBar extends StatelessWidget {
+  final ProjectFilterType activeFilter;
+  final int totalCount;
+  final int shyamCount;
+  final int clientCount;
+  final ValueChanged<ProjectFilterType> onFilterChanged;
+
+  const _FilterTabsBar({
+    required this.activeFilter,
+    required this.totalCount,
+    required this.shyamCount,
+    required this.clientCount,
+    required this.onFilterChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.dividerColor),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
         ],
+      ),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          _FilterTabButton(
+            label: 'ALL CASE STUDIES ($totalCount)',
+            isSelected: activeFilter == ProjectFilterType.all,
+            accentColor: AppColors.primary,
+            onTap: () => onFilterChanged(ProjectFilterType.all),
+          ),
+          _FilterTabButton(
+            label: 'SHYAM STEEL PRODUCTS ($shyamCount)',
+            isSelected: activeFilter == ProjectFilterType.shyamSteel,
+            accentColor: AppColors.androidGreen,
+            onTap: () => onFilterChanged(ProjectFilterType.shyamSteel),
+          ),
+          _FilterTabButton(
+            label: 'CLIENT SOLUTIONS ($clientCount)',
+            isSelected: activeFilter == ProjectFilterType.clientSolutions,
+            accentColor: AppColors.flutterBlue,
+            onTap: () => onFilterChanged(ProjectFilterType.clientSolutions),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FilterTabButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final Color accentColor;
+  final VoidCallback onTap;
+
+  const _FilterTabButton({
+    required this.label,
+    required this.isSelected,
+    required this.accentColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? accentColor.withValues(alpha: 0.18)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected
+                ? accentColor.withValues(alpha: 0.6)
+                : Colors.transparent,
+            width: 1.5,
+          ),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.jetBrainsMono(
+            fontSize: 11.5,
+            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+            color: isSelected ? accentColor : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            letterSpacing: 0.5,
+          ),
+        ),
       ),
     );
   }
@@ -64,7 +231,7 @@ class _RichSectionHeader extends StatelessWidget {
             title,
             style: theme.textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w900,
-              letterSpacing: isDesktop ? 3 : 1.5,
+              letterSpacing: isDesktop ? 2.5 : 1.2,
               fontSize: isDesktop ? 16 : 13,
             ),
             overflow: TextOverflow.ellipsis,
@@ -93,7 +260,7 @@ class _RichSectionHeader extends StatelessWidget {
 
 class _ProductShowcaseCard extends StatefulWidget {
   final Project project;
-  const _ProductShowcaseCard({required this.project});
+  const _ProductShowcaseCard({required this.project, super.key});
 
   @override
   State<_ProductShowcaseCard> createState() => _ProductShowcaseCardState();
@@ -107,50 +274,61 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
     final theme = Theme.of(context);
     final isDesktop = Responsive.isDesktopOrWider(context);
 
-    // Pick brand color based on platform/project
     final isFlutter = widget.project.stackSummary.contains('Flutter');
     final accentColor = isFlutter ? AppColors.flutterBlue : AppColors.androidGreen;
 
     final width = MediaQuery.sizeOf(context).width;
     final isMobile = width < 640;
 
+    final hasMockup = widget.project.screenshotUrl != null;
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 60),
+      margin: const EdgeInsets.only(bottom: 56),
       child: MouseRegion(
         onEnter: (_) => setState(() => _isHovered = true),
         onExit: (_) => setState(() => _isHovered = false),
         child: GlassContainer(
-          padding: EdgeInsets.all(isDesktop ? 44 : (isMobile ? 18 : 26)),
-          borderColor: _isHovered ? accentColor.withValues(alpha: 0.5) : null,
+          padding: EdgeInsets.all(isDesktop ? 40 : (isMobile ? 18 : 26)),
+          borderColor: _isHovered ? accentColor.withValues(alpha: 0.55) : null,
           glowColor: accentColor,
           child: Flex(
-            direction: isDesktop ? Axis.horizontal : Axis.vertical,
+            direction: (isDesktop && hasMockup) ? Axis.horizontal : Axis.vertical,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _maybeExpanded(
-                expand: isDesktop,
+                expand: isDesktop && hasMockup,
                 flex: 6,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Metadata Badges Row
                     Wrap(
-                      spacing: 12,
+                      spacing: 10,
                       runSpacing: 8,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
+                        _TechTagRich(
+                          label: widget.project.company.toUpperCase(),
+                          color: AppColors.primary,
+                        ),
                         _TechTagRich(
                           label: widget.project.platforms.join(' • '),
                           color: accentColor,
                         ),
                         Text(
                           widget.project.period,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                          style: GoogleFonts.jetBrainsMono(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+
+                    const SizedBox(height: 20),
+
+                    // Title
                     GradientText(
                       widget.project.title,
                       colors: isFlutter
@@ -158,29 +336,74 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
                           : [Colors.white, AppColors.androidGreen],
                       style: theme.textTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.w900,
-                        fontSize: isDesktop ? 38 : 28,
-                        letterSpacing: -1,
+                        fontSize: isDesktop ? 34 : 26,
+                        letterSpacing: -0.5,
                       ),
                     ),
-                    const SizedBox(height: 16),
+
+                    const SizedBox(height: 14),
+
+                    // High-level Overview
                     Text(
                       widget.project.overview,
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.75),
-                        height: 1.65,
-                        fontSize: 16,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                        height: 1.6,
+                        fontSize: 15,
                       ),
                     ),
-                    const SizedBox(height: 28),
+
+                    const SizedBox(height: 24),
+
+                    // Structured Case Study Breakdown
+                    _CaseStudySectionBox(
+                      number: '01',
+                      title: 'PROBLEM & SCOPE',
+                      content: widget.project.effectiveProblemScope,
+                      accentColor: accentColor,
+                    ),
+
+                    const SizedBox(height: 14),
+
+                    _CaseStudySectionBox(
+                      number: '02',
+                      title: 'TECHNICAL ARCHITECTURE',
+                      content: widget.project.effectiveTechnicalArchitecture,
+                      accentColor: accentColor,
+                    ),
+
+                    if (widget.project.effectiveHardChallenges.isNotEmpty) ...[
+                      const SizedBox(height: 14),
+                      _CaseStudySectionBox(
+                        number: '03',
+                        title: 'HARD ENGINEERING CHALLENGES',
+                        content: widget.project.effectiveHardChallenges,
+                        accentColor: AppColors.amber,
+                      ),
+                    ],
+
+                    if (widget.project.effectiveQuantifiableImpact.isNotEmpty) ...[
+                      const SizedBox(height: 14),
+                      _CaseStudySectionBox(
+                        number: '04',
+                        title: 'QUANTIFIABLE IMPACT & RESULTS',
+                        content: widget.project.effectiveQuantifiableImpact,
+                        accentColor: AppColors.emerald,
+                      ),
+                    ],
+
+                    const SizedBox(height: 24),
+
+                    // Stack Badges rendered in JetBrains Mono
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'TECHNOLOGIES & LIBRARIES',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w900,
+                          'ENGINEERING STACK BADGES',
+                          style: GoogleFonts.jetBrainsMono(
+                            fontWeight: FontWeight.w800,
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
-                            fontSize: 10,
+                            fontSize: 10.5,
                             letterSpacing: 1.5,
                           ),
                         ),
@@ -191,16 +414,20 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    _InfoItemRich(label: 'MY ROLE', content: widget.project.myRole),
-                    const SizedBox(height: 36),
+
+                    const SizedBox(height: 18),
+                    _InfoItemRich(label: 'MY ARCHITECTURAL ROLE', content: widget.project.myRole),
+
+                    const SizedBox(height: 32),
+
+                    // Actions Row
                     Wrap(
-                      spacing: 16,
-                      runSpacing: 16,
+                      spacing: 14,
+                      runSpacing: 14,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         _PrimaryAction(
-                          label: 'VIEW CASE STUDY',
+                          label: 'VIEW FULL CASE STUDY',
                           color: accentColor,
                           onTap: () {
                             Navigator.of(context).push(
@@ -223,35 +450,108 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
                   ],
                 ),
               ),
-              if (isDesktop) const SizedBox(width: 60),
-              if (!isDesktop) const SizedBox(height: 48),
-              _maybeExpanded(
-                expand: isDesktop,
-                flex: 4,
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 240),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: AnimatedScale(
-                        duration: const Duration(milliseconds: 300),
-                        scale: _isHovered ? 1.03 : 1.0,
-                        child: DeviceMockup(
-                          title: widget.project.title,
-                          assetPath: widget.project.screenshotUrl,
-                          fallbackIcon: isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
-                          glowColor: accentColor,
-                          width: 220,
-                          height: 460,
+
+              if (hasMockup) ...[
+                if (isDesktop) const SizedBox(width: 50),
+                if (!isDesktop) const SizedBox(height: 40),
+                _maybeExpanded(
+                  expand: isDesktop,
+                  flex: 4,
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 240),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: AnimatedScale(
+                          duration: const Duration(milliseconds: 300),
+                          scale: _isHovered ? 1.03 : 1.0,
+                          child: DeviceMockup(
+                            title: widget.project.title,
+                            assetPath: widget.project.screenshotUrl,
+                            fallbackIcon: isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
+                            glowColor: accentColor,
+                            width: 220,
+                            height: 460,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CaseStudySectionBox extends StatelessWidget {
+  final String number;
+  final String title;
+  final String content;
+  final Color accentColor;
+
+  const _CaseStudySectionBox({
+    required this.number,
+    required this.title,
+    required this.content,
+    required this.accentColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: accentColor.withValues(alpha: isDark ? 0.06 : 0.04),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: accentColor.withValues(alpha: isDark ? 0.2 : 0.15),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                number,
+                style: GoogleFonts.jetBrainsMono(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
+                  color: accentColor,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: GoogleFonts.jetBrainsMono(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.0,
+                    color: accentColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            content,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
+              height: 1.55,
+              fontSize: 13.5,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -277,19 +577,22 @@ class _LinkPill extends StatelessWidget {
             borderRadius: BorderRadius.circular(100),
             border: Border.all(color: theme.dividerColor),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(_linkIcon(link.type), size: 16, color: theme.colorScheme.primary),
-              const SizedBox(width: 8),
-              Text(
-                link.label,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 11,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(_linkIcon(link.type), size: 16, color: theme.colorScheme.primary),
+                const SizedBox(width: 8),
+                Text(
+                  link.label,
+                  style: GoogleFonts.jetBrainsMono(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 11,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -298,10 +601,14 @@ class _LinkPill extends StatelessWidget {
 
   IconData _linkIcon(ProjectLinkType type) {
     switch (type) {
-      case ProjectLinkType.playStore: return Icons.shop_outlined;
-      case ProjectLinkType.appStore: return Icons.apple;
-      case ProjectLinkType.web: return Icons.language_rounded;
-      case ProjectLinkType.github: return Icons.code_rounded;
+      case ProjectLinkType.playStore:
+        return Icons.shop_outlined;
+      case ProjectLinkType.appStore:
+        return Icons.apple;
+      case ProjectLinkType.web:
+        return Icons.language_rounded;
+      case ProjectLinkType.github:
+        return Icons.code_rounded;
     }
   }
 }
@@ -320,36 +627,19 @@ class _ProjectTechTags extends StatelessWidget {
     if (lower.contains('kotlin') || lower.contains('android') || lower.contains('compose')) {
       return AppColors.androidGreen;
     }
-    if (lower.contains('flutter') || lower.contains('dart') || lower.contains('riverpod')) {
+    if (lower.contains('flutter') || lower.contains('dart') || lower.contains('riverpod') || lower.contains('bloc')) {
       return AppColors.flutterBlue;
     }
-    if (lower.contains('retrofit') || lower.contains('rest') || lower.contains('dio')) {
+    if (lower.contains('retrofit') || lower.contains('rest') || lower.contains('dio') || lower.contains('webrtc')) {
       return AppColors.emerald;
     }
-    if (lower.contains('room') || lower.contains('sqlite') || lower.contains('objectbox')) {
+    if (lower.contains('room') || lower.contains('sqlite') || lower.contains('sqlcipher')) {
       return AppColors.amber;
     }
-    if (lower.contains('rxjava') || lower.contains('coroutine') || lower.contains('flow')) {
-      return AppColors.secondary;
-    }
-    if (lower.contains('clean') || lower.contains('mvvm') || lower.contains('architecture')) {
+    if (lower.contains('clean') || lower.contains('mvvm') || lower.contains('architecture') || lower.contains('livedata')) {
       return AppColors.accent;
     }
     return primaryColor;
-  }
-
-  IconData _getTagIcon(String tech) {
-    final lower = tech.toLowerCase();
-    if (lower.contains('compose')) return Icons.widgets_rounded;
-    if (lower.contains('kotlin') || lower.contains('android')) return Icons.android_rounded;
-    if (lower.contains('flutter') || lower.contains('dart') || lower.contains('riverpod')) return Icons.flutter_dash_rounded;
-    if (lower.contains('retrofit') || lower.contains('rest') || lower.contains('dio')) return Icons.cloud_sync_rounded;
-    if (lower.contains('room') || lower.contains('sqlite')) return Icons.storage_rounded;
-    if (lower.contains('rxjava') || lower.contains('coroutine') || lower.contains('flow')) return Icons.stream_rounded;
-    if (lower.contains('clean') || lower.contains('mvvm')) return Icons.layers_rounded;
-    if (lower.contains('gps') || lower.contains('location')) return Icons.location_on_rounded;
-    if (lower.contains('firebase')) return Icons.local_fire_department_rounded;
-    return Icons.code_rounded;
   }
 
   @override
@@ -375,21 +665,14 @@ class _ProjectTechTags extends StatelessWidget {
                     width: 1,
                   ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(_getTagIcon(tech), size: 12, color: color),
-                    const SizedBox(width: 6),
-                    Text(
-                      tech,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: isDark ? Colors.white.withValues(alpha: 0.9) : color,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 11,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  tech,
+                  style: GoogleFonts.jetBrainsMono(
+                    color: isDark ? Colors.white.withValues(alpha: 0.9) : color,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 11,
+                    letterSpacing: 0.2,
+                  ),
                 ),
               );
             },
@@ -406,9 +689,8 @@ class _TechTagRich extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(100),
@@ -416,11 +698,11 @@ class _TechTagRich extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: theme.textTheme.labelSmall?.copyWith(
-          fontWeight: FontWeight.w900,
+        style: GoogleFonts.jetBrainsMono(
+          fontWeight: FontWeight.w800,
           color: color,
-          letterSpacing: 1,
-          fontSize: 11,
+          letterSpacing: 0.8,
+          fontSize: 10.5,
         ),
       ),
     );
@@ -440,9 +722,9 @@ class _InfoItemRich extends StatelessWidget {
       children: [
         Text(
           label,
-          style: theme.textTheme.labelSmall?.copyWith(
-            fontWeight: FontWeight.w900,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+          style: GoogleFonts.jetBrainsMono(
+            fontWeight: FontWeight.w800,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
             fontSize: 10,
             letterSpacing: 1.5,
           ),
@@ -451,8 +733,9 @@ class _InfoItemRich extends StatelessWidget {
         Text(
           content,
           style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+            fontSize: 13,
           ),
         ),
       ],
@@ -460,7 +743,7 @@ class _InfoItemRich extends StatelessWidget {
   }
 }
 
-class _PrimaryAction extends StatelessWidget {
+class _PrimaryAction extends StatefulWidget {
   final String label;
   final Color color;
   final VoidCallback onTap;
@@ -472,29 +755,45 @@ class _PrimaryAction extends StatelessWidget {
   });
 
   @override
+  State<_PrimaryAction> createState() => _PrimaryActionState();
+}
+
+class _PrimaryActionState extends State<_PrimaryAction> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    final isMobile = width < 640;
+    final isCompact = width < 360;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(100),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         borderRadius: BorderRadius.circular(100),
-        child: Padding(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          constraints: const BoxConstraints(minHeight: 44),
           padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 18 : 24,
-            vertical: isMobile ? 12 : 14,
+            horizontal: isCompact ? 16 : 22,
+            vertical: 12,
+          ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                widget.color,
+                widget.color.withValues(alpha: 0.8),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [
+              BoxShadow(
+                color: widget.color.withValues(alpha: _hovered ? 0.45 : 0.25),
+                blurRadius: _hovered ? 16 : 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: FittedBox(
             fit: BoxFit.scaleDown,
@@ -502,12 +801,12 @@ class _PrimaryAction extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  label,
-                  style: const TextStyle(
+                  widget.label,
+                  style: GoogleFonts.jetBrainsMono(
                     fontWeight: FontWeight.w900,
+                    letterSpacing: isCompact ? 0.8 : 1.2,
+                    fontSize: isCompact ? 11 : 12,
                     color: Colors.white,
-                    letterSpacing: 1.2,
-                    fontSize: 12,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -523,8 +822,8 @@ class _PrimaryAction extends StatelessWidget {
 
 Widget _maybeExpanded({
   required bool expand,
-  required int flex,
   required Widget child,
+  int flex = 1,
 }) {
   if (expand) {
     return Expanded(flex: flex, child: child);

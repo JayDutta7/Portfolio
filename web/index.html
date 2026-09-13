@@ -211,6 +211,39 @@
       // Fallback timer to prevent loader sticking under any condition
       setTimeout(hideLoader, 12000);
     })();
+
+    // PWA BeforeInstallPrompt & Native APK Download Interop
+    window.deferredPwaPrompt = null;
+    window.isPwaInstallable = false;
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      window.deferredPwaPrompt = e;
+      window.isPwaInstallable = true;
+      window.dispatchEvent(new CustomEvent('pwa-install-ready'));
+    });
+
+    window.installPwa = function() {
+      if (window.deferredPwaPrompt) {
+        window.deferredPwaPrompt.prompt();
+        return window.deferredPwaPrompt.userChoice.then(function(choiceResult) {
+          window.deferredPwaPrompt = null;
+          window.isPwaInstallable = false;
+          window.dispatchEvent(new CustomEvent('pwa-installed'));
+          return choiceResult.outcome;
+        });
+      }
+      return Promise.resolve('not-available');
+    };
+
+    window.triggerApkDownload = function(url, filename) {
+      var a = document.createElement('a');
+      a.href = url || 'assets/assets/apk/JayajitDutta_Portfolio.apk';
+      a.download = filename || 'JayajitDutta_Portfolio.apk';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
   </script>
 </body>
 </html>

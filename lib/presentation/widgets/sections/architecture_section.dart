@@ -80,7 +80,7 @@ class _ArchitectureStackVisualizer extends StatelessWidget {
         _StackArrow(),
         const _StackNode(
           title: '02. PRESENTATION / STATE LAYER',
-          sub: 'ViewModel / StateFlow / Riverpod',
+          sub: 'ViewModel / LiveData / StateFlow / BLoC',
           color: AppColors.secondary,
         ),
         _StackArrow(),

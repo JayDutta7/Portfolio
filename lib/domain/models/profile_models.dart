@@ -42,34 +42,62 @@ class ProjectLink {
 }
 
 enum ProjectLinkType { playStore, appStore, web, github }
+enum ProjectCategory { shyamSteel, clientSolutions }
 
 /// A featured project card + its detail view content.
 class Project {
   final String title;
   final String period;
+  final String company;
+  final ProjectCategory category;
   final String stackSummary;
   final List<String> techStack;
   final String overview;
   final String myRole;
-  final String? architecture;
+  final String? problemScope;
+  final String? technicalArchitecture;
+  final String? hardChallenges;
+  final String? quantifiableImpact;
   final List<String> keyFeatures;
-  final String? technicalChallenge;
-  final String? solution;
   final List<String> platforms;
   final List<ProjectLink> links;
   final String? screenshotUrl;
 
+  String get effectiveProblemScope =>
+      (problemScope != null && problemScope!.isNotEmpty) ? problemScope! : overview;
+
+  String get effectiveTechnicalArchitecture =>
+      (technicalArchitecture != null && technicalArchitecture!.isNotEmpty)
+          ? technicalArchitecture!
+          : overview;
+
+  String get effectiveHardChallenges =>
+      (hardChallenges != null && hardChallenges!.isNotEmpty) ? hardChallenges! : '';
+
+  String get effectiveQuantifiableImpact =>
+      (quantifiableImpact != null && quantifiableImpact!.isNotEmpty)
+          ? quantifiableImpact!
+          : '';
+
+  // Backwards compatibility getters
+  String? get architecture => technicalArchitecture;
+  String? get technicalChallenge => hardChallenges;
+  String? get solution => quantifiableImpact;
+
   const Project({
     required this.title,
     required this.period,
+    this.company = 'Shyam Steel',
+    this.category = ProjectCategory.shyamSteel,
     required this.stackSummary,
     required this.techStack,
     required this.overview,
     required this.myRole,
-    this.architecture,
+    this.problemScope,
+    this.technicalArchitecture,
+    this.hardChallenges,
+    this.quantifiableImpact,
     this.keyFeatures = const [],
-    this.technicalChallenge,
-    this.solution,
     this.platforms = const [],
     this.links = const [],
     this.screenshotUrl,
