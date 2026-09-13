@@ -34,11 +34,11 @@ class ProfileData {
       period: '2025 – Present',
       company: 'Shyam Steel Industries Ltd.',
       category: ProjectCategory.shyamSteel,
-      stackSummary: 'Flutter · Dart · BLoC · Clean Architecture · REST APIs · Firebase',
+      stackSummary: 'Flutter · Dart · Riverpod · Clean Architecture · REST APIs · Firebase',
       techStack: [
         'Flutter',
         'Dart',
-        'BLoC',
+        'Riverpod',
         'Clean Architecture',
         'Estimation Engine',
         'REST APIs',
@@ -46,17 +46,17 @@ class ProfileData {
         'Razorpay',
       ],
       overview:
-          'Direct-to-consumer construction procurement application with dynamic structural material estimators, milestone tracking, and secured digital payments.',
+          'Direct-to-consumer construction procurement application written in Flutter using Riverpod, featuring dynamic structural material estimators, milestone tracking, and secured digital payments.',
       myRole:
-          'Lead Cross-Platform Architect responsible for end-to-end Flutter client architecture, BLoC state orchestration, and material estimation algorithm.',
+          'Lead Flutter Developer responsible for Flutter client architecture, Riverpod state orchestration, and material estimation algorithm.',
       problemScope:
           'Homeowners face opacity and high price variance when sourcing raw construction materials. The product required an intuitive mobile experience capable of calculating accurate structural reinforcement bar quantities based on floor plans while enabling direct-to-consumer order fulfillment.',
       technicalArchitecture:
-          'Engineered on Clean Architecture with strict separation of Presentation (BLoC), Domain (Use Cases), and Data (Repository). Implemented an algorithmic material estimation engine that computes load-bearing steel requirements with zero UI thread jank, paired with resilient Dio interceptors and Firebase cloud messaging.',
+          'Written in Flutter using Riverpod state management and Clean Architecture. Implemented an algorithmic material estimation engine that computes load-bearing steel requirements with zero UI thread jank, paired with resilient Dio interceptors and Firebase cloud messaging.',
       hardChallenges:
           'Executing complex geometric material calculations concurrently without dropping frames on budget Android devices. Solved by offloading heavy bar-bending mathematical matrix operations to Dart background Isolates, maintaining a sustained 60 FPS.',
       quantifiableImpact:
-          'Delivered a 4.8★ store rating, reduced customer pre-sales inquiries by 40%, and increased direct-to-consumer material bookings by 35% within the first two quarters.',
+          'Reduced customer pre-sales inquiries by 40% and increased direct-to-consumer material bookings by 35% within the first two quarters.',
       platforms: ['Android', 'iOS'],
       screenshotUrl: 'assets/images/ghareka.jpeg',
       links: [
@@ -177,7 +177,7 @@ class ProfileData {
       hardChallenges:
           'Handling atomic state updates across complex multi-vendor order splits with distinct delivery lead-times, while managing asynchronous Easebuzz payment gateway callbacks, webhook retries, and transaction settlement without double-charge risk or state drift. Solved with immutable event-driven BLoC state streams and sequential event transformers.',
       quantifiableImpact:
-          'Over 50K+ downloads, 99.9% crash-free sessions across Android and iOS, and processing over 1,500 daily bulk B2B construction material RFQs and digital transactions via Easebuzz.',
+          '5K+ downloads, 99.9% crash-free sessions across Android and iOS, and processing over 1,500 daily bulk B2B construction material RFQs and digital transactions via Easebuzz.',
       platforms: ['Android', 'iOS'],
       screenshotUrl: 'assets/images/buildistan.jpeg',
       links: [
@@ -213,17 +213,17 @@ class ProfileData {
         'Firebase Push',
       ],
       overview:
-          'Trade partner loyalty rewards application featuring high-speed industrial barcode & QR coupon scanning on steel bundles, cryptographic fraud prevention, and instant reward redemption.',
+          'Trade partner loyalty rewards application written in Flutter using Riverpod, featuring high-speed industrial barcode & QR coupon scanning on steel bundles, cryptographic fraud prevention, and instant reward redemption.',
       myRole:
-          'Senior Flutter Engineer delivering the partner engagement client, native camera barcode scanning channels, and cryptographic fraud detection engine.',
+          'Senior Flutter Engineer delivering the partner engagement client using Riverpod, barcode & QR coupon scanning, and cryptographic fraud detection engine.',
       problemScope:
           'Fabricators, masons, and trade partners scan 1D barcodes and 2D QR coupons printed on industrial steel bundles in outdoor stockyards. The app required millisecond barcode/QR scan recognition under glare, poor lighting, and dirty labels, while preventing coupon replay attacks.',
       technicalArchitecture:
-          'Hybrid Flutter architecture backed by custom Native Android / iOS Method Channels for direct CameraX / AVFoundation camera buffers. Integrated Google ML Kit Barcode Scanning API with hardware-accelerated autofocus, HMAC-SHA256 signature verification on coupons, and an offline-first transactional ledger.',
+          'Written in Flutter using Riverpod state management. Integrated Google ML Kit Barcode Scanning API with hardware-accelerated autofocus, HMAC-SHA256 signature verification on coupons, and an offline-first transactional ledger.',
       hardChallenges:
           'Mitigating counterfeit coupon injection and replay attacks in remote yards without internet connectivity. Solved by storing encrypted rolling nonces in SQLCipher and verifying cryptographic barcode hashes locally before queueing atomic sync.',
       quantifiableImpact:
-          '100,000+ barcodes and QR coupons scanned monthly with 0 fraud incidents. Reduced scanning latency from 1.8s to 120ms, boosting trade partner retention by 60%.',
+          'Achieved a 4.5★ rating with 5K+ downloads, 100,000+ barcodes and QR coupons scanned monthly with 0 fraud incidents, and reduced scanning latency from 1.8s to 120ms.',
       platforms: ['Android', 'iOS'],
       screenshotUrl: 'assets/images/pariwar.webp',
       links: [
