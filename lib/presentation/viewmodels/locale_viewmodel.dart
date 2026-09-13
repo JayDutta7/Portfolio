@@ -62,6 +62,14 @@ extension AppLanguageX on AppLanguage {
     }
   }
 
+  String get heroGreeting {
+    switch (this) {
+      case AppLanguage.bengali: return 'নমস্কার, আমি জয়জিৎ দত্ত।';
+      case AppLanguage.hindi: return 'नमस्ते, मैं जयजीत दत्ता हूँ।';
+      case AppLanguage.english: return 'Hello, Myself Jayajit Dutta.';
+    }
+  }
+
   String get heroHeadline {
     switch (this) {
       case AppLanguage.bengali: return 'সিনিয়র মোবাইল ডেভেলপার\nAndroid • Kotlin • Flutter';

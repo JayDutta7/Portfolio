@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,7 +57,13 @@ class HeroSection extends ConsumerWidget {
                         label: currentLanguage.heroBadge,
                         dotColor: AppColors.primary,
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 18),
+                      _TypewriterGreeting(
+                        text: currentLanguage.heroGreeting,
+                        isDesktop: isDesktop,
+                        isDark: isDark,
+                      ),
+                      const SizedBox(height: 18),
                       GradientText(
                         currentLanguage.heroHeadline,
                         colors: isDark
@@ -764,6 +771,187 @@ class _TechLogoPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _TechLogoPainter oldDelegate) =>
       oldDelegate.type != type || oldDelegate.color != color;
+}
+
+class _TypewriterGreeting extends StatefulWidget {
+  final String text;
+  final bool isDesktop;
+  final bool isDark;
+
+  const _TypewriterGreeting({
+    required this.text,
+    required this.isDesktop,
+    required this.isDark,
+  });
+
+  @override
+  State<_TypewriterGreeting> createState() => _TypewriterGreetingState();
+}
+
+class _TypewriterGreetingState extends State<_TypewriterGreeting> {
+  int _charIndex = 0;
+  Timer? _typeTimer;
+  Timer? _cursorTimer;
+  bool _showCursor = true;
+  bool _isDeleting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTypewriter();
+    _startCursorBlink();
+  }
+
+  @override
+  void didUpdateWidget(covariant _TypewriterGreeting oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.text != widget.text) {
+      _charIndex = 0;
+      _isDeleting = false;
+      _startTypewriter();
+    }
+  }
+
+  void _startCursorBlink() {
+    _cursorTimer?.cancel();
+    _cursorTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      if (mounted) {
+        setState(() {
+          _showCursor = !_showCursor;
+        });
+      }
+    });
+  }
+
+  void _startTypewriter() {
+    _typeTimer?.cancel();
+    _typeTimer = Timer.periodic(const Duration(milliseconds: 70), (timer) {
+      if (!mounted) return;
+
+      setState(() {
+        if (!_isDeleting) {
+          if (_charIndex < widget.text.length) {
+            _charIndex++;
+          } else {
+            // Finished typing: pause for 3.5s so user can read comfortably
+            _typeTimer?.cancel();
+            _typeTimer = Timer(const Duration(milliseconds: 3500), () {
+              if (mounted) {
+                _isDeleting = true;
+                _startDeleting();
+              }
+            });
+          }
+        }
+      });
+    });
+  }
+
+  void _startDeleting() {
+    _typeTimer?.cancel();
+    _typeTimer = Timer.periodic(const Duration(milliseconds: 35), (timer) {
+      if (!mounted) return;
+
+      setState(() {
+        if (_charIndex > 0) {
+          _charIndex--;
+        } else {
+          // Finished deleting: pause 500ms and retype
+          _typeTimer?.cancel();
+          _isDeleting = false;
+          _typeTimer = Timer(const Duration(milliseconds: 500), () {
+            if (mounted) {
+              _startTypewriter();
+            }
+          });
+        }
+      });
+    });
+  }
+
+  void _replay() {
+    _typeTimer?.cancel();
+    setState(() {
+      _charIndex = 0;
+      _isDeleting = false;
+    });
+    _startTypewriter();
+  }
+
+  @override
+  void dispose() {
+    _typeTimer?.cancel();
+    _cursorTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
+    final fontSize = isMobile ? 18.0 : (widget.isDesktop ? 26.0 : 22.0);
+    final displayedText = widget.text.substring(0, _charIndex);
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: _replay,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: widget.isDesktop ? Alignment.centerLeft : Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('👋 ', style: TextStyle(fontSize: 22)),
+                GradientText(
+                  displayedText.isEmpty ? ' ' : displayedText,
+                  colors: widget.isDark
+                      ? const [
+                          Color(0xFF38BDF8),
+                          Color(0xFF818CF8),
+                          Color(0xFFC084FC),
+                        ]
+                      : const [
+                          Color(0xFF0284C7),
+                          Color(0xFF4F46E5),
+                          Color(0xFF9333EA),
+                        ],
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                // Glowing cyan blinking cursor
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 150),
+                  opacity: _showCursor ? 1.0 : 0.0,
+                  child: Container(
+                    width: 3.0,
+                    height: fontSize * 1.1,
+                    margin: const EdgeInsets.only(left: 3),
+                    decoration: BoxDecoration(
+                      color: widget.isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7),
+                      borderRadius: BorderRadius.circular(2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF38BDF8).withValues(alpha: 0.7),
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _PrimaryCTAButton extends StatefulWidget {

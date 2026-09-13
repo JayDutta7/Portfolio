@@ -804,6 +804,55 @@ Date:   Sep 13 2026
   }
 
   // ==========================================================================
+  // Typewriter Greeting Message
+  // ==========================================================================
+  function initTypewriterGreeting() {
+    const textEl = document.getElementById('typewriterText');
+    const containerEl = document.getElementById('typewriterGreeting');
+    if (!textEl) return;
+
+    const fullText = 'Hello, Myself Jayajit Dutta.';
+    let charIndex = 0;
+    let isDeleting = false;
+    let typeTimeout = null;
+
+    function typeLoop() {
+      if (!isDeleting) {
+        if (charIndex <= fullText.length) {
+          textEl.textContent = fullText.substring(0, charIndex);
+          charIndex++;
+          typeTimeout = setTimeout(typeLoop, 70);
+        } else {
+          typeTimeout = setTimeout(() => {
+            isDeleting = true;
+            typeLoop();
+          }, 3500);
+        }
+      } else {
+        if (charIndex > 0) {
+          charIndex--;
+          textEl.textContent = fullText.substring(0, charIndex);
+          typeTimeout = setTimeout(typeLoop, 35);
+        } else {
+          isDeleting = false;
+          typeTimeout = setTimeout(typeLoop, 500);
+        }
+      }
+    }
+
+    if (containerEl) {
+      containerEl.addEventListener('click', () => {
+        clearTimeout(typeTimeout);
+        charIndex = 0;
+        isDeleting = false;
+        typeLoop();
+      });
+    }
+
+    typeLoop();
+  }
+
+  // ==========================================================================
   // Initialization Bootstrap
   // ==========================================================================
   document.addEventListener('DOMContentLoaded', () => {
@@ -814,5 +863,6 @@ Date:   Sep 13 2026
     initCommandPalette();
     initApkModal();
     initPwa();
+    initTypewriterGreeting();
   });
 })();
