@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../core/theme/app_colors.dart';
 import '../../core/utils/distribution_helper.dart';
 import '../viewmodels/locale_viewmodel.dart';
 import '../viewmodels/profile_viewmodel.dart';
@@ -95,6 +97,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  _TopOpportunityBanner(message: currentLanguage.availableBadge),
                   HeroSection(
                     profile: profile,
                     sectionKey: _heroKey,
@@ -115,6 +118,69 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _TopOpportunityBanner extends StatelessWidget {
+  final String message;
+  const _TopOpportunityBanner({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 14, left: 16, right: 16, bottom: 4),
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          decoration: BoxDecoration(
+            color: isDark
+                ? AppColors.emerald.withValues(alpha: 0.12)
+                : AppColors.emerald.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(100),
+            border: Border.all(
+              color: AppColors.emerald.withValues(alpha: 0.35),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.emerald.withValues(alpha: 0.08),
+                blurRadius: 16,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: AppColors.emerald,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.jetBrainsMono(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? const Color(0xFF34D399) : const Color(0xFF047857),
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

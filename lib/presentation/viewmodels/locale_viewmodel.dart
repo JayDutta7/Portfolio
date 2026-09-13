@@ -80,9 +80,17 @@ extension AppLanguageX on AppLanguage {
 
   String get availableBadge {
     switch (this) {
-      case AppLanguage.bengali: return '৯+ বছর • কাজ করতে ইচ্ছুক';
-      case AppLanguage.hindi: return '9+ वर्ष • काम के लिए उपलब्ध';
-      case AppLanguage.english: return '9+ YRS • AVAILABLE FOR PROJECTS';
+      case AppLanguage.bengali: return 'নতুন সুযোগের সন্ধান • ইন-অফিস বা রিমোট উপলব্ধ';
+      case AppLanguage.hindi: return 'नए अवसर की तलाश • इन-ऑफिस या रिमोट में उपलब्ध';
+      case AppLanguage.english: return 'Looking for new opportunity available in in-office or remote';
+    }
+  }
+
+  String get navBadge {
+    switch (this) {
+      case AppLanguage.bengali: return 'ইন-অফিস / রিমোট';
+      case AppLanguage.hindi: return 'इन-ऑफिस / रिमोट';
+      case AppLanguage.english: return 'IN-OFFICE / REMOTE';
     }
   }
 }

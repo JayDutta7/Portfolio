@@ -77,13 +77,13 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                   child: Row(
                     children: [
                       const Flexible(child: _Logo()),
-                      if (isDesktop && width >= 1350) ...[
+                      if (isDesktop && width >= 1150) ...[
                         const SizedBox(width: 14),
-                        PulseBadge(
-                          label: currentLanguage == AppLanguage.bengali
-                              ? 'উপলব্ধ'
-                              : (currentLanguage == AppLanguage.hindi ? 'उपलब्ध' : 'AVAILABLE'),
-                          dotColor: AppColors.emerald,
+                        Flexible(
+                          child: PulseBadge(
+                            label: currentLanguage.navBadge,
+                            dotColor: AppColors.emerald,
+                          ),
                         ),
                       ],
                       const Spacer(),

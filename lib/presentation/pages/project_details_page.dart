@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/launch_helper.dart';
 import '../../domain/models/profile_models.dart';
+import '../widgets/common/device_mockup.dart';
 import '../widgets/common/glass_container.dart';
 import '../widgets/common/section_wrapper.dart';
 
@@ -32,6 +33,7 @@ class ProjectDetailsPage extends StatelessWidget {
     final accentColor = isFlutter ? AppColors.flutterBlue : AppColors.androidGreen;
 
     final width = MediaQuery.sizeOf(context).width;
+    final isDesktop = width >= 1024;
     final isMobile = width < 640;
     final isCompact = width < 380;
 
@@ -138,18 +140,45 @@ class ProjectDetailsPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Positioned(
-                      right: 20,
-                      bottom: 20,
-                      child: Opacity(
-                        opacity: 0.12,
-                        child: Icon(
-                          isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
-                          size: isMobile ? 140 : 220,
-                          color: Colors.white,
+                    if (project.screenshotUrl != null)
+                      Positioned(
+                        right: isMobile ? 12 : 36,
+                        top: isMobile ? 36 : 24,
+                        bottom: isMobile ? 24 : 16,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.35),
+                                blurRadius: 24,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              project.screenshotUrl!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      Positioned(
+                        right: 20,
+                        bottom: 20,
+                        child: Opacity(
+                          opacity: 0.12,
+                          child: Icon(
+                            isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
+                            size: isMobile ? 140 : 220,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -160,74 +189,117 @@ class ProjectDetailsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Top summary bar
+                    // Top summary & device mockup showcase
                     GlassContainer(
                       padding: EdgeInsets.all(isMobile ? 18 : 28),
-                      child: Column(
+                      child: Flex(
+                        direction: (isDesktop && project.screenshotUrl != null)
+                            ? Axis.horizontal
+                            : Axis.vertical,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: accentColor.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(
-                                  isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
-                                  color: accentColor,
-                                  size: 24,
-                                ),
-                              ),
-                              const SizedBox(width: 14),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                          _maybeExpanded(
+                            expand: isDesktop && project.screenshotUrl != null,
+                            flex: 7,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
                                   children: [
-                                    Text(
-                                      project.myRole,
-                                      style: theme.textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.w800,
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: accentColor.withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Icon(
+                                        isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
+                                        color: accentColor,
+                                        size: 24,
                                       ),
                                     ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      '${project.company} • ${project.stackSummary}',
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                    const SizedBox(width: 14),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            project.myRole,
+                                            style: theme.textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            '${project.company} • ${project.stackSummary}',
+                                            style: theme.textTheme.bodySmall?.copyWith(
+                                              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          if (project.links.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: [
-                                for (final link in project.links)
-                                  OutlinedButton.icon(
-                                    onPressed: () => LaunchHelper.openUrl(link.url),
-                                    icon: Icon(_linkIcon(link.type), size: 14),
-                                    label: Text(
-                                      link.label,
-                                      style: GoogleFonts.jetBrainsMono(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: accentColor,
-                                      side: BorderSide(color: accentColor.withValues(alpha: 0.4)),
-                                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    ),
+                                const SizedBox(height: 18),
+                                Text(
+                                  project.overview,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    height: 1.6,
+                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
                                   ),
+                                ),
+                                if (project.links.isNotEmpty) ...[
+                                  const SizedBox(height: 20),
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: [
+                                      for (final link in project.links)
+                                        OutlinedButton.icon(
+                                          onPressed: () => LaunchHelper.openUrl(link.url),
+                                          icon: Icon(_linkIcon(link.type), size: 14),
+                                          label: Text(
+                                            link.label,
+                                            style: GoogleFonts.jetBrainsMono(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          style: OutlinedButton.styleFrom(
+                                            foregroundColor: accentColor,
+                                            side: BorderSide(color: accentColor.withValues(alpha: 0.4)),
+                                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
                               ],
+                            ),
+                          ),
+                          if (project.screenshotUrl != null) ...[
+                            if (isDesktop) const SizedBox(width: 36),
+                            if (!isDesktop) const SizedBox(height: 28),
+                            Center(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: isMobile ? 200 : 240,
+                                  maxHeight: isMobile ? 400 : 480,
+                                ),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: DeviceMockup(
+                                    title: project.title,
+                                    assetPath: project.screenshotUrl,
+                                    fallbackIcon: isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
+                                    glowColor: accentColor,
+                                    width: 220,
+                                    height: 460,
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ],
@@ -402,6 +474,13 @@ class ProjectDetailsPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _maybeExpanded({required bool expand, required Widget child, int flex = 1}) {
+    if (expand) {
+      return Expanded(flex: flex, child: child);
+    }
+    return child;
   }
 }
 
