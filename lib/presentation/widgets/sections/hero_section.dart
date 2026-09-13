@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
@@ -7,8 +7,6 @@ import '../../../core/utils/responsive.dart';
 import '../../../core/utils/resume_download/resume_download.dart';
 import '../../../domain/models/profile_models.dart';
 import '../../viewmodels/locale_viewmodel.dart';
-import '../common/device_mockup.dart';
-import '../common/glass_container.dart';
 import '../common/gradient_text.dart';
 import '../common/pulse_badge.dart';
 import '../common/section_wrapper.dart';
@@ -144,8 +142,8 @@ class HeroSection extends ConsumerWidget {
                 _maybeExpanded(
                   expand: isDesktop,
                   flex: 5,
-                  child: const Center(
-                    child: _VisualShowcase(),
+                  child: Center(
+                    child: _HeroOrbitAvatarShowcase(profile: profile),
                   ),
                 ),
               ],
@@ -157,86 +155,615 @@ class HeroSection extends ConsumerWidget {
   }
 }
 
-class _VisualShowcase extends StatelessWidget {
-  const _VisualShowcase();
+enum _TechBadgeType {
+  flutter,
+  kotlin,
+  android,
+  git,
+  ios,
+  playStore,
+  firebase,
+  appStore,
+}
+
+class _TechBadgeData {
+  final String name;
+  final Color color;
+  final Color glowColor;
+  final _TechBadgeType type;
+
+  const _TechBadgeData({
+    required this.name,
+    required this.color,
+    required this.glowColor,
+    required this.type,
+  });
+}
+
+class _HeroOrbitAvatarShowcase extends StatefulWidget {
+  final Profile profile;
+  const _HeroOrbitAvatarShowcase({required this.profile});
+
+  @override
+  State<_HeroOrbitAvatarShowcase> createState() => _HeroOrbitAvatarShowcaseState();
+}
+
+class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
+    with TickerProviderStateMixin {
+  late final AnimationController _orbitController;
+  late final AnimationController _pulseController;
+  late final Animation<double> _pulseAnimation;
+  int? _hoveredBadgeIndex;
+
+  static const List<_TechBadgeData> _badges = [
+    _TechBadgeData(
+      name: 'Flutter',
+      color: Color(0xFF38BDF8),
+      glowColor: Color(0xFF0284C7),
+      type: _TechBadgeType.flutter,
+    ),
+    _TechBadgeData(
+      name: 'Kotlin',
+      color: Color(0xFF818CF8),
+      glowColor: Color(0xFFC084FC),
+      type: _TechBadgeType.kotlin,
+    ),
+    _TechBadgeData(
+      name: 'Android',
+      color: Color(0xFF34D399),
+      glowColor: Color(0xFF10B981),
+      type: _TechBadgeType.android,
+    ),
+    _TechBadgeData(
+      name: 'Git',
+      color: Color(0xFFFB923C),
+      glowColor: Color(0xFFEA580C),
+      type: _TechBadgeType.git,
+    ),
+    _TechBadgeData(
+      name: 'iOS',
+      color: Color(0xFFF8FAFC),
+      glowColor: Color(0xFF94A3B8),
+      type: _TechBadgeType.ios,
+    ),
+    _TechBadgeData(
+      name: 'Play Store',
+      color: Color(0xFF34D399),
+      glowColor: Color(0xFF059669),
+      type: _TechBadgeType.playStore,
+    ),
+    _TechBadgeData(
+      name: 'Firebase',
+      color: Color(0xFFFBBF24),
+      glowColor: Color(0xFFD97706),
+      type: _TechBadgeType.firebase,
+    ),
+    _TechBadgeData(
+      name: 'App Store',
+      color: Color(0xFF38BDF8),
+      glowColor: Color(0xFF2563EB),
+      type: _TechBadgeType.appStore,
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _orbitController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 24),
+    )..repeat();
+
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2400),
+    )..repeat(reverse: true);
+
+    _pulseAnimation = Tween<double>(begin: 0.96, end: 1.05).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _orbitController.dispose();
+    _pulseController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const FittedBox(
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    const double canvasSize = 420.0;
+    const double centerCoord = canvasSize / 2;
+    const double orbitRadius = 162.0;
+    const double avatarSize = 228.0;
+
+    return FittedBox(
       fit: BoxFit.scaleDown,
       child: SizedBox(
-        height: 500,
-        width: 480,
+        width: canvasSize,
+        height: canvasSize,
         child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: [
-          // Background Phone (Ghareka PMT)
-          Positioned(
-            top: 20,
-            right: 20,
-            child: _FloatingWidget(
-              delay: 400,
-              child: DeviceMockup(
-                title: 'Ghareka PMT',
-                assetPath: 'assets/images/ghareka_pmt.jpeg',
-                fallbackIcon: Icons.home_work_rounded,
-                glowColor: AppColors.secondary,
-                width: 210,
-                height: 430,
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            // 1. Orbital track & radar ring background
+            CustomPaint(
+              size: const Size(canvasSize, canvasSize),
+              painter: _OrbitTrackPainter(
+                orbitRadius: orbitRadius,
+                isDark: isDark,
               ),
             ),
-          ),
-          // Foreground Phone (Retail CRM)
-          Positioned(
-            top: 40,
-            left: 20,
-            child: _FloatingWidget(
-              delay: 0,
-              child: DeviceMockup(
-                title: 'Retail CRM',
-                assetPath: 'assets/images/crm.jpeg',
-                fallbackIcon: Icons.dashboard_rounded,
-                glowColor: AppColors.primary,
-                width: 220,
-                height: 440,
-              ),
-            ),
-          ),
 
-          // Floating Tech Pills with top positioning ONLY to prevent bottom-calculation relayout on Web
-          Positioned(
-            top: 0,
-            left: 0,
-            child: _FloatingTechPill(
-              label: 'Kotlin • Compose',
-              delay: 600,
-              color: AppColors.androidGreen,
+            // 2. Pulsing Radial Aura / Glow behind portrait
+            AnimatedBuilder(
+              animation: _pulseAnimation,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _pulseAnimation.value,
+                  child: Container(
+                    width: avatarSize + 36,
+                    height: avatarSize + 36,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          const Color(0xFFA855F7).withValues(alpha: isDark ? 0.35 : 0.20),
+                          const Color(0xFF6366F1).withValues(alpha: isDark ? 0.25 : 0.12),
+                          const Color(0xFF06B6D4).withValues(alpha: isDark ? 0.15 : 0.06),
+                          Colors.transparent,
+                        ],
+                        stops: const [0.3, 0.6, 0.85, 1.0],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-          ),
-          Positioned(
-            top: 410,
-            right: 0,
-            child: _FloatingTechPill(
-              label: 'Flutter • Riverpod',
-              delay: 800,
-              color: AppColors.flutterBlue,
+
+            // 3. Circular Avatar with neon multi-gradient border
+            Container(
+              width: avatarSize,
+              height: avatarSize,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const SweepGradient(
+                  colors: [
+                    Color(0xFF8B5CF6),
+                    Color(0xFF06B6D4),
+                    Color(0xFFEC4899),
+                    Color(0xFF3B82F6),
+                    Color(0xFF8B5CF6),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.45),
+                    blurRadius: 36,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: const Color(0xFF06B6D4).withValues(alpha: 0.25),
+                    blurRadius: 24,
+                    spreadRadius: -4,
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(4.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isDark ? const Color(0xFF0A0D14) : Colors.white,
+                  border: Border.all(
+                    color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.8),
+                    width: 2.0,
+                  ),
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    widget.profile.profilePicture,
+                    fit: BoxFit.cover,
+                    width: avatarSize,
+                    height: avatarSize,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
+                      child: const Center(
+                        child: Icon(
+                          Icons.person_rounded,
+                          size: 90,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-          Positioned(
-            top: 440,
-            left: 10,
-            child: _FloatingTechPill(
-              label: 'Clean Architecture',
-              delay: 1000,
-              color: AppColors.accent,
+
+            // 4. The 8 Orbiting Tech Badges
+            AnimatedBuilder(
+              animation: _orbitController,
+              builder: (context, child) {
+                final baseAngle = _orbitController.value * 2 * math.pi;
+
+                return Stack(
+                  children: List.generate(_badges.length, (index) {
+                    final badge = _badges[index];
+                    final angle = baseAngle + index * (2 * math.pi / _badges.length);
+                    final x = centerCoord + orbitRadius * math.cos(angle);
+                    final y = centerCoord + orbitRadius * math.sin(angle);
+                    final isHovered = _hoveredBadgeIndex == index;
+                    const badgeSize = 46.0;
+
+                    return Positioned(
+                      left: x - badgeSize / 2,
+                      top: y - badgeSize / 2,
+                      child: MouseRegion(
+                        onEnter: (_) {
+                          setState(() {
+                            _hoveredBadgeIndex = index;
+                          });
+                        },
+                        onExit: (_) {
+                          setState(() {
+                            if (_hoveredBadgeIndex == index) {
+                              _hoveredBadgeIndex = null;
+                            }
+                          });
+                        },
+                        cursor: SystemMouseCursors.click,
+                        child: Tooltip(
+                          message: badge.name,
+                          textStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0F172A).withValues(alpha: 0.95),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: badge.color.withValues(alpha: 0.6),
+                              width: 1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: badge.glowColor.withValues(alpha: 0.4),
+                                blurRadius: 10,
+                              ),
+                            ],
+                          ),
+                          child: AnimatedScale(
+                            duration: const Duration(milliseconds: 180),
+                            scale: isHovered ? 1.28 : 1.0,
+                            child: Container(
+                              width: badgeSize,
+                              height: badgeSize,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isDark
+                                    ? const Color(0xFF0B0F19)
+                                    : const Color(0xFFFFFFFF),
+                                border: Border.all(
+                                  color: isHovered
+                                      ? badge.color
+                                      : badge.color.withValues(alpha: 0.55),
+                                  width: isHovered ? 2.2 : 1.5,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: badge.glowColor.withValues(alpha: isHovered ? 0.65 : 0.35),
+                                    blurRadius: isHovered ? 18 : 10,
+                                    spreadRadius: isHovered ? 2 : 0.5,
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: SizedBox(
+                                  width: 26,
+                                  height: 26,
+                                  child: CustomPaint(
+                                    painter: _TechLogoPainter(
+                                      type: badge.type,
+                                      color: badge.color,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                );
+              },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
+
+class _OrbitTrackPainter extends CustomPainter {
+  final double orbitRadius;
+  final bool isDark;
+
+  const _OrbitTrackPainter({
+    required this.orbitRadius,
+    required this.isDark,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+
+    final glowPaint = Paint()
+      ..color = const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.12 : 0.07)
+      ..strokeWidth = 3.0
+      ..style = PaintingStyle.stroke;
+    canvas.drawCircle(center, orbitRadius, glowPaint);
+
+    final dashPaint = Paint()
+      ..color = (isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7))
+          .withValues(alpha: isDark ? 0.35 : 0.25)
+      ..strokeWidth = 1.6
+      ..style = PaintingStyle.stroke;
+
+    const totalDashes = 48;
+    const dashAngle = (2 * math.pi) / totalDashes;
+    const dashDrawAngle = dashAngle * 0.55;
+
+    for (int i = 0; i < totalDashes; i++) {
+      final startAngle = i * dashAngle;
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: orbitRadius),
+        startAngle,
+        dashDrawAngle,
+        false,
+        dashPaint,
+      );
+    }
+
+    final innerPaint = Paint()
+      ..color = (isDark ? const Color(0xFFA855F7) : const Color(0xFF7C3AED))
+          .withValues(alpha: isDark ? 0.15 : 0.08)
+      ..strokeWidth = 1.0
+      ..style = PaintingStyle.stroke;
+    canvas.drawCircle(center, orbitRadius - 28, innerPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _OrbitTrackPainter oldDelegate) =>
+      oldDelegate.orbitRadius != orbitRadius || oldDelegate.isDark != isDark;
+}
+
+class _TechLogoPainter extends CustomPainter {
+  final _TechBadgeType type;
+  final Color color;
+
+  const _TechLogoPainter({
+    required this.type,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    switch (type) {
+      case _TechBadgeType.flutter:
+        final paintLight = Paint()..color = const Color(0xFF54C5F8)..style = PaintingStyle.fill;
+        final paintMed = Paint()..color = const Color(0xFF29B6F6)..style = PaintingStyle.fill;
+        final paintDark = Paint()..color = const Color(0xFF01579B)..style = PaintingStyle.fill;
+
+        final pathTop = Path()
+          ..moveTo(w * 0.20, h * 0.15)
+          ..lineTo(w * 0.85, h * 0.80)
+          ..lineTo(w * 0.62, h * 0.80)
+          ..lineTo(w * 0.05, h * 0.23)
+          ..close();
+        canvas.drawPath(pathTop, paintLight);
+
+        final pathMid = Path()
+          ..moveTo(w * 0.38, h * 0.65)
+          ..lineTo(w * 0.52, h * 0.79)
+          ..lineTo(w * 0.38, h * 0.93)
+          ..lineTo(w * 0.24, h * 0.79)
+          ..close();
+        canvas.drawPath(pathMid, paintMed);
+
+        final pathBottom = Path()
+          ..moveTo(w * 0.52, h * 0.79)
+          ..lineTo(w * 0.85, h * 0.79)
+          ..lineTo(w * 0.71, h * 0.93)
+          ..lineTo(w * 0.38, h * 0.93)
+          ..close();
+        canvas.drawPath(pathBottom, paintDark);
+        break;
+
+      case _TechBadgeType.kotlin:
+        final rect = Rect.fromLTWH(w * 0.18, h * 0.18, w * 0.64, h * 0.64);
+        final grad = const LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Color(0xFF7F52FF), Color(0xFFC711E1), Color(0xFFE4485D)],
+        ).createShader(rect);
+        final pGrad = Paint()..shader = grad..style = PaintingStyle.fill;
+
+        final pathUpper = Path()
+          ..moveTo(w * 0.18, h * 0.18)
+          ..lineTo(w * 0.82, h * 0.18)
+          ..lineTo(w * 0.18, h * 0.82)
+          ..close();
+        canvas.drawPath(pathUpper, pGrad);
+
+        final pathLower = Path()
+          ..moveTo(w * 0.82, h * 0.82)
+          ..lineTo(w * 0.35, h * 0.82)
+          ..lineTo(w * 0.82, h * 0.35)
+          ..close();
+        canvas.drawPath(pathLower, pGrad);
+        break;
+
+      case _TechBadgeType.android:
+        final pGreen = Paint()..color = const Color(0xFF3DDC84)..style = PaintingStyle.fill;
+        final pWhite = Paint()..color = Colors.white..style = PaintingStyle.fill;
+        final pAntenna = Paint()
+          ..color = const Color(0xFF3DDC84)
+          ..strokeWidth = 1.8
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke;
+
+        canvas.drawLine(Offset(w * 0.38, h * 0.34), Offset(w * 0.28, h * 0.20), pAntenna);
+        canvas.drawLine(Offset(w * 0.62, h * 0.34), Offset(w * 0.72, h * 0.20), pAntenna);
+
+        final head = Path()
+          ..arcTo(Rect.fromLTWH(w * 0.22, h * 0.32, w * 0.56, h * 0.56), math.pi, math.pi, true)
+          ..close();
+        canvas.drawPath(head, pGreen);
+
+        canvas.drawCircle(Offset(w * 0.38, h * 0.48), 1.8, pWhite);
+        canvas.drawCircle(Offset(w * 0.62, h * 0.48), 1.8, pWhite);
+        break;
+
+      case _TechBadgeType.git:
+        final pGit = Paint()..color = const Color(0xFFF05032)..style = PaintingStyle.fill;
+        final pStem = Paint()
+          ..color = Colors.white
+          ..strokeWidth = 2.0
+          ..style = PaintingStyle.stroke;
+        final pNode = Paint()..color = Colors.white..style = PaintingStyle.fill;
+
+        final diamond = Path()
+          ..moveTo(w * 0.5, h * 0.12)
+          ..lineTo(w * 0.88, h * 0.5)
+          ..lineTo(w * 0.5, h * 0.88)
+          ..lineTo(w * 0.12, h * 0.5)
+          ..close();
+        canvas.drawPath(diamond, pGit);
+
+        canvas.drawLine(Offset(w * 0.42, h * 0.32), Offset(w * 0.42, h * 0.68), pStem);
+        final branch = Path()
+          ..moveTo(w * 0.42, h * 0.54)
+          ..quadraticBezierTo(w * 0.58, h * 0.54, w * 0.62, h * 0.42);
+        canvas.drawPath(branch, pStem);
+
+        canvas.drawCircle(Offset(w * 0.42, h * 0.34), 2.2, pNode);
+        canvas.drawCircle(Offset(w * 0.42, h * 0.66), 2.2, pNode);
+        canvas.drawCircle(Offset(w * 0.62, h * 0.42), 2.2, pNode);
+        break;
+
+      case _TechBadgeType.ios:
+        final pApple = Paint()..color = Colors.white..style = PaintingStyle.fill;
+        canvas.drawCircle(Offset(w * 0.44, h * 0.56), w * 0.21, pApple);
+        canvas.drawCircle(Offset(w * 0.56, h * 0.56), w * 0.21, pApple);
+
+        final leaf = Path()
+          ..moveTo(w * 0.50, h * 0.26)
+          ..quadraticBezierTo(w * 0.64, h * 0.24, w * 0.64, h * 0.35)
+          ..quadraticBezierTo(w * 0.50, h * 0.37, w * 0.50, h * 0.26)
+          ..close();
+        canvas.drawPath(leaf, pApple);
+
+        final pBite = Paint()..color = const Color(0xFF0C101A)..style = PaintingStyle.fill;
+        canvas.drawCircle(Offset(w * 0.72, h * 0.52), w * 0.09, pBite);
+        break;
+
+      case _TechBadgeType.playStore:
+        final pBlue = Paint()..color = const Color(0xFF00C3FF)..style = PaintingStyle.fill;
+        final pGreen = Paint()..color = const Color(0xFF00E676)..style = PaintingStyle.fill;
+        final pAmber = Paint()..color = const Color(0xFFFFD400)..style = PaintingStyle.fill;
+        final pRed = Paint()..color = const Color(0xFFFF3A44)..style = PaintingStyle.fill;
+
+        final pathRed = Path()
+          ..moveTo(w * 0.22, h * 0.18)
+          ..lineTo(w * 0.60, h * 0.50)
+          ..lineTo(w * 0.22, h * 0.82)
+          ..close();
+        canvas.drawPath(pathRed, pRed);
+
+        final pathBlue = Path()
+          ..moveTo(w * 0.22, h * 0.18)
+          ..lineTo(w * 0.78, h * 0.50)
+          ..lineTo(w * 0.60, h * 0.50)
+          ..close();
+        canvas.drawPath(pathBlue, pBlue);
+
+        final pathGreen = Path()
+          ..moveTo(w * 0.22, h * 0.82)
+          ..lineTo(w * 0.60, h * 0.50)
+          ..lineTo(w * 0.78, h * 0.50)
+          ..close();
+        canvas.drawPath(pathGreen, pGreen);
+
+        final pathAmber = Path()
+          ..moveTo(w * 0.60, h * 0.50)
+          ..lineTo(w * 0.78, h * 0.50)
+          ..lineTo(w * 0.70, h * 0.58)
+          ..close();
+        canvas.drawPath(pathAmber, pAmber);
+        break;
+
+      case _TechBadgeType.firebase:
+        final p1 = Paint()..color = const Color(0xFFFFCA28)..style = PaintingStyle.fill;
+        final p2 = Paint()..color = const Color(0xFFFFA000)..style = PaintingStyle.fill;
+        final p3 = Paint()..color = const Color(0xFFF57C00)..style = PaintingStyle.fill;
+
+        final path1 = Path()
+          ..moveTo(w * 0.48, h * 0.12)
+          ..lineTo(w * 0.16, h * 0.70)
+          ..lineTo(w * 0.50, h * 0.88)
+          ..close();
+        canvas.drawPath(path1, p1);
+
+        final path2 = Path()
+          ..moveTo(w * 0.74, h * 0.35)
+          ..lineTo(w * 0.50, h * 0.88)
+          ..lineTo(w * 0.84, h * 0.72)
+          ..close();
+        canvas.drawPath(path2, p2);
+
+        final path3 = Path()
+          ..moveTo(w * 0.36, h * 0.40)
+          ..lineTo(w * 0.50, h * 0.88)
+          ..lineTo(w * 0.62, h * 0.62)
+          ..close();
+        canvas.drawPath(path3, p3);
+        break;
+
+      case _TechBadgeType.appStore:
+        final pBg = Paint()..color = const Color(0xFF0D96F6)..style = PaintingStyle.fill;
+        final pSticks = Paint()
+          ..color = Colors.white
+          ..strokeWidth = 2.4
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke;
+
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromLTWH(w * 0.15, h * 0.15, w * 0.70, h * 0.70),
+            const Radius.circular(5),
+          ),
+          pBg,
+        );
+        canvas.drawLine(Offset(w * 0.32, h * 0.75), Offset(w * 0.50, h * 0.28), pSticks);
+        canvas.drawLine(Offset(w * 0.68, h * 0.75), Offset(w * 0.50, h * 0.28), pSticks);
+        canvas.drawLine(Offset(w * 0.26, h * 0.62), Offset(w * 0.74, h * 0.62), pSticks);
+        break;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _TechLogoPainter oldDelegate) =>
+      oldDelegate.type != type || oldDelegate.color != color;
 }
 
 class _PrimaryCTAButton extends StatefulWidget {
@@ -439,110 +966,6 @@ class _SocialPillState extends State<_SocialPill> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _FloatingTechPill extends StatelessWidget {
-  final String label;
-  final int delay;
-  final Color color;
-
-  const _FloatingTechPill({
-    required this.label,
-    required this.delay,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return _FloatingWidget(
-      delay: delay,
-      child: GlassContainer(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        borderRadius: 100,
-        borderColor: color.withValues(alpha: 0.4),
-        glowColor: color,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 6,
-              height: 6,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: color,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              label.toUpperCase(),
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.2,
-                color: color,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FloatingWidget extends StatefulWidget {
-  final Widget child;
-  final int delay;
-
-  const _FloatingWidget({
-    required this.child,
-    required this.delay,
-  });
-
-  @override
-  State<_FloatingWidget> createState() => _FloatingWidgetState();
-}
-
-class _FloatingWidgetState extends State<_FloatingWidget> with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _animation;
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 4),
-    );
-
-    _animation = Tween<double>(
-      begin: 0.0,
-      end: 10.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    _timer = Timer(Duration(milliseconds: widget.delay), () {
-      if (mounted) _controller.repeat(reverse: true);
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) => Transform.translate(
-        offset: Offset(0, _animation.value),
-        child: child,
-      ),
-      child: widget.child,
     );
   }
 }
