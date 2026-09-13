@@ -560,14 +560,26 @@ Date:   Sep 13 2026
 
     function filterItems(query) {
       const q = query.toLowerCase().trim();
+      let matchCount = 0;
       items.forEach((item) => {
         const text = item.innerText.toLowerCase();
         if (!q || text.includes(q)) {
           item.style.display = 'flex';
+          matchCount++;
         } else {
           item.style.display = 'none';
         }
       });
+
+      const groupTitles = document.querySelectorAll('.cmdk-group-title');
+      groupTitles.forEach((gt) => {
+        gt.style.display = (matchCount === 0 && q) ? 'none' : 'block';
+      });
+
+      const emptyState = document.getElementById('cmdkEmptyState');
+      if (emptyState) {
+        emptyState.style.display = (matchCount === 0 && q) ? 'flex' : 'none';
+      }
     }
 
     triggers.forEach((btn) => btn.addEventListener('click', openPalette));
@@ -1133,8 +1145,8 @@ Date:   Sep 13 2026
         openSpecificCaseStudy('staffer', 'Staffer App');
         return;
       }
-      if (cmd.includes('massage') || cmd.includes('club')) {
-        openSpecificCaseStudy('massageclub', 'Massage Club');
+      if (cmd.includes('massage') || cmd.includes('message') || cmd.includes('club')) {
+        openSpecificCaseStudy('message_club', 'Message Club');
         return;
       }
       if (cmd.includes('captain') || cmd.includes('fleet') || cmd.includes('logistic')) {
@@ -1242,8 +1254,8 @@ Date:   Sep 13 2026
         return;
       }
 
-      // 12. Command Palette / Search
-      if (cmd.includes('search') || cmd.includes('find') || cmd.includes('palette') || cmd.includes('command')) {
+      // 12. Explicit Command Palette trigger (do not open modal for general voice queries)
+      if (cmd === 'open search' || cmd === 'open command palette' || cmd === 'palette' || cmd === 'command palette' || cmd === 'open palette') {
         const searchBtn = document.querySelector('.cmdk-trigger');
         if (searchBtn) {
           searchBtn.click();
@@ -1272,11 +1284,17 @@ Date:   Sep 13 2026
         return;
       }
 
-      // 15. Unrecognized command feedback
+      // 15. Unrecognized / No Results Feedback (Never open a blank modal or blank screen)
       if (transcriptEl) {
-        transcriptEl.textContent = `Unrecognized command: "${commandText}". Try saying "Go to projects" or "Skills".`;
+        transcriptEl.textContent = `No results found for "${commandText}". Try saying "Projects", "Skills", or "Architecture".`;
+      }
+      if (statusTitle) statusTitle.textContent = 'No Match Found';
+      if (statusBadge) {
+        statusBadge.textContent = 'NOT FOUND';
+        statusBadge.style.color = '#f59e0b';
       }
       playAudioChime('error');
+      speakConfirmation('No matching results found');
     }
 
     function openSpecificCaseStudy(id, name) {

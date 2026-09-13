@@ -156,9 +156,7 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
           _words = result.recognizedWords;
         });
 
-        if (result.finalResult || result.recognizedWords.isNotEmpty) {
-          _processVoiceCommand(result.recognizedWords);
-        }
+        _processVoiceCommand(result.recognizedWords, isFinal: result.finalResult);
       },
       listenOptions: stt.SpeechListenOptions(
         partialResults: true,
@@ -183,16 +181,27 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
     }
   }
 
-  void _processVoiceCommand(String text) {
+  void _processVoiceCommand(String text, {bool isFinal = false}) {
     final cmd = text.toLowerCase().trim();
     if (cmd.isEmpty) return;
 
-    // 1. Projects
+    // 1. Projects & Specific Case Studies
     if (cmd.contains('project') ||
         cmd.contains('work') ||
         cmd.contains('case study') ||
         cmd.contains('app') ||
-        cmd.contains('portfolio')) {
+        cmd.contains('portfolio') ||
+        cmd.contains('ghareka') ||
+        cmd.contains('buildistan') ||
+        cmd.contains('pariwar') ||
+        cmd.contains('crm') ||
+        cmd.contains('sales') ||
+        cmd.contains('captain') ||
+        cmd.contains('message club') ||
+        cmd.contains('massage club') ||
+        cmd.contains('staffer') ||
+        cmd.contains('drlife') ||
+        cmd.contains('telemedicine')) {
       _executeAction('Navigating to Projects', widget.onScrollToProjects);
       return;
     }
@@ -207,13 +216,19 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
       return;
     }
 
-    // 3. Skills
+    // 3. Skills & Technologies
     if (cmd.contains('skill') ||
         cmd.contains('technolog') ||
         cmd.contains('coroutine') ||
         cmd.contains('dagger') ||
         cmd.contains('hilt') ||
-        cmd.contains('stack')) {
+        cmd.contains('stack') ||
+        cmd.contains('flutter') ||
+        cmd.contains('kotlin') ||
+        cmd.contains('android') ||
+        cmd.contains('compose') ||
+        cmd.contains('riverpod') ||
+        cmd.contains('bloc')) {
       _executeAction('Navigating to Skills', widget.onScrollToSkills);
       return;
     }
@@ -266,9 +281,22 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
     }
 
     // 9. Close
-    if (cmd.contains('close') || cmd.contains('stop') || cmd.contains('dismiss')) {
+    if (cmd.contains('close') || cmd.contains('stop') || cmd.contains('dismiss') || cmd.contains('cancel')) {
       Navigator.of(context).pop();
       return;
+    }
+
+    // 10. Fallback when voice search produces no match (avoid blank screens)
+    if (isFinal) {
+      _speech.stop();
+      if (!mounted) return;
+      setState(() {
+        _isListening = false;
+        _words = '';
+        _badgeText = 'NO MATCH';
+        _badgeColor = Colors.orangeAccent;
+        _statusMessage = 'No results found for "$text". Tap a command:';
+      });
     }
   }
 
@@ -291,42 +319,49 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: MediaQuery.paddingOf(context).bottom + 20,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-          child: Container(
-            decoration: BoxDecoration(
-              color: isDark
-                  ? const Color(0xFF090A0F).withValues(alpha: 0.92)
-                  : Colors.white.withValues(alpha: 0.95),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: _isListening
-                    ? AppColors.emerald.withValues(alpha: 0.5)
-                    : AppColors.secondary.withValues(alpha: 0.35),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: _isListening
-                      ? AppColors.emerald.withValues(alpha: 0.2)
-                      : AppColors.secondary.withValues(alpha: 0.15),
-                  blurRadius: 30,
-                  offset: const Offset(0, 8),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 640),
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            bottom: MediaQuery.paddingOf(context).bottom + 20,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF090A0F).withValues(alpha: 0.92)
+                      : Colors.white.withValues(alpha: 0.95),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: _isListening
+                        ? AppColors.emerald.withValues(alpha: 0.5)
+                        : (_badgeText == 'NO MATCH'
+                            ? Colors.orange.withValues(alpha: 0.6)
+                            : AppColors.secondary.withValues(alpha: 0.35)),
+                    width: 1.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _isListening
+                          ? AppColors.emerald.withValues(alpha: 0.2)
+                          : (_badgeText == 'NO MATCH'
+                              ? Colors.orange.withValues(alpha: 0.2)
+                              : AppColors.secondary.withValues(alpha: 0.15)),
+                      blurRadius: 30,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                 // Top row: Mic button, Status, Equalizer, Close
                 Row(
                   children: [
@@ -471,6 +506,36 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
                   ],
                 ),
 
+                if (_badgeText == 'NO MATCH') ...[
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.orange.withValues(alpha: 0.35),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.info_outline_rounded, size: 15, color: Colors.orangeAccent),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'No matching section or project found. Tap a command below:',
+                            style: GoogleFonts.inter(
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w600,
+                              color: isDark ? const Color(0xFFFDBA74) : const Color(0xFFC2410C),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
                 const SizedBox(height: 14),
                 const Divider(height: 1, color: Colors.white10),
                 const SizedBox(height: 12),
@@ -512,7 +577,9 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
   Widget _buildQuickChip(String label, VoidCallback onTap, bool isDark) {
