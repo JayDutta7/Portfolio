@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/launch_helper.dart';
 import '../../../core/utils/responsive.dart';
@@ -16,154 +18,270 @@ class HeroSection extends ConsumerWidget {
   final Profile profile;
   final VoidCallback onViewWork;
   final GlobalKey? sectionKey;
+  final ScrollController? scrollController;
+  final GlobalKey? projectsKey;
+  final VoidCallback? onViewCaseStudies;
 
   const HeroSection({
     required this.profile,
     required this.onViewWork,
     this.sectionKey,
+    this.scrollController,
+    this.projectsKey,
+    this.onViewCaseStudies,
     super.key,
   });
+
+  void _scrollToCaseStudies(BuildContext context) {
+    if (onViewCaseStudies != null) {
+      onViewCaseStudies!();
+      return;
+    }
+    if (scrollController != null && scrollController!.hasClients) {
+      if (projectsKey?.currentContext != null) {
+        final renderBox = projectsKey!.currentContext!.findRenderObject() as RenderBox?;
+        if (renderBox != null) {
+          final scrollable = Scrollable.of(projectsKey!.currentContext!);
+          final position = scrollable.position;
+          final offset = renderBox.localToGlobal(Offset.zero, ancestor: scrollable.context.findRenderObject()).dy;
+          final target = (position.pixels + offset - 85).clamp(0.0, position.maxScrollExtent);
+          scrollController!.animateTo(
+            target,
+            duration: const Duration(milliseconds: 650),
+            curve: Curves.easeInOutCubic,
+          );
+          return;
+        }
+      }
+    }
+    onViewWork();
+  }
+
+  Future<void> _handleDownloadResume(BuildContext context) async {
+    try {
+      final uri = Uri.parse(profile.resumeAssetPath);
+      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!launched) {
+        await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
+      }
+    } catch (_) {
+      try {
+        await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Could not open resume: $e')),
+          );
+        }
+      }
+    }
+  }
+
+  Widget _buildSubtitle(
+    BuildContext context, {
+    required bool isDesktop,
+    required bool isMobile,
+    required bool isTablet,
+    required bool isDark,
+  }) {
+    final baseStyle = GoogleFonts.inter(
+      fontSize: isMobile ? 15.0 : (isTablet ? 16.5 : 18.0),
+      height: 1.65,
+      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+    );
+
+    InlineSpan techSpan(String text) {
+      return WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 2),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 6 : 8,
+            vertical: isMobile ? 2 : 3,
+          ),
+          decoration: BoxDecoration(
+            color: isDark
+                ? const Color(0xFF38BDF8).withValues(alpha: 0.14)
+                : const Color(0xFF6366F1).withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: isDark
+                  ? const Color(0xFF38BDF8).withValues(alpha: 0.45)
+                  : const Color(0xFF6366F1).withValues(alpha: 0.30),
+              width: 1,
+            ),
+          ),
+          child: Text(
+            text,
+            style: GoogleFonts.jetBrainsMono(
+              fontSize: isMobile ? 12.0 : (isTablet ? 13.5 : 14.5),
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.2,
+              color: isDark ? const Color(0xFF38BDF8) : const Color(0xFF4338CA),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: isDesktop ? 640 : 700),
+      child: Text.rich(
+        TextSpan(
+          style: baseStyle,
+          children: [
+            const TextSpan(text: 'Architecting resilient mobile ecosystems with '),
+            techSpan('Clean Architecture'),
+            const TextSpan(text: ', modern declarative Android with '),
+            techSpan('Jetpack Compose'),
+            const TextSpan(text: ', reactive concurrency using '),
+            techSpan('Kotlin Coroutines'),
+            const TextSpan(text: ', scalable cross-platform engineering with '),
+            techSpan('Flutter/Dart'),
+            const TextSpan(text: ', and decoupled '),
+            techSpan('Multi-Module Design'),
+            const TextSpan(text: '.'),
+          ],
+        ),
+        textAlign: isDesktop ? TextAlign.left : TextAlign.center,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDesktop = Responsive.isDesktopOrWider(context);
     final isDark = theme.brightness == Brightness.dark;
     final currentLanguage = ref.watch(localeProvider);
 
-    final width = MediaQuery.sizeOf(context).width;
-    final isMobile = width < 600;
-    final headlineFontSize = isDesktop ? 64.0 : (width < 380 ? 30.0 : (width < 600 ? 36.0 : 48.0));
-    final headlineLetterSpacing = isDesktop ? -2.5 : (width < 600 ? -1.0 : -1.8);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final isMobile = width < 600;
+        final isTablet = width >= 600 && width <= 1024;
+        final isDesktop = width > 1024;
 
-    final textContent = Column(
-      crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-      children: [
-        PulseBadge(
-          label: currentLanguage.heroBadge,
-          dotColor: AppColors.primary,
-        ),
-        SizedBox(height: isMobile ? 14 : 18),
-        _TypewriterGreeting(
-          text: currentLanguage.heroGreeting,
-          isDesktop: isDesktop,
-          isDark: isDark,
-        ),
-        SizedBox(height: isMobile ? 14 : 18),
-        GradientText(
-          currentLanguage.heroHeadline,
-          colors: isDark
-              ? AppColors.heroTitleGradient
-              : AppColors.heroTitleGradientLight,
-          textAlign: isDesktop ? TextAlign.left : TextAlign.center,
-          style: theme.textTheme.displayLarge?.copyWith(
-            fontSize: headlineFontSize,
-            fontWeight: FontWeight.w900,
-            height: 1.08,
-            letterSpacing: headlineLetterSpacing,
-          ),
-        ),
-        SizedBox(height: isMobile ? 16 : 24),
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 580),
-          child: Text(
-            profile.heroIntro,
-            textAlign: isDesktop ? TextAlign.left : TextAlign.center,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              fontSize: isMobile ? 16 : 18,
-              height: 1.65,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.75),
-            ),
-          ),
-        ),
-        SizedBox(height: isMobile ? 28 : 48),
-        Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
+        final headlineFontSize = isDesktop
+            ? 62.0
+            : (isTablet
+                ? 44.0
+                : (width < 380 ? 28.0 : 34.0));
+        final headlineLetterSpacing = isDesktop ? -2.2 : (isTablet ? -1.4 : -0.8);
+
+        final textContent = Column(
+          crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
           children: [
-            _PrimaryCTAButton(
-              label: currentLanguage.downloadCv,
-              icon: Icons.download_rounded,
-              onPressed: () async {
-                try {
-                  await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Download failed: $e')),
-                    );
-                  }
-                }
-              },
+            PulseBadge(
+              label: currentLanguage.heroBadge,
+              dotColor: AppColors.primary,
             ),
-            _SecondaryCTAButton(
-              label: currentLanguage.exploreWork,
-              icon: Icons.arrow_downward_rounded,
-              onPressed: onViewWork,
+            SizedBox(height: isMobile ? 14 : 18),
+            _TypewriterGreeting(
+              text: currentLanguage.heroGreeting,
+              isDesktop: isDesktop,
+              isDark: isDark,
             ),
-          ],
-        ),
-        SizedBox(height: isMobile ? 24 : 36),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
-          children: [
-            _SocialPill(
-              icon: Icons.code_rounded,
-              label: 'GitHub',
-              onTap: () => LaunchHelper.openUrl(profile.githubUrl),
-            ),
-            _SocialPill(
-              icon: Icons.work_rounded,
-              label: 'LinkedIn',
-              onTap: () => LaunchHelper.openUrl(profile.linkedInUrl),
-            ),
-            _SocialPill(
-              icon: Icons.email_rounded,
-              label: 'Email',
-              onTap: () => LaunchHelper.sendEmail(profile.email),
-            ),
-          ],
-        ),
-      ],
-    );
-
-    final avatarShowcase = Center(
-      child: _HeroOrbitAvatarShowcase(profile: profile),
-    );
-
-    return SizedBox(
-      key: sectionKey,
-      width: double.infinity,
-      child: SectionWrapper(
-        verticalPadding: isDesktop ? 100 : 28,
-        child: isDesktop
-            ? Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 6,
-                    child: textContent,
-                  ),
-                  const SizedBox(width: 60),
-                  Expanded(
-                    flex: 5,
-                    child: avatarShowcase,
-                  ),
-                ],
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // On mobile/tablet: Display the animated orbit avatar prominently at the top
-                  avatarShowcase,
-                  const SizedBox(height: 28),
-                  textContent,
-                ],
+            SizedBox(height: isMobile ? 14 : 18),
+            GradientText(
+              'Senior Android & Flutter Engineer',
+              colors: isDark
+                  ? AppColors.heroTitleGradient
+                  : AppColors.heroTitleGradientLight,
+              textAlign: isDesktop ? TextAlign.left : TextAlign.center,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: headlineFontSize,
+                fontWeight: FontWeight.w900,
+                height: 1.08,
+                letterSpacing: headlineLetterSpacing,
               ),
-      ),
+            ),
+            SizedBox(height: isMobile ? 16 : 24),
+            _buildSubtitle(
+              context,
+              isDesktop: isDesktop,
+              isMobile: isMobile,
+              isTablet: isTablet,
+              isDark: isDark,
+            ),
+            SizedBox(height: isMobile ? 24 : 36),
+            Wrap(
+              spacing: 16,
+              runSpacing: 14,
+              alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
+              children: [
+                _CaseStudiesCTAButton(
+                  label: 'View Case Studies',
+                  icon: Icons.explore_rounded,
+                  onPressed: () => _scrollToCaseStudies(context),
+                ),
+                _ResumeCTAButton(
+                  label: 'Download Resume (PDF)',
+                  icon: Icons.description_rounded,
+                  onPressed: () => _handleDownloadResume(context),
+                ),
+              ],
+            ),
+            SizedBox(height: isMobile ? 24 : 36),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
+              children: [
+                _SocialPill(
+                  icon: Icons.code_rounded,
+                  label: 'GitHub',
+                  onTap: () => LaunchHelper.openUrl(profile.githubUrl),
+                ),
+                _SocialPill(
+                  icon: Icons.work_rounded,
+                  label: 'LinkedIn',
+                  onTap: () => LaunchHelper.openUrl(profile.linkedInUrl),
+                ),
+                _SocialPill(
+                  icon: Icons.email_rounded,
+                  label: 'Email',
+                  onTap: () => LaunchHelper.sendEmail(profile.email),
+                ),
+              ],
+            ),
+          ],
+        );
+
+        final avatarShowcase = Center(
+          child: _HeroOrbitAvatarShowcase(profile: profile),
+        );
+
+        return SizedBox(
+          key: sectionKey,
+          width: double.infinity,
+          child: SectionWrapper(
+            verticalPadding: isDesktop ? 96 : (isTablet ? 48 : 24),
+            child: isDesktop
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 6,
+                        child: textContent,
+                      ),
+                      const SizedBox(width: 48),
+                      Expanded(
+                        flex: 5,
+                        child: avatarShowcase,
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      avatarShowcase,
+                      SizedBox(height: isTablet ? 32 : 20),
+                      textContent,
+                    ],
+                  ),
+          ),
+        );
+      },
     );
   }
 }
@@ -239,8 +357,8 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
     ),
     _TechBadgeData(
       name: 'iOS',
-      color: Color(0xFFF8FAFC),
-      glowColor: Color(0xFF94A3B8),
+      color: Color(0xFF64748B),
+      glowColor: Color(0xFF475569),
       type: _TechBadgeType.ios,
     ),
     _TechBadgeData(
@@ -662,6 +780,7 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
                                       painter: _TechLogoPainter(
                                         type: badge.type,
                                         color: badge.color,
+                                        isDark: isDark,
                                       ),
                                     ),
                                   ),
@@ -770,10 +889,12 @@ class _OrbitTrackPainter extends CustomPainter {
 class _TechLogoPainter extends CustomPainter {
   final _TechBadgeType type;
   final Color color;
+  final bool isDark;
 
   const _TechLogoPainter({
     required this.type,
     required this.color,
+    required this.isDark,
   });
 
   @override
@@ -885,7 +1006,10 @@ class _TechLogoPainter extends CustomPainter {
         break;
 
       case _TechBadgeType.ios:
-        final pApple = Paint()..color = Colors.white..style = PaintingStyle.fill;
+        // Use dark slate in light mode for visibility, white in dark mode
+        final appleColor = isDark ? Colors.white : const Color(0xFF0F172A);
+        final biteColor = isDark ? const Color(0xFF0C101A) : Colors.white;
+        final pApple = Paint()..color = appleColor..style = PaintingStyle.fill;
         canvas.drawCircle(Offset(w * 0.44, h * 0.56), w * 0.21, pApple);
         canvas.drawCircle(Offset(w * 0.56, h * 0.56), w * 0.21, pApple);
 
@@ -896,7 +1020,7 @@ class _TechLogoPainter extends CustomPainter {
           ..close();
         canvas.drawPath(leaf, pApple);
 
-        final pBite = Paint()..color = const Color(0xFF0C101A)..style = PaintingStyle.fill;
+        final pBite = Paint()..color = biteColor..style = PaintingStyle.fill;
         canvas.drawCircle(Offset(w * 0.72, h * 0.52), w * 0.09, pBite);
         break;
 
@@ -1161,6 +1285,163 @@ class _TypewriterGreetingState extends State<_TypewriterGreeting> {
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CaseStudiesCTAButton extends StatefulWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  const _CaseStudiesCTAButton({
+    required this.label,
+    required this.icon,
+    required this.onPressed,
+  });
+
+  @override
+  State<_CaseStudiesCTAButton> createState() => _CaseStudiesCTAButtonState();
+}
+
+class _CaseStudiesCTAButtonState extends State<_CaseStudiesCTAButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: AnimatedScale(
+        duration: const Duration(milliseconds: 180),
+        scale: _isHovered ? 1.04 : 1.0,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF2563EB), Color(0xFF4F46E5), Color(0xFF7C3AED)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.35),
+              width: 1.2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF4F46E5).withValues(alpha: _isHovered ? 0.55 : 0.35),
+                blurRadius: _isHovered ? 28 : 16,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: ElevatedButton.icon(
+            onPressed: widget.onPressed,
+            icon: Icon(widget.icon, size: isMobile ? 18 : 20, color: Colors.white),
+            label: Text(
+              widget.label,
+              style: GoogleFonts.plusJakartaSans(
+                fontWeight: FontWeight.w800,
+                fontSize: isMobile ? 13.5 : 15,
+                letterSpacing: 0.4,
+                color: Colors.white,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 20 : 28,
+                vertical: isMobile ? 16 : 20,
+              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ResumeCTAButton extends StatefulWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  const _ResumeCTAButton({
+    required this.label,
+    required this.icon,
+    required this.onPressed,
+  });
+
+  @override
+  State<_ResumeCTAButton> createState() => _ResumeCTAButtonState();
+}
+
+class _ResumeCTAButtonState extends State<_ResumeCTAButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
+
+    final accentColor = isDark ? const Color(0xFF38BDF8) : const Color(0xFF4338CA);
+    final bgSurface = isDark
+        ? const Color(0xFF0F172A).withValues(alpha: _isHovered ? 0.95 : 0.8)
+        : Colors.white.withValues(alpha: _isHovered ? 1.0 : 0.96);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: AnimatedScale(
+        duration: const Duration(milliseconds: 180),
+        scale: _isHovered ? 1.04 : 1.0,
+        child: Container(
+          decoration: BoxDecoration(
+            color: bgSurface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: accentColor,
+              width: 2.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: accentColor.withValues(alpha: _isHovered ? 0.35 : 0.12),
+                blurRadius: _isHovered ? 24 : 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: OutlinedButton.icon(
+            onPressed: widget.onPressed,
+            icon: Icon(widget.icon, size: isMobile ? 18 : 20, color: accentColor),
+            label: Text(
+              widget.label,
+              style: GoogleFonts.plusJakartaSans(
+                fontWeight: FontWeight.w800,
+                fontSize: isMobile ? 13.5 : 15,
+                letterSpacing: 0.4,
+                color: accentColor,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              side: BorderSide.none,
+              backgroundColor: Colors.transparent,
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 18 : 26,
+                vertical: isMobile ? 16 : 20,
+              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
           ),
         ),

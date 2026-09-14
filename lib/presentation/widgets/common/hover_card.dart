@@ -26,6 +26,7 @@ class _HoverCardState extends State<HoverCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return MouseRegion(
       cursor:
           widget.onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
@@ -42,12 +43,26 @@ class _HoverCardState extends State<HoverCard> {
           boxShadow: _hovering
               ? [
                   BoxShadow(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.14),
+                    color: theme.colorScheme.primary.withValues(alpha: isDark ? 0.14 : 0.10),
                     blurRadius: 28,
                     offset: const Offset(0, 14),
                   ),
+                  if (!isDark)
+                    BoxShadow(
+                      color: const Color(0xFF0F172A).withValues(alpha: 0.06),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
+                    ),
                 ]
-              : [],
+              : [
+                  BoxShadow(
+                    color: isDark
+                        ? Colors.black.withValues(alpha: 0.20)
+                        : const Color(0xFF0F172A).withValues(alpha: 0.04),
+                    blurRadius: 14,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
         ),
         child: Material(
           color: Colors.transparent,

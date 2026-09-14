@@ -30,6 +30,7 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  final _scrollController = ScrollController();
   final _heroKey = GlobalKey();
   final _aboutKey = GlobalKey();
   final _skillsKey = GlobalKey();
@@ -38,11 +39,24 @@ class _HomePageState extends ConsumerState<HomePage> {
   final _projectsKey = GlobalKey();
   final _educationKey = GlobalKey();
   final _contactKey = GlobalKey();
+  bool _isStartupLoadingDone = false;
 
   @override
   void initState() {
     super.initState();
     DistributionHelper.init();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleRefresh() async {
+    ref.invalidate(profileViewModelProvider);
+    DistributionHelper.init();
+    await Future.delayed(const Duration(milliseconds: 600));
   }
 
   List<NavItem> _getNavItems(AppLanguage lang) => [
@@ -57,6 +71,16 @@ class _HomePageState extends ConsumerState<HomePage> {
     if (ctx != null) {
       final renderObject = ctx.findRenderObject() as RenderBox?;
       if (renderObject != null) {
+        if (_scrollController.hasClients) {
+          final offset = renderObject.localToGlobal(Offset.zero, ancestor: context.findRenderObject()).dy;
+          final target = (_scrollController.offset + offset - 85).clamp(0.0, _scrollController.position.maxScrollExtent);
+          _scrollController.animateTo(
+            target,
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeInOutCubic,
+          );
+          return;
+        }
         final scrollable = Scrollable.of(ctx);
         final position = scrollable.position;
         final offset = renderObject.localToGlobal(Offset.zero, ancestor: scrollable.context.findRenderObject()).dy;
@@ -98,6 +122,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final profile = ref.watch(profileViewModelProvider);
     final currentLanguage = ref.watch(localeProvider);
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -122,33 +147,193 @@ class _HomePageState extends ConsumerState<HomePage> {
             child: AmbientMeshBackground(),
           ),
 
-          // Scrollable Section Layer
+          // Scrollable Section Layer with Pull to Refresh
           Positioned.fill(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  _TopOpportunityBanner(message: currentLanguage.availableBadge),
-                  HeroSection(
-                    profile: profile,
-                    sectionKey: _heroKey,
-                    onViewWork: () => _scrollTo(_projectsKey),
-                  ),
-                  StatsSection(profile: profile),
-                  ExperienceSection(profile: profile, sectionKey: _experienceKey),
-                  ProjectsSection(profile: profile, sectionKey: _projectsKey),
-                  ArchitectureSection(profile: profile, sectionKey: _architectureKey),
-                  SkillsSection(profile: profile, sectionKey: _skillsKey),
-                  const SetupSection(),
-                  AboutSection(profile: profile, sectionKey: _aboutKey),
-                  EducationSection(profile: profile, sectionKey: _educationKey),
-                  ContactSection(profile: profile, sectionKey: _contactKey),
-                  SiteFooter(profile: profile),
-                ],
+            child: RefreshIndicator(
+              color: AppColors.primary,
+              backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+              displacement: 40,
+              edgeOffset: 8,
+              triggerMode: RefreshIndicatorTriggerMode.onEdge,
+              onRefresh: _handleRefresh,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
+                child: Column(
+                  children: [
+                    _TopOpportunityBanner(message: currentLanguage.availableBadge),
+                    HeroSection(
+                      profile: profile,
+                      sectionKey: _heroKey,
+                      scrollController: _scrollController,
+                      projectsKey: _projectsKey,
+                      onViewWork: () => _scrollTo(_projectsKey),
+                    ),
+                    StatsSection(profile: profile),
+                    ExperienceSection(profile: profile, sectionKey: _experienceKey),
+                    ProjectsSection(profile: profile, sectionKey: _projectsKey),
+                    ArchitectureSection(profile: profile, sectionKey: _architectureKey),
+                    SkillsSection(profile: profile, sectionKey: _skillsKey),
+                    const SetupSection(),
+                    AboutSection(profile: profile, sectionKey: _aboutKey),
+                    EducationSection(profile: profile, sectionKey: _educationKey),
+                    ContactSection(profile: profile, sectionKey: _contactKey),
+                    SiteFooter(profile: profile),
+                  ],
+                ),
               ),
             ),
           ),
+
+          // Starting Loading Animation (Fade In -> Fade Out)
+          if (!_isStartupLoadingDone)
+            Positioned.fill(
+              child: _StartingLoadingOverlay(
+                onCompleted: () {
+                  if (mounted) {
+                    setState(() => _isStartupLoadingDone = true);
+                  }
+                },
+              ),
+            ),
         ],
       ),
+    );
+  }
+}
+
+/// Lightweight starting loading overlay that smoothly fades in and then fades out
+class _StartingLoadingOverlay extends StatefulWidget {
+  final VoidCallback? onCompleted;
+
+  const _StartingLoadingOverlay({this.onCompleted});
+
+  @override
+  State<_StartingLoadingOverlay> createState() => _StartingLoadingOverlayState();
+}
+
+class _StartingLoadingOverlayState extends State<_StartingLoadingOverlay>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _opacityAnimation;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+
+    // Keyframe sequence: Fade In -> Hold -> Fade Out
+    _opacityAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeInCubic)),
+        weight: 38,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween<double>(1.0),
+        weight: 24,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeOutCubic)),
+        weight: 38,
+      ),
+    ]).animate(_controller);
+
+    _scaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.94, end: 1.0).chain(CurveTween(curve: Curves.easeOutCubic)),
+        weight: 38,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween<double>(1.0),
+        weight: 24,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 1.04).chain(CurveTween(curve: Curves.easeInCubic)),
+        weight: 38,
+      ),
+    ]).animate(_controller);
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        widget.onCompleted?.call();
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _controller.forward();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        final opacity = _opacityAnimation.value.clamp(0.0, 1.0);
+        if (opacity <= 0.0 && _controller.value >= 0.99) {
+          return const SizedBox.shrink();
+        }
+
+        return IgnorePointer(
+          ignoring: opacity < 0.2,
+          child: Opacity(
+            opacity: opacity,
+            child: Material(
+              color: theme.scaffoldBackgroundColor,
+              child: Center(
+                child: Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Minimalist sleek glowing spinner
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primary.withValues(alpha: 0.35 * opacity),
+                              blurRadius: 28,
+                              spreadRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3.2,
+                          strokeCap: StrokeCap.round,
+                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                          backgroundColor: isDark
+                              ? Colors.white.withValues(alpha: 0.08)
+                              : Colors.black.withValues(alpha: 0.08),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

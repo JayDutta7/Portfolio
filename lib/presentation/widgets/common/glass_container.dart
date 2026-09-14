@@ -48,26 +48,43 @@ class _GlassContainerState extends State<GlassContainer> {
     final cardDecoration = BoxDecoration(
       color: isDark
           ? theme.colorScheme.surface.withValues(alpha: _isHovered ? 0.95 : 0.85)
-          : Colors.white.withValues(alpha: _isHovered ? 0.98 : 0.92),
+          : Colors.white.withValues(alpha: _isHovered ? 1.0 : 0.96),
       borderRadius: BorderRadius.circular(widget.borderRadius),
       border: Border.all(
         color: effectiveBorderColor,
         width: _isHovered ? 1.5 : 1.0,
       ),
       boxShadow: [
-        if (_isHovered)
+        if (_isHovered) ...[
           BoxShadow(
-            color: effectiveGlowColor.withValues(alpha: isDark ? 0.22 : 0.12),
+            color: isDark
+                ? effectiveGlowColor.withValues(alpha: 0.22)
+                : const Color(0xFF0F172A).withValues(alpha: 0.08),
             blurRadius: 28,
-            spreadRadius: 1,
+            spreadRadius: isDark ? 1 : 0,
             offset: const Offset(0, 10),
-          )
-        else
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
           ),
+          if (!isDark)
+            BoxShadow(
+              color: effectiveGlowColor.withValues(alpha: 0.12),
+              blurRadius: 18,
+              offset: const Offset(0, 4),
+            ),
+        ] else ...[
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.25)
+                : const Color(0xFF0F172A).withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+          if (!isDark)
+            BoxShadow(
+              color: const Color(0xFF0F172A).withValues(alpha: 0.02),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
+        ],
       ],
     );
 

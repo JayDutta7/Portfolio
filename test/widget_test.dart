@@ -28,8 +28,9 @@ void main() {
     expect(find.textContaining('Kotlin'), findsWidgets);
     expect(find.textContaining('Flutter'), findsWidgets);
 
-    // Verify Prominent 'DOWNLOAD RESUME' button
-    expect(find.text('DOWNLOAD RESUME'), findsWidgets);
+    // Verify Prominent CTA buttons
+    expect(find.text('Download Resume (PDF)'), findsWidgets);
+    expect(find.text('View Case Studies'), findsWidgets);
   });
 
   testWidgets('Projects section renders device mockups and mobile tech tags (Retrofit, Room, RxJava)', (tester) async {
@@ -67,7 +68,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
 
     // Verify hero headline and button on mobile screen
-    expect(find.text('DOWNLOAD RESUME'), findsWidgets);
+    expect(find.text('Download Resume (PDF)'), findsWidgets);
     expect(find.textContaining('Android'), findsWidgets);
   });
 

@@ -74,10 +74,18 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                        color: isDark
+                            ? Colors.black.withValues(alpha: 0.3)
+                            : const Color(0xFF0F172A).withValues(alpha: 0.06),
                         blurRadius: 24,
                         offset: const Offset(0, 8),
                       ),
+                      if (!isDark)
+                        BoxShadow(
+                          color: const Color(0xFF0F172A).withValues(alpha: 0.02),
+                          blurRadius: 4,
+                          offset: const Offset(0, 1),
+                        ),
                     ],
                   ),
                   padding: EdgeInsets.symmetric(
