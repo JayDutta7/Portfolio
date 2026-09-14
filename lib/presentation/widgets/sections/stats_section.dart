@@ -48,7 +48,7 @@ class StatsSection extends StatelessWidget {
 
     return SectionWrapper(
       sectionKey: sectionKey,
-      verticalPadding: 24,
+      verticalPadding: 28,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final width = constraints.maxWidth;
@@ -63,7 +63,7 @@ class StatsSection extends StatelessWidget {
                   if (i > 0)
                     Container(
                       width: 1,
-                      height: 80,
+                      height: 85,
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -72,8 +72,8 @@ class StatsSection extends StatelessWidget {
                           colors: [
                             Colors.transparent,
                             isDark
-                                ? Colors.white.withValues(alpha: 0.08)
-                                : const Color(0xFF0F172A).withValues(alpha: 0.08),
+                                ? Colors.white.withValues(alpha: 0.10)
+                                : const Color(0xFF0F172A).withValues(alpha: 0.10),
                             Colors.transparent,
                           ],
                         ),
@@ -118,16 +118,16 @@ class StatsSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(child: _CleanAnimatedStat(config: statsData[0], isCompact: true)),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 12),
                     Expanded(child: _CleanAnimatedStat(config: statsData[1], isCompact: true)),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 18),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(child: _CleanAnimatedStat(config: statsData[2], isCompact: true)),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 12),
                     Expanded(child: _CleanAnimatedStat(config: statsData[3], isCompact: true)),
                   ],
                 ),
@@ -163,7 +163,7 @@ class _StatConfig {
   });
 }
 
-/// Clean, cardless animated stat with smooth number rolling up
+/// Clean, cardless animated stat with stepped increasing numbers (e.g. 1 2 3 4 5 6 7 8 9+)
 class _CleanAnimatedStat extends StatefulWidget {
   final _StatConfig config;
   final bool isCompact;
@@ -181,23 +181,67 @@ class _CleanAnimatedStatState extends State<_CleanAnimatedStat>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
+  ScrollPosition? _scrollPosition;
+  bool _hasTriggered = false;
 
   @override
   void initState() {
     super.initState();
+    // Duration gives clear ~150ms per digit step so users can see each number count up
+    final durationMs = (widget.config.targetNumber * 160).clamp(700, 1600);
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1800),
+      duration: Duration(milliseconds: durationMs),
     );
     _animation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.easeOutExpo,
+      curve: Curves.easeOutQuad,
     );
-    _controller.forward();
+
+    // Initial visibility check on mount
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkVisibility();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final newPosition = Scrollable.maybeOf(context)?.position;
+    if (_scrollPosition != newPosition) {
+      _scrollPosition?.removeListener(_onScroll);
+      _scrollPosition = newPosition;
+      _scrollPosition?.addListener(_onScroll);
+    }
+  }
+
+  void _onScroll() {
+    if (!_hasTriggered) {
+      _checkVisibility();
+    }
+  }
+
+  void _checkVisibility() {
+    if (!mounted || _hasTriggered) return;
+    final renderObject = context.findRenderObject();
+    if (renderObject is RenderBox && renderObject.hasSize) {
+      final pos = renderObject.localToGlobal(Offset.zero);
+      final screenHeight = MediaQuery.of(context).size.height;
+      // Start counting up when top enters the viewport
+      if (pos.dy < screenHeight * 0.92 && pos.dy + renderObject.size.height > 0) {
+        _hasTriggered = true;
+        _controller.forward(from: 0.0);
+      }
+    } else {
+      // Fallback if layout hasn't computed yet
+      _hasTriggered = true;
+      _controller.forward(from: 0.0);
+    }
   }
 
   @override
   void dispose() {
+    _scrollPosition?.removeListener(_onScroll);
     _controller.dispose();
     super.dispose();
   }
@@ -208,65 +252,53 @@ class _CleanAnimatedStatState extends State<_CleanAnimatedStat>
     final isDark = theme.brightness == Brightness.dark;
     final primaryColor = widget.config.gradient.first;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: widget.isCompact ? 4 : 8,
-        vertical: 4,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Icon badge with soft ambient glow
-          Container(
-            padding: EdgeInsets.all(widget.isCompact ? 6 : 8),
-            decoration: BoxDecoration(
-              color: primaryColor.withValues(alpha: isDark ? 0.14 : 0.08),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: primaryColor.withValues(alpha: isDark ? 0.28 : 0.18),
-                width: 1,
+    return MouseRegion(
+      // Re-trigger counting animation on hover for user delight
+      onEnter: (_) {
+        _controller.forward(from: 0.0);
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: widget.isCompact ? 4 : 8,
+          vertical: 4,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icon badge with soft ambient glow
+            Container(
+              padding: EdgeInsets.all(widget.isCompact ? 6 : 8),
+              decoration: BoxDecoration(
+                color: primaryColor.withValues(alpha: isDark ? 0.14 : 0.08),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: primaryColor.withValues(alpha: isDark ? 0.28 : 0.18),
+                  width: 1,
+                ),
+              ),
+              child: Icon(
+                widget.config.icon,
+                color: primaryColor,
+                size: widget.isCompact ? 18 : 22,
               ),
             ),
-            child: Icon(
-              widget.config.icon,
-              color: primaryColor,
-              size: widget.isCompact ? 18 : 22,
-            ),
-          ),
 
-          SizedBox(height: widget.isCompact ? 8 : 12),
+            SizedBox(height: widget.isCompact ? 8 : 12),
 
-          // Animated Increasing Number
-          AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              final currentVal =
-                  (_animation.value * widget.config.targetNumber).round();
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  ShaderMask(
-                    blendMode: BlendMode.srcIn,
-                    shaderCallback: (bounds) => LinearGradient(
-                      colors: widget.config.gradient,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ).createShader(bounds),
-                    child: Text(
-                      '$currentVal',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: widget.isCompact ? 34 : 52,
-                        fontWeight: FontWeight.w900,
-                        height: 1.0,
-                        letterSpacing: -2.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  if (widget.config.suffix.isNotEmpty)
+            // Animated Increasing Number (1 2 3 4 5 6 7 8 9+)
+            AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                final currentVal =
+                    (_animation.value * widget.config.targetNumber).round();
+                final isAtTarget = currentVal >= widget.config.targetNumber;
+
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
                     ShaderMask(
                       blendMode: BlendMode.srcIn,
                       shaderCallback: (bounds) => LinearGradient(
@@ -275,68 +307,93 @@ class _CleanAnimatedStatState extends State<_CleanAnimatedStat>
                         end: Alignment.bottomRight,
                       ).createShader(bounds),
                       child: Text(
-                        widget.config.suffix,
+                        '$currentVal',
                         style: GoogleFonts.plusJakartaSans(
-                          fontSize: widget.isCompact ? 24 : 36,
-                          fontWeight: FontWeight.w800,
+                          fontSize: widget.isCompact ? 34 : 52,
+                          fontWeight: FontWeight.w900,
                           height: 1.0,
+                          letterSpacing: -2.0,
                           color: Colors.white,
                         ),
                       ),
                     ),
-                ],
-              );
-            },
-          ),
-
-          SizedBox(height: widget.isCompact ? 6 : 8),
-
-          // Title
-          Text(
-            widget.config.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: widget.isCompact ? 11.0 : 13.0,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.5,
-              color: isDark ? Colors.white : const Color(0xFF0F172A),
+                    // Suffix appears when counting reaches target (e.g. 1 2 3 ... 8 9 -> 9+)
+                    if (widget.config.suffix.isNotEmpty)
+                      AnimatedOpacity(
+                        duration: const Duration(milliseconds: 200),
+                        opacity: isAtTarget ? 1.0 : 0.0,
+                        child: ShaderMask(
+                          blendMode: BlendMode.srcIn,
+                          shaderCallback: (bounds) => LinearGradient(
+                            colors: widget.config.gradient,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ).createShader(bounds),
+                          child: Text(
+                            widget.config.suffix,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: widget.isCompact ? 24 : 36,
+                              fontWeight: FontWeight.w800,
+                              height: 1.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
             ),
-          ),
 
-          const SizedBox(height: 3),
+            SizedBox(height: widget.isCompact ? 6 : 8),
 
-          // Subtitle / context
-          Text(
-            widget.config.subtitle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.inter(
-              fontSize: widget.isCompact ? 10.0 : 12.0,
-              fontWeight: FontWeight.w500,
-              color: isDark
-                  ? const Color(0xFF94A3B8)
-                  : const Color(0xFF64748B),
-            ),
-          ),
-
-          SizedBox(height: widget.isCompact ? 8 : 10),
-
-          // Subtle gradient indicator bar
-          Container(
-            height: 2.0,
-            width: widget.isCompact ? 24 : 32,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(1),
-              gradient: LinearGradient(
-                colors: [
-                  primaryColor,
-                  widget.config.gradient.last.withValues(alpha: 0.2),
-                ],
+            // Title
+            Text(
+              widget.config.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: widget.isCompact ? 11.0 : 13.0,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.5,
+                color: isDark ? Colors.white : const Color(0xFF0F172A),
               ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 3),
+
+            // Subtitle / context
+            Text(
+              widget.config.subtitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.inter(
+                fontSize: widget.isCompact ? 10.0 : 12.0,
+                fontWeight: FontWeight.w500,
+                color: isDark
+                    ? const Color(0xFF94A3B8)
+                    : const Color(0xFF64748B),
+              ),
+            ),
+
+            SizedBox(height: widget.isCompact ? 8 : 10),
+
+            // Subtle gradient indicator bar
+            Container(
+              height: 2.0,
+              width: widget.isCompact ? 24 : 32,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(1),
+                gradient: LinearGradient(
+                  colors: [
+                    primaryColor,
+                    widget.config.gradient.last.withValues(alpha: 0.2),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
