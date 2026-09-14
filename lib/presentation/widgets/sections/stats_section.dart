@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
@@ -14,29 +15,33 @@ class StatsSection extends StatelessWidget {
     final statsData = [
       _StatItem(
         value: profile.stats.isNotEmpty ? profile.stats[0].value : '9+',
+        numericValue: _extractNumber(profile.stats.isNotEmpty ? profile.stats[0].value : '9+'),
+        suffix: profile.stats.isNotEmpty && profile.stats[0].value.contains('+') ? '+' : '',
         label: profile.stats.isNotEmpty ? profile.stats[0].label.toUpperCase() : 'YEARS EXPERIENCE',
-        sub: 'Android & Flutter Development',
         colors: const [AppColors.primary, AppColors.secondary],
         icon: Icons.workspace_premium_rounded,
       ),
       _StatItem(
         value: profile.stats.length > 1 ? profile.stats[1].value : '2',
+        numericValue: _extractNumber(profile.stats.length > 1 ? profile.stats[1].value : '2'),
+        suffix: '',
         label: profile.stats.length > 1 ? profile.stats[1].label.toUpperCase() : 'PLATFORMS',
-        sub: 'Android + Flutter Cross-Platform',
         colors: const [AppColors.secondary, AppColors.flutterBlue],
         icon: Icons.devices_rounded,
       ),
       _StatItem(
         value: profile.stats.length > 2 ? profile.stats[2].value : '9',
+        numericValue: _extractNumber(profile.stats.length > 2 ? profile.stats[2].value : '9'),
+        suffix: '',
         label: profile.stats.length > 2 ? profile.stats[2].label.toUpperCase() : 'PRODUCTION APPS',
-        sub: 'Verified & Deployed to Stores',
         colors: const [AppColors.androidGreen, AppColors.emerald],
         icon: Icons.verified_rounded,
       ),
       _StatItem(
         value: profile.stats.length > 3 ? profile.stats[3].value : '4',
+        numericValue: _extractNumber(profile.stats.length > 3 ? profile.stats[3].value : '4'),
+        suffix: '',
         label: profile.stats.length > 3 ? profile.stats[3].label.toUpperCase() : 'COMPANIES',
-        sub: 'Enterprise-Scale Delivery',
         colors: const [AppColors.accent, Color(0xFFEC4899)],
         icon: Icons.business_rounded,
       ),
@@ -44,277 +49,321 @@ class StatsSection extends StatelessWidget {
 
     return SectionWrapper(
       sectionKey: sectionKey,
-      verticalPadding: 32,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final width = constraints.maxWidth;
-
-          if (width >= 900) {
-            // Desktop: 4 cards in a single row
-            return IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (int i = 0; i < statsData.length; i++) ...[
-                    Expanded(child: _ImpactStatCard(stat: statsData[i])),
-                    if (i < statsData.length - 1) const SizedBox(width: 16),
-                  ],
-                ],
-              ),
-            );
-          } else if (width >= 500) {
-            // Tablet: 2x2 grid
-            return Column(
-              children: [
-                IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(child: _ImpactStatCard(stat: statsData[0])),
-                      const SizedBox(width: 14),
-                      Expanded(child: _ImpactStatCard(stat: statsData[1])),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 14),
-                IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(child: _ImpactStatCard(stat: statsData[2])),
-                      const SizedBox(width: 14),
-                      Expanded(child: _ImpactStatCard(stat: statsData[3])),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          } else {
-            // Mobile: stacked vertically
-            return Column(
-              children: [
-                for (int i = 0; i < statsData.length; i++) ...[
-                  _ImpactStatCard(stat: statsData[i]),
-                  if (i < statsData.length - 1) const SizedBox(height: 12),
-                ],
-              ],
-            );
-          }
-        },
-      ),
+      verticalPadding: 24,
+      child: _StatsTickerStrip(stats: statsData),
     );
+  }
+
+  static int _extractNumber(String val) {
+    final cleaned = val.replaceAll(RegExp(r'[^0-9]'), '');
+    return int.tryParse(cleaned) ?? 0;
   }
 }
 
 class _StatItem {
   final String value;
+  final int numericValue;
+  final String suffix;
   final String label;
-  final String sub;
   final List<Color> colors;
   final IconData icon;
 
   const _StatItem({
     required this.value,
+    required this.numericValue,
+    required this.suffix,
     required this.label,
-    required this.sub,
     required this.colors,
     required this.icon,
   });
 }
 
-class _ImpactStatCard extends StatefulWidget {
-  final _StatItem stat;
-  const _ImpactStatCard({required this.stat});
+/// Animated scrolling ticker strip that auto-scrolls and shows counting numbers
+class _StatsTickerStrip extends StatefulWidget {
+  final List<_StatItem> stats;
+  const _StatsTickerStrip({required this.stats});
 
   @override
-  State<_ImpactStatCard> createState() => _ImpactStatCardState();
+  State<_StatsTickerStrip> createState() => _StatsTickerStripState();
 }
 
-class _ImpactStatCardState extends State<_ImpactStatCard> {
+class _StatsTickerStripState extends State<_StatsTickerStrip> {
+  late final ScrollController _scrollController;
+  Timer? _scrollTimer;
   bool _isHovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    // Start auto-scroll after a brief delay
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAutoScroll();
+    });
+  }
+
+  void _startAutoScroll() {
+    _scrollTimer?.cancel();
+    _scrollTimer = Timer.periodic(const Duration(milliseconds: 30), (_) {
+      if (!_isHovered && _scrollController.hasClients) {
+        final maxScroll = _scrollController.position.maxScrollExtent;
+        if (maxScroll > 0) {
+          final current = _scrollController.offset;
+          // Seamless loop: when we reach past the halfway point (one full set), jump back
+          final halfwayPoint = maxScroll / 2;
+          if (current >= halfwayPoint) {
+            _scrollController.jumpTo(current - halfwayPoint);
+          } else {
+            _scrollController.jumpTo(current + 0.5);
+          }
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollTimer?.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final stat = widget.stat;
+
+    // Duplicate stats for seamless infinite scroll
+    final tickerItems = [...widget.stats, ...widget.stats];
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeOutCubic,
-        transform: Matrix4.translationValues(0, _isHovered ? -4 : 0, 0),
-        padding: const EdgeInsets.all(20),
+      child: Container(
         decoration: BoxDecoration(
           color: isDark
-              ? AppColors.darkSurface.withValues(alpha: _isHovered ? 0.95 : 0.85)
-              : Colors.white.withValues(alpha: _isHovered ? 1.0 : 0.96),
+              ? AppColors.darkSurface.withValues(alpha: 0.80)
+              : Colors.white.withValues(alpha: 0.92),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: _isHovered
-                ? stat.colors.first.withValues(alpha: 0.5)
-                : (isDark
-                    ? AppColors.darkBorder.withValues(alpha: 0.6)
-                    : AppColors.lightBorder),
-            width: _isHovered ? 1.5 : 1.0,
+            color: isDark
+                ? AppColors.darkBorder.withValues(alpha: 0.6)
+                : AppColors.lightBorder,
+            width: 1,
           ),
           boxShadow: [
-            if (_isHovered) ...[
-              BoxShadow(
-                color: stat.colors.first.withValues(alpha: isDark ? 0.25 : 0.14),
-                blurRadius: 24,
-                spreadRadius: 0,
-                offset: const Offset(0, 8),
-              ),
-            ] else ...[
-              BoxShadow(
-                color: isDark
-                    ? Colors.black.withValues(alpha: 0.20)
-                    : const Color(0xFF0F172A).withValues(alpha: 0.04),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withValues(alpha: 0.25)
+                  : const Color(0xFF0F172A).withValues(alpha: 0.05),
+              blurRadius: 20,
+              offset: const Offset(0, 6),
+            ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Top row: Icon badge + accent dot
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Glowing icon container
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 220),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    gradient: _isHovered
-                        ? LinearGradient(
-                            colors: [
-                              stat.colors.first.withValues(alpha: 0.20),
-                              stat.colors.last.withValues(alpha: 0.10),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          )
-                        : null,
-                    color: _isHovered
-                        ? null
-                        : stat.colors.first.withValues(alpha: isDark ? 0.12 : 0.08),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: stat.colors.first.withValues(alpha: _isHovered ? 0.45 : 0.25),
-                      width: 1,
-                    ),
-                    boxShadow: _isHovered
-                        ? [
-                            BoxShadow(
-                              color: stat.colors.first.withValues(alpha: 0.30),
-                              blurRadius: 12,
-                              spreadRadius: -2,
-                            ),
-                          ]
-                        : [],
-                  ),
-                  child: Icon(stat.icon, color: stat.colors.first, size: 18),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: ShaderMask(
+            shaderCallback: (bounds) => LinearGradient(
+              colors: [
+                Colors.transparent,
+                isDark ? Colors.white : Colors.black,
+                isDark ? Colors.white : Colors.black,
+                Colors.transparent,
+              ],
+              stops: const [0.0, 0.06, 0.94, 1.0],
+            ).createShader(bounds),
+            blendMode: BlendMode.dstIn,
+            child: SizedBox(
+              height: 110,
+              child: ListView.builder(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: tickerItems.length,
+                itemBuilder: (context, index) {
+                  final stat = tickerItems[index];
+                  final isLast = index == tickerItems.length - 1;
+
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _TickerStatCell(stat: stat, isDark: isDark),
+                      if (!isLast) _GlowingDivider(isDark: isDark),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Individual stat cell in the ticker
+class _TickerStatCell extends StatelessWidget {
+  final _StatItem stat;
+  final bool isDark;
+  const _TickerStatCell({required this.stat, required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      width: 220,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+      child: Row(
+        children: [
+          // Accent icon with glow
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: stat.colors.first.withValues(alpha: isDark ? 0.15 : 0.10),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: stat.colors.first.withValues(alpha: 0.30),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: stat.colors.first.withValues(alpha: isDark ? 0.20 : 0.12),
+                  blurRadius: 12,
+                  spreadRadius: -2,
                 ),
-                // Live status dot
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 220),
-                  width: _isHovered ? 8 : 6,
-                  height: _isHovered ? 8 : 6,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: stat.colors.first,
-                    boxShadow: _isHovered
-                        ? [
-                            BoxShadow(
-                              color: stat.colors.first.withValues(alpha: 0.6),
-                              blurRadius: 8,
-                              spreadRadius: 1,
-                            ),
-                          ]
-                        : [],
+              ],
+            ),
+            child: Icon(stat.icon, color: stat.colors.first, size: 20),
+          ),
+
+          const SizedBox(width: 14),
+
+          // Number + Label
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Animated counter number
+                _AnimatedCounter(
+                  targetValue: stat.numericValue,
+                  suffix: stat.suffix,
+                  colors: stat.colors,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  stat.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.jetBrainsMono(
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.8,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
                   ),
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-            const SizedBox(height: 18),
+/// Glowing vertical divider between stat cells
+class _GlowingDivider extends StatelessWidget {
+  final bool isDark;
+  const _GlowingDivider({required this.isDark});
 
-            // Giant metric number with gradient
-            ShaderMask(
-              blendMode: BlendMode.srcIn,
-              shaderCallback: (bounds) => LinearGradient(
-                colors: stat.colors,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ).createShader(bounds),
-              child: Text(
-                stat.value,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 48,
-                  fontWeight: FontWeight.w900,
-                  height: 1.0,
-                  letterSpacing: -2.0,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            // Accent bar separator
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 220),
-              height: 2.5,
-              width: _isHovered ? 48 : 32,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2),
-                gradient: LinearGradient(
-                  colors: [
-                    stat.colors.first,
-                    stat.colors.last.withValues(alpha: 0.4),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            // Metric label
-            Text(
-              stat.label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.jetBrainsMono(
-                fontSize: 10.5,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.0,
-                color: theme.colorScheme.onSurface.withValues(alpha: isDark ? 0.85 : 0.75),
-              ),
-            ),
-
-            const SizedBox(height: 3),
-
-            // Subtle sub description
-            Text(
-              stat.sub,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.inter(
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
-              ),
-            ),
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1,
+      height: 56,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.transparent,
+            (isDark ? AppColors.primary : const Color(0xFF94A3B8)).withValues(alpha: isDark ? 0.35 : 0.25),
+            Colors.transparent,
           ],
+          stops: const [0.1, 0.5, 0.9],
         ),
       ),
+    );
+  }
+}
+
+/// Counting number animation that rolls up from 0 to target
+class _AnimatedCounter extends StatefulWidget {
+  final int targetValue;
+  final String suffix;
+  final List<Color> colors;
+  const _AnimatedCounter({
+    required this.targetValue,
+    required this.suffix,
+    required this.colors,
+  });
+
+  @override
+  State<_AnimatedCounter> createState() => _AnimatedCounterState();
+}
+
+class _AnimatedCounterState extends State<_AnimatedCounter>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutExpo,
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        final currentValue = (_animation.value * widget.targetValue).round();
+        return ShaderMask(
+          blendMode: BlendMode.srcIn,
+          shaderCallback: (bounds) => LinearGradient(
+            colors: widget.colors,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ).createShader(bounds),
+          child: Text(
+            '$currentValue${widget.suffix}',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 36,
+              fontWeight: FontWeight.w900,
+              height: 1.1,
+              letterSpacing: -1.5,
+              color: Colors.white,
+            ),
+          ),
+        );
+      },
     );
   }
 }

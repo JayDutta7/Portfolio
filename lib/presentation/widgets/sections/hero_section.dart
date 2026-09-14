@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/launch_helper.dart';
-import '../../../core/utils/responsive.dart';
 import '../../../core/utils/resume_download/resume_download.dart';
 import '../../../domain/models/profile_models.dart';
 import '../../viewmodels/locale_viewmodel.dart';

@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
 
 /// Ambient mesh background with rich, eye-catching aurora nebula glows,
 /// cyber matrix grid, and batched GPU path rendering.
