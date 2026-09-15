@@ -629,7 +629,7 @@ class ProfileData {
       StatItem(value: '৯', label: 'যাচাইকৃত প্রোডাকশন অ্যাপ'),
       StatItem(value: '৪', label: 'কোম্পানি'),
       StatItem(value: '২', label: 'প্ল্যাটফর্ম (Android + Flutter)'),
-      StatItem(value: '২০+', label: 'ডাউনলোড'),
+      StatItem(value: '৫০K+', label: 'ডাউনলোড'),
       StatItem(value: '৯৯.৮%+', label: 'ক্র্যাশ-মুক্ত হার'),
     ],
     education: [
