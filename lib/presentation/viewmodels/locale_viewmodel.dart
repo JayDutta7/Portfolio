@@ -109,6 +109,70 @@ extension AppLanguageX on AppLanguage {
       case AppLanguage.english: return 'IN-OFFICE / REMOTE';
     }
   }
+
+  String get metricYearsExperience {
+    switch (this) {
+      case AppLanguage.bengali: return 'বছরের অভিজ্ঞতা';
+      case AppLanguage.hindi: return 'वर्षों का अनुभव';
+      case AppLanguage.english: return 'Years Experience';
+    }
+  }
+
+  String get metricYearsValue {
+    switch (this) {
+      case AppLanguage.bengali: return '৯+';
+      case AppLanguage.hindi: return '9+';
+      case AppLanguage.english: return '9+';
+    }
+  }
+
+  String get metricAppsShipped {
+    switch (this) {
+      case AppLanguage.bengali: return 'প্রোডাকশন অ্যাপস';
+      case AppLanguage.hindi: return 'प्रोडक्शन ऐप्स';
+      case AppLanguage.english: return 'Production Apps Shipped';
+    }
+  }
+
+  String get metricAppsValue {
+    switch (this) {
+      case AppLanguage.bengali: return '১৫+';
+      case AppLanguage.hindi: return '15+';
+      case AppLanguage.english: return '15+';
+    }
+  }
+
+  String get metricTotalDownloads {
+    switch (this) {
+      case AppLanguage.bengali: return 'মোট ডাউনলোড';
+      case AppLanguage.hindi: return 'कुल डाउनलोड';
+      case AppLanguage.english: return 'Total Downloads';
+    }
+  }
+
+  String get metricDownloadsValue {
+    switch (this) {
+      case AppLanguage.bengali: return '২০K+';
+      case AppLanguage.hindi: return '20K+';
+      case AppLanguage.english: return '20K+';
+    }
+  }
+
+  String get metricCrashFreeRates {
+    switch (this) {
+      case AppLanguage.bengali: return 'ক্র্যাশ-মুক্ত হার';
+      case AppLanguage.hindi: return 'क्रैश-मुक्त दर';
+      case AppLanguage.english: return 'Crash-Free Rates';
+    }
+  }
+
+  String get metricCrashFreeValue {
+    switch (this) {
+      case AppLanguage.bengali: return '৯৯.৮%+';
+      case AppLanguage.hindi: return '99.8%+';
+      case AppLanguage.english: return '99.8%+';
+    }
+  }
 }
 
 final localeProvider = StateNotifierProvider<LocaleViewModel, AppLanguage>((ref) {

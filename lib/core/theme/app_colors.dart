@@ -21,10 +21,10 @@ class AppColors {
   static const Color lightTextSecondary = Color(0xFF475569);
 
   // Dark Theme Surfaces (Deep Space Glass Obsidian)
-  static const Color darkBackground = Color(0xFF07090E);
-  static const Color darkSurface = Color(0xFF0F121C);
-  static const Color darkSurfaceAlt = Color(0xFF161B29);
-  static const Color darkBorder = Color(0xFF1E2436);
+  static const Color darkBackground = Color(0xFF0F172A);
+  static const Color darkSurface = Color(0xFF1E293B);
+  static const Color darkSurfaceAlt = Color(0xFF334155);
+  static const Color darkBorder = Color(0xFF334155);
   static const Color darkTextPrimary = Color(0xFFF8FAFC);
   static const Color darkTextSecondary = Color(0xFF94A3B8);
 

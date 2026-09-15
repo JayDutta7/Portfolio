@@ -14,7 +14,7 @@ class StatsSection extends StatelessWidget {
     final statsData = [
       _StatConfig(
         targetNumber: _extractNumber(profile.stats.isNotEmpty ? profile.stats[0].value : '9+'),
-        suffix: profile.stats.isNotEmpty && profile.stats[0].value.contains('+') ? '+' : '',
+        suffix: profile.stats.isNotEmpty ? _extractSuffix(profile.stats[0].value) : '+',
         title: profile.stats.isNotEmpty ? profile.stats[0].label.toUpperCase() : 'YEARS EXPERIENCE',
         subtitle: 'Enterprise Android & Flutter',
         icon: Icons.workspace_premium_rounded,
@@ -22,7 +22,7 @@ class StatsSection extends StatelessWidget {
       ),
       _StatConfig(
         targetNumber: _extractNumber(profile.stats.length > 1 ? profile.stats[1].value : '9'),
-        suffix: '',
+        suffix: profile.stats.length > 1 ? _extractSuffix(profile.stats[1].value) : '',
         title: profile.stats.length > 1 ? profile.stats[1].label.toUpperCase() : 'VERIFIED PRODUCTION APPS',
         subtitle: 'Consumer & Business Scale',
         icon: Icons.verified_rounded,
@@ -30,7 +30,7 @@ class StatsSection extends StatelessWidget {
       ),
       _StatConfig(
         targetNumber: _extractNumber(profile.stats.length > 2 ? profile.stats[2].value : '4'),
-        suffix: '',
+        suffix: profile.stats.length > 2 ? _extractSuffix(profile.stats[2].value) : '',
         title: profile.stats.length > 2 ? profile.stats[2].label.toUpperCase() : 'COMPANIES',
         subtitle: 'Fintech, Steel & Media Labs',
         icon: Icons.business_rounded,
@@ -38,11 +38,27 @@ class StatsSection extends StatelessWidget {
       ),
       _StatConfig(
         targetNumber: _extractNumber(profile.stats.length > 3 ? profile.stats[3].value : '2'),
-        suffix: '',
+        suffix: profile.stats.length > 3 ? _extractSuffix(profile.stats[3].value) : '',
         title: profile.stats.length > 3 ? profile.stats[3].label.toUpperCase() : 'PLATFORMS',
         subtitle: 'Android & iOS Ecosystems',
         icon: Icons.devices_rounded,
         gradient: const [Color(0xFF8B5CF6), Color(0xFF38BDF8)],
+      ),
+      _StatConfig(
+        targetNumber: _extractNumber(profile.stats.length > 4 ? profile.stats[4].value : '50K+'),
+        suffix: profile.stats.length > 4 ? _extractSuffix(profile.stats[4].value) : 'K+',
+        title: profile.stats.length > 4 ? profile.stats[4].label.toUpperCase() : 'DOWNLOADS',
+        subtitle: 'App Store & Play Store',
+        icon: Icons.cloud_download_rounded,
+        gradient: const [Color(0xFFF59E0B), Color(0xFFEF4444)],
+      ),
+      _StatConfig(
+        targetNumber: 99,
+        suffix: profile.stats.length > 5 && profile.stats[5].value.contains('99.8') ? '.8%+' : '%+',
+        title: profile.stats.length > 5 ? profile.stats[5].label.toUpperCase() : 'CRASH-FREE RATES',
+        subtitle: 'Enterprise Reliability',
+        icon: Icons.health_and_safety_rounded,
+        gradient: const [Color(0xFF22C55E), Color(0xFF14B8A6)],
       ),
     ];
 
@@ -53,95 +69,50 @@ class StatsSection extends StatelessWidget {
         builder: (context, constraints) {
           final width = constraints.maxWidth;
           final isDark = Theme.of(context).brightness == Brightness.dark;
+          
+          final spacing = width >= 560 ? 24.0 : 16.0;
+          final runSpacing = width >= 560 ? 32.0 : 24.0;
+          final columns = width >= 960 ? 3 : 2;
+          final itemWidth = (width - spacing * (columns - 1)) / columns - 0.1;
 
-          if (width >= 960) {
-            // Desktop: 4 items in a clean row with subtle vertical divider
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (int i = 0; i < statsData.length; i++) ...[
-                  if (i > 0)
-                    Container(
-                      width: 1,
-                      height: 85,
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            isDark
-                                ? Colors.white.withValues(alpha: 0.10)
-                                : const Color(0xFF0F172A).withValues(alpha: 0.10),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                  Expanded(
-                    child: _CleanAnimatedStat(
-                      config: statsData[i],
-                    ),
-                  ),
-                ],
-              ],
-            );
-          } else if (width >= 560) {
-            // Tablet: 2x2 Grid
-            return Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: _CleanAnimatedStat(config: statsData[0])),
-                    const SizedBox(width: 24),
-                    Expanded(child: _CleanAnimatedStat(config: statsData[1])),
-                  ],
+          return Wrap(
+            spacing: spacing,
+            runSpacing: runSpacing,
+            alignment: WrapAlignment.start,
+            children: statsData.map((config) {
+              return SizedBox(
+                width: itemWidth,
+                child: _CleanAnimatedStat(
+                  config: config,
+                  isCompact: width < 560,
                 ),
-                const SizedBox(height: 28),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: _CleanAnimatedStat(config: statsData[2])),
-                    const SizedBox(width: 24),
-                    Expanded(child: _CleanAnimatedStat(config: statsData[3])),
-                  ],
-                ),
-              ],
-            );
-          } else {
-            // Mobile: 2x2 compact grid
-            return Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: _CleanAnimatedStat(config: statsData[0], isCompact: true)),
-                    const SizedBox(width: 12),
-                    Expanded(child: _CleanAnimatedStat(config: statsData[1], isCompact: true)),
-                  ],
-                ),
-                const SizedBox(height: 18),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: _CleanAnimatedStat(config: statsData[2], isCompact: true)),
-                    const SizedBox(width: 12),
-                    Expanded(child: _CleanAnimatedStat(config: statsData[3], isCompact: true)),
-                  ],
-                ),
-              ],
-            );
-          }
+              );
+            }).toList(),
+          );
         },
       ),
     );
   }
 
   static int _extractNumber(String val) {
-    final cleaned = val.replaceAll(RegExp(r'[^0-9]'), '');
+    var englishVal = val
+        .replaceAll('০', '0')
+        .replaceAll('১', '1')
+        .replaceAll('২', '2')
+        .replaceAll('৩', '3')
+        .replaceAll('৪', '4')
+        .replaceAll('৫', '5')
+        .replaceAll('৬', '6')
+        .replaceAll('৭', '7')
+        .replaceAll('৮', '8')
+        .replaceAll('৯', '9');
+        
+    final cleaned = englishVal.replaceAll(RegExp(r'[^0-9]'), '');
     return int.tryParse(cleaned) ?? 0;
+  }
+
+  static String _extractSuffix(String val) {
+    return val.replaceAll(RegExp(r'[0-9০-৯]'), '');
   }
 }
 

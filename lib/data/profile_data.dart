@@ -506,6 +506,8 @@ class ProfileData {
       StatItem(value: '9', label: 'Verified Production Apps'),
       StatItem(value: '4', label: 'Companies'),
       StatItem(value: '2', label: 'Platforms (Android + Flutter)'),
+      StatItem(value: '50K+', label: 'Downloads'),
+      StatItem(value: '99.8%+', label: 'Crash-Free Rates'),
     ],
     education: [
       EducationItem(
@@ -627,6 +629,8 @@ class ProfileData {
       StatItem(value: '৯', label: 'যাচাইকৃত প্রোডাকশন অ্যাপ'),
       StatItem(value: '৪', label: 'কোম্পানি'),
       StatItem(value: '২', label: 'প্ল্যাটফর্ম (Android + Flutter)'),
+      StatItem(value: '২০+', label: 'ডাউনলোড'),
+      StatItem(value: '৯৯.৮%+', label: 'ক্র্যাশ-মুক্ত হার'),
     ],
     education: [
       EducationItem(
@@ -742,6 +746,8 @@ class ProfileData {
       StatItem(value: '9', label: 'सत्यापित प्रोडक्शन ऐप्स'),
       StatItem(value: '4', label: 'कंपनियां'),
       StatItem(value: '2', label: 'प्लेटफ़ॉर्म (Android + Flutter)'),
+      StatItem(value: '50K+', label: 'डाउनलोड'),
+      StatItem(value: '99.8%+', label: 'क्रैश-मुक्त दर'),
     ],
     education: [
       EducationItem(

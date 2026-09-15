@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -129,16 +130,18 @@ class HeroSection extends ConsumerWidget {
         TextSpan(
           style: baseStyle,
           children: [
-            const TextSpan(text: 'Architecting resilient mobile ecosystems with '),
-            techSpan('Clean Architecture'),
-            const TextSpan(text: ', modern declarative Android with '),
+            const TextSpan(text: 'Architecting high-performance, scalable native '),
+            techSpan('Android'),
+            const TextSpan(text: ' ('),
+            techSpan('Kotlin'),
+            const TextSpan(text: ', '),
             techSpan('Jetpack Compose'),
-            const TextSpan(text: ', reactive concurrency using '),
-            techSpan('Kotlin Coroutines'),
-            const TextSpan(text: ', scalable cross-platform engineering with '),
-            techSpan('Flutter/Dart'),
-            const TextSpan(text: ', and decoupled '),
-            techSpan('Multi-Module Design'),
+            const TextSpan(text: ') and cross-platform ('),
+            techSpan('Flutter'),
+            const TextSpan(text: ') mobile applications with '),
+            techSpan('Clean Architecture'),
+            const TextSpan(text: ' & '),
+            techSpan('Modular Systems'),
             const TextSpan(text: '.'),
           ],
         ),
@@ -182,7 +185,7 @@ class HeroSection extends ConsumerWidget {
             ),
             SizedBox(height: isMobile ? 14 : 18),
             GradientText(
-              'Senior Android & Flutter Engineer',
+              'Senior Android & Flutter Developer',
               colors: isDark
                   ? AppColors.heroTitleGradient
                   : AppColors.heroTitleGradientLight,
