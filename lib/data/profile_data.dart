@@ -503,7 +503,7 @@ class ProfileData {
     projects: _verifiedProjects,
     stats: [
       StatItem(value: '9+', label: 'Years Experience'),
-      StatItem(value: '9', label: 'Verified Production Apps'),
+      StatItem(value: '13+', label: 'Production Apps'),
       StatItem(value: '4', label: 'Companies'),
       StatItem(value: '2', label: 'Platforms (Android + Flutter)'),
       StatItem(value: '50K+', label: 'Downloads'),
@@ -626,7 +626,7 @@ class ProfileData {
     projects: _verifiedProjects,
     stats: [
       StatItem(value: '৯+', label: 'বছরের অভিজ্ঞতা'),
-      StatItem(value: '৯', label: 'যাচাইকৃত প্রোডাকশন অ্যাপ'),
+      StatItem(value: '১৩+', label: 'প্রোডাকশন অ্যাপ'),
       StatItem(value: '৪', label: 'কোম্পানি'),
       StatItem(value: '২', label: 'প্ল্যাটফর্ম (Android + Flutter)'),
       StatItem(value: '৫০K+', label: 'ডাউনলোড'),
@@ -743,7 +743,7 @@ class ProfileData {
     projects: _verifiedProjects,
     stats: [
       StatItem(value: '9+', label: 'वर्षों का अनुभव'),
-      StatItem(value: '9', label: 'सत्यापित प्रोडक्शन ऐप्स'),
+      StatItem(value: '13+', label: 'प्रोडक्शन ऐप्स'),
       StatItem(value: '4', label: 'कंपनियां'),
       StatItem(value: '2', label: 'प्लेटफ़ॉर्म (Android + Flutter)'),
       StatItem(value: '50K+', label: 'डाउनलोड'),

@@ -21,9 +21,9 @@ class StatsSection extends StatelessWidget {
         gradient: const [AppColors.primary, Color(0xFF6366F1)],
       ),
       _StatConfig(
-        targetNumber: _extractNumber(profile.stats.length > 1 ? profile.stats[1].value : '9'),
-        suffix: profile.stats.length > 1 ? _extractSuffix(profile.stats[1].value) : '',
-        title: profile.stats.length > 1 ? profile.stats[1].label.toUpperCase() : 'VERIFIED PRODUCTION APPS',
+        targetNumber: _extractNumber(profile.stats.length > 1 ? profile.stats[1].value : '13+'),
+        suffix: profile.stats.length > 1 ? _extractSuffix(profile.stats[1].value) : '+',
+        title: profile.stats.length > 1 ? profile.stats[1].label.toUpperCase() : 'PRODUCTION APPS',
         subtitle: 'Consumer & Business Scale',
         icon: Icons.verified_rounded,
         gradient: const [Color(0xFF10B981), Color(0xFF06B6D4)],
