@@ -21,9 +21,9 @@ class StatsSection extends StatelessWidget {
         gradient: const [AppColors.primary, Color(0xFF6366F1)],
       ),
       _StatConfig(
-        targetNumber: _extractNumber(profile.stats.length > 1 ? profile.stats[1].value : '13+'),
-        suffix: profile.stats.length > 1 ? _extractSuffix(profile.stats[1].value) : '+',
-        title: profile.stats.length > 1 ? profile.stats[1].label.toUpperCase() : 'PRODUCTION APPS',
+        targetNumber: _extractNumber(profile.stats.length > 1 ? profile.stats[1].value : '9'),
+        suffix: profile.stats.length > 1 ? _extractSuffix(profile.stats[1].value) : '',
+        title: profile.stats.length > 1 ? profile.stats[1].label.toUpperCase() : 'VERIFIED PRODUCTION APPS',
         subtitle: 'Consumer & Business Scale',
         icon: Icons.verified_rounded,
         gradient: const [Color(0xFF10B981), Color(0xFF06B6D4)],
@@ -68,8 +68,6 @@ class StatsSection extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final width = constraints.maxWidth;
-          final isDark = Theme.of(context).brightness == Brightness.dark;
-          
           final spacing = width >= 560 ? 24.0 : 16.0;
           final runSpacing = width >= 560 ? 32.0 : 24.0;
           final columns = width >= 960 ? 3 : 2;
@@ -265,53 +263,57 @@ class _CleanAnimatedStatState extends State<_CleanAnimatedStat>
                     (_animation.value * widget.config.targetNumber).round();
                 final isAtTarget = currentVal >= widget.config.targetNumber;
 
-                return Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    ShaderMask(
-                      blendMode: BlendMode.srcIn,
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: widget.config.gradient,
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ).createShader(bounds),
-                      child: Text(
-                        '$currentVal',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: widget.isCompact ? 34 : 52,
-                          fontWeight: FontWeight.w900,
-                          height: 1.0,
-                          letterSpacing: -2.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    // Suffix appears when counting reaches target (e.g. 1 2 3 ... 8 9 -> 9+)
-                    if (widget.config.suffix.isNotEmpty)
-                      AnimatedOpacity(
-                        duration: const Duration(milliseconds: 200),
-                        opacity: isAtTarget ? 1.0 : 0.0,
-                        child: ShaderMask(
-                          blendMode: BlendMode.srcIn,
-                          shaderCallback: (bounds) => LinearGradient(
-                            colors: widget.config.gradient,
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ).createShader(bounds),
-                          child: Text(
-                            widget.config.suffix,
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: widget.isCompact ? 24 : 36,
-                              fontWeight: FontWeight.w800,
-                              height: 1.0,
-                              color: Colors.white,
-                            ),
+                return FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      ShaderMask(
+                        blendMode: BlendMode.srcIn,
+                        shaderCallback: (bounds) => LinearGradient(
+                          colors: widget.config.gradient,
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ).createShader(bounds),
+                        child: Text(
+                          '$currentVal',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: widget.isCompact ? 34 : 52,
+                            fontWeight: FontWeight.w900,
+                            height: 1.0,
+                            letterSpacing: -2.0,
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                  ],
+                      // Suffix appears when counting reaches target (e.g. 1 2 3 ... 8 9 -> 9+)
+                      if (widget.config.suffix.isNotEmpty)
+                        AnimatedOpacity(
+                          duration: const Duration(milliseconds: 200),
+                          opacity: isAtTarget ? 1.0 : 0.0,
+                          child: ShaderMask(
+                            blendMode: BlendMode.srcIn,
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: widget.config.gradient,
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ).createShader(bounds),
+                            child: Text(
+                              widget.config.suffix,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: widget.isCompact ? 24 : 36,
+                                fontWeight: FontWeight.w800,
+                                height: 1.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 );
               },
             ),

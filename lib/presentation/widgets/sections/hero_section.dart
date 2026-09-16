@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/launch_helper.dart';
 import '../../../core/utils/resume_download/resume_download.dart';
@@ -59,20 +57,12 @@ class HeroSection extends ConsumerWidget {
 
   Future<void> _handleDownloadResume(BuildContext context) async {
     try {
-      final uri = Uri.parse(profile.resumeAssetPath);
-      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-      if (!launched) {
-        await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
-      }
-    } catch (_) {
-      try {
-        await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
-      } catch (e) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Could not open resume: $e')),
-          );
-        }
+      await downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not download resume: $e')),
+        );
       }
     }
   }
@@ -1424,26 +1414,37 @@ class _ResumeCTAButtonState extends State<_ResumeCTAButton> {
               ),
             ],
           ),
-          child: OutlinedButton.icon(
-            onPressed: widget.onPressed,
-            icon: Icon(widget.icon, size: isMobile ? 18 : 20, color: accentColor),
-            label: Text(
-              widget.label,
-              style: GoogleFonts.plusJakartaSans(
-                fontWeight: FontWeight.w800,
-                fontSize: isMobile ? 13.5 : 15,
-                letterSpacing: 0.4,
-                color: accentColor,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: widget.onPressed,
+              borderRadius: BorderRadius.circular(16),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 14 : 26,
+                  vertical: isMobile ? 14 : 20,
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(widget.icon, size: isMobile ? 18 : 20, color: accentColor),
+                      const SizedBox(width: 8),
+                      Text(
+                        widget.label,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontWeight: FontWeight.w800,
+                          fontSize: isMobile ? 13.5 : 15,
+                          letterSpacing: 0.4,
+                          color: accentColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide.none,
-              backgroundColor: Colors.transparent,
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 18 : 26,
-                vertical: isMobile ? 16 : 20,
-              ),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
           ),
         ),

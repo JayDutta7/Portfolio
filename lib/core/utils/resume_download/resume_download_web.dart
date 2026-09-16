@@ -6,19 +6,33 @@ import 'package:flutter/services.dart';
 Future<void> downloadResume(String assetPath, String fileName) async {
   try {
     final bytes = await rootBundle.load(assetPath);
-    final blob = html.Blob([bytes.buffer.asUint8List()]);
+    final blob = html.Blob([bytes.buffer.asUint8List()], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
     final anchor = html.AnchorElement(href: url)
       ..setAttribute('download', fileName)
+      ..target = '_blank'
+      ..rel = 'noopener noreferrer'
       ..style.display = 'none';
     html.document.body?.append(anchor);
     anchor.click();
     anchor.remove();
     // Delay revocation to ensure the browser has started the download
-    Future.delayed(const Duration(seconds: 10), () {
+    Future.delayed(const Duration(seconds: 30), () {
       html.Url.revokeObjectUrl(url);
     });
-  } catch (e) {
-    rethrow;
+  } catch (_) {
+    // Fallback for environments where rootBundle fails or blob download is restricted on mobile web
+    try {
+      final anchor = html.AnchorElement(href: fileName)
+        ..setAttribute('download', fileName)
+        ..target = '_blank'
+        ..rel = 'noopener noreferrer'
+        ..style.display = 'none';
+      html.document.body?.append(anchor);
+      anchor.click();
+      anchor.remove();
+    } catch (e) {
+      rethrow;
+    }
   }
 }
