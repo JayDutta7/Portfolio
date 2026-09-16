@@ -56,7 +56,7 @@ class _PulseBadgeState extends State<PulseBadge> with SingleTickerProviderStateM
               (isDark
                   ? widget.dotColor.withValues(alpha: _isHovered ? 0.22 : 0.12)
                   : widget.dotColor.withValues(alpha: _isHovered ? 0.15 : 0.08)),
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: widget.dotColor.withValues(alpha: isDark ? (_isHovered ? 0.6 : 0.3) : (_isHovered ? 0.4 : 0.2)),
             width: 1,
@@ -98,13 +98,14 @@ class _PulseBadgeState extends State<PulseBadge> with SingleTickerProviderStateM
                 widget.label,
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: isDark 
-                      ? (_isHovered ? Colors.white : Colors.white.withValues(alpha: 0.9)) 
+                      ? (_isHovered ? Colors.white : Colors.white.withValues(alpha: 0.95)) 
                       : (_isHovered ? theme.colorScheme.primary : theme.colorScheme.onSurface),
                   fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
+                  letterSpacing: 0.5,
                   fontSize: 11,
+                  height: 1.3,
                 ),
-                overflow: TextOverflow.ellipsis,
+                softWrap: true,
               ),
             ),
           ],

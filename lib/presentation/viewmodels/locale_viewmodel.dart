@@ -56,17 +56,34 @@ extension AppLanguageX on AppLanguage {
 
   String get heroBadge {
     switch (this) {
-      case AppLanguage.bengali: return 'সিনিয়র মোবাইল আর্কিটেক্ট • ৯+ বছর';
-      case AppLanguage.hindi: return 'सीनियर मोबाइल आर्किटेक्ट • 9+ वर्ष';
-      case AppLanguage.english: return 'SENIOR MOBILE ARCHITECT • 9+ YEARS';
+      case AppLanguage.bengali:
+        return 'নতুন সুযোগের জন্য উপলব্ধ ( মোবাইল আর্কিটেক্ট , মোবাইল লিড , সিনিয়র পজিশন )';
+      case AppLanguage.hindi:
+        return 'नए अवसरों के लिए उपलब्ध ( मोबाइल आर्किटेक्ट , मोबाइल लीड , सीनियर पद )';
+      case AppLanguage.english:
+        return 'Available for new opportunities ( Mobile Architect , Mobile Lead , Senior Position )';
     }
   }
 
   String get heroGreeting {
     switch (this) {
-      case AppLanguage.bengali: return 'নমস্কার, আমি জয়জিৎ দত্ত।';
-      case AppLanguage.hindi: return 'नमस्ते, मैं जयजीत दत्ता हूँ।';
-      case AppLanguage.english: return 'Hello, Myself Jayajit Dutta.';
+      case AppLanguage.bengali: return 'নমস্কার, আমি';
+      case AppLanguage.hindi: return 'नमस्ते, मैं';
+      case AppLanguage.english: return 'Hello, Myself';
+    }
+  }
+
+  List<String> get animatedRoles {
+    switch (this) {
+      case AppLanguage.bengali:
+      case AppLanguage.hindi:
+      case AppLanguage.english:
+        return const [
+          'Senior android developer',
+          'Flutter developer',
+          'Ios publisher',
+          'AI - assisted mobile developer',
+        ];
     }
   }
 
@@ -96,9 +113,12 @@ extension AppLanguageX on AppLanguage {
 
   String get availableBadge {
     switch (this) {
-      case AppLanguage.bengali: return 'নতুন সুযোগের জন্য উপলব্ধ';
-      case AppLanguage.hindi: return 'नए अवसरों के लिए उपलब्ध';
-      case AppLanguage.english: return 'Available for new opportunities';
+      case AppLanguage.bengali:
+        return 'নতুন সুযোগের জন্য উপলব্ধ ( মোবাইল আর্কিটেক্ট , মোবাইল লিড , সিনিয়র পজিশন )';
+      case AppLanguage.hindi:
+        return 'नए अवसरों के लिए उपलब्ध ( मोबाइल आर्किटेक्ट , मोबाइल लीड , सीनियर पद )';
+      case AppLanguage.english:
+        return 'Available for new opportunities ( Mobile Architect , Mobile Lead , Senior Position )';
     }
   }
 

@@ -346,17 +346,27 @@ class _TopOpportunityBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 600;
 
     return Padding(
-      padding: const EdgeInsets.only(top: 14, left: 16, right: 16, bottom: 4),
+      padding: EdgeInsets.only(
+        top: isMobile ? 10 : 14,
+        left: 16,
+        right: 16,
+        bottom: 4,
+      ),
       child: Center(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 14 : 18,
+            vertical: isMobile ? 7 : 8,
+          ),
           decoration: BoxDecoration(
             color: isDark
                 ? AppColors.emerald.withValues(alpha: 0.12)
                 : AppColors.emerald.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: AppColors.emerald.withValues(alpha: 0.35),
               width: 1,
@@ -371,6 +381,8 @@ class _TopOpportunityBanner extends StatelessWidget {
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 width: 8,
@@ -385,11 +397,13 @@ class _TopOpportunityBanner extends StatelessWidget {
                 child: Text(
                   message,
                   textAlign: TextAlign.center,
+                  softWrap: true,
                   style: GoogleFonts.jetBrainsMono(
-                    fontSize: 12.5,
+                    fontSize: isMobile ? (width < 360 ? 11.0 : 11.8) : 12.5,
                     fontWeight: FontWeight.w700,
                     color: isDark ? const Color(0xFF34D399) : const Color(0xFF047857),
                     letterSpacing: 0.2,
+                    height: 1.35,
                   ),
                 ),
               ),
