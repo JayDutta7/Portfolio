@@ -10,6 +10,9 @@ import '../../../domain/models/profile_models.dart';
 import '../../viewmodels/locale_viewmodel.dart';
 import '../common/gradient_text.dart';
 import '../common/section_wrapper.dart';
+import '../hero_avatar/hero_avatar_ring.dart';
+import '../hero_avatar/orbiting_tech_badges.dart';
+import '../hero_avatar/pulsing_avatar_hero.dart';
 
 class HeroSection extends ConsumerWidget {
   final Profile profile;
@@ -305,20 +308,6 @@ enum _TechBadgeType {
   appStore,
 }
 
-class _TechBadgeData {
-  final String name;
-  final Color color;
-  final Color glowColor;
-  final _TechBadgeType type;
-
-  const _TechBadgeData({
-    required this.name,
-    required this.color,
-    required this.glowColor,
-    required this.type,
-  });
-}
-
 class _HeroOrbitAvatarShowcase extends StatefulWidget {
   final Profile profile;
   const _HeroOrbitAvatarShowcase({required this.profile});
@@ -327,110 +316,8 @@ class _HeroOrbitAvatarShowcase extends StatefulWidget {
   State<_HeroOrbitAvatarShowcase> createState() => _HeroOrbitAvatarShowcaseState();
 }
 
-class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
-    with TickerProviderStateMixin {
-  late final AnimationController _orbitController;
-  late final AnimationController _pulseController;
-  late final AnimationController _bounceController;
-  late final Animation<double> _pulseAnimation;
-  late final Animation<double> _bounceAnimation;
-  late final Animation<double> _ringScaleAnimation;
-  late final Animation<double> _outerRippleAnimation;
-  int? _hoveredBadgeIndex;
-
-  static const List<_TechBadgeData> _badges = [
-    _TechBadgeData(
-      name: 'Flutter',
-      color: Color(0xFF38BDF8),
-      glowColor: Color(0xFF0284C7),
-      type: _TechBadgeType.flutter,
-    ),
-    _TechBadgeData(
-      name: 'Kotlin',
-      color: Color(0xFF818CF8),
-      glowColor: Color(0xFFC084FC),
-      type: _TechBadgeType.kotlin,
-    ),
-    _TechBadgeData(
-      name: 'Android',
-      color: Color(0xFF34D399),
-      glowColor: Color(0xFF10B981),
-      type: _TechBadgeType.android,
-    ),
-    _TechBadgeData(
-      name: 'Git',
-      color: Color(0xFFFB923C),
-      glowColor: Color(0xFFEA580C),
-      type: _TechBadgeType.git,
-    ),
-    _TechBadgeData(
-      name: 'iOS',
-      color: Color(0xFF64748B),
-      glowColor: Color(0xFF475569),
-      type: _TechBadgeType.ios,
-    ),
-    _TechBadgeData(
-      name: 'Play Store',
-      color: Color(0xFF34D399),
-      glowColor: Color(0xFF059669),
-      type: _TechBadgeType.playStore,
-    ),
-    _TechBadgeData(
-      name: 'Firebase',
-      color: Color(0xFFFBBF24),
-      glowColor: Color(0xFFD97706),
-      type: _TechBadgeType.firebase,
-    ),
-    _TechBadgeData(
-      name: 'App Store',
-      color: Color(0xFF38BDF8),
-      glowColor: Color(0xFF2563EB),
-      type: _TechBadgeType.appStore,
-    ),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _orbitController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 24),
-    )..repeat();
-
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2400),
-    )..repeat(reverse: true);
-
-    _bounceController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2600),
-    )..repeat(reverse: true);
-
-    _pulseAnimation = Tween<double>(begin: 0.92, end: 1.10).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOutSine),
-    );
-
-    _ringScaleAnimation = Tween<double>(begin: 0.98, end: 1.18).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOutCubic),
-    );
-
-    _outerRippleAnimation = Tween<double>(begin: 1.04, end: 1.34).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeOutQuad),
-    );
-
-    _bounceAnimation = Tween<double>(begin: -9.0, end: 9.0).animate(
-      CurvedAnimation(parent: _bounceController, curve: Curves.easeInOutSine),
-    );
-  }
-
-  @override
-  void dispose() {
-    _orbitController.dispose();
-    _pulseController.dispose();
-    _bounceController.dispose();
-    super.dispose();
-  }
+class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase> {
+  bool _isAvatarHovered = false;
 
   @override
   Widget build(BuildContext context) {
@@ -440,545 +327,234 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isMobile = screenWidth < 600;
 
-    final double canvasSize = isMobile ? 320.0 : 420.0;
-    final double centerCoord = canvasSize / 2;
-    final double orbitRadius = isMobile ? 120.0 : 162.0;
-    final double avatarSize = isMobile ? 164.0 : 228.0;
-    final double badgeSize = isMobile ? 36.0 : 46.0;
-    final double iconSize = isMobile ? 20.0 : 26.0;
+    final double canvasSize = isMobile ? 360.0 : 450.0;
+    final double avatarDiameter = isMobile ? 152.0 : 196.0;
+    final double avatarRadius = avatarDiameter / 2;
+    final double innerRadius = isMobile ? 112.0 : 142.0;
+    final double outerRadius = isMobile ? 154.0 : 194.0;
+    final double badgeSize = isMobile ? 36.0 : 44.0;
 
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: SizedBox(
-        width: canvasSize,
-        height: canvasSize,
-        child: Stack(
-          alignment: Alignment.center,
-          clipBehavior: Clip.none,
-          children: [
-            // 1. Orbital track & radar ring background with dynamic rotation & pulsing
-            AnimatedBuilder(
-              animation: Listenable.merge([_orbitController, _pulseController]),
-              builder: (context, child) {
-                return CustomPaint(
-                  size: Size(canvasSize, canvasSize),
-                  painter: _OrbitTrackPainter(
-                    orbitRadius: orbitRadius,
-                    isDark: isDark,
-                    rotationAngle: _orbitController.value * 2 * math.pi,
-                    pulseValue: _pulseAnimation.value,
-                  ),
-                );
-              },
+    // 1. Inner Track Badges: Core Native & Language Runtimes (Clockwise revolution)
+    final innerBadges = [
+      OrbitBadgeItem(
+        name: 'Flutter',
+        icon: CustomPaint(
+          painter: _TechLogoPainter(
+            type: _TechBadgeType.flutter,
+            color: const Color(0xFF38BDF8),
+            isDark: isDark,
+          ),
+        ),
+        color: const Color(0xFF38BDF8),
+        glowColor: const Color(0xFF0284C7),
+        tooltip: 'Flutter (Dart) • Cross-Platform Master',
+      ),
+      OrbitBadgeItem(
+        name: 'Android',
+        icon: CustomPaint(
+          painter: _TechLogoPainter(
+            type: _TechBadgeType.android,
+            color: const Color(0xFF34D399),
+            isDark: isDark,
+          ),
+        ),
+        color: const Color(0xFF34D399),
+        glowColor: const Color(0xFF10B981),
+        tooltip: 'Android Native • Jetpack & Coroutines',
+      ),
+      OrbitBadgeItem(
+        name: 'Kotlin',
+        icon: CustomPaint(
+          painter: _TechLogoPainter(
+            type: _TechBadgeType.kotlin,
+            color: const Color(0xFF818CF8),
+            isDark: isDark,
+          ),
+        ),
+        color: const Color(0xFF818CF8),
+        glowColor: const Color(0xFFC084FC),
+        tooltip: 'Kotlin & KMP • Multiplatform',
+      ),
+      OrbitBadgeItem(
+        name: 'iOS',
+        icon: CustomPaint(
+          painter: _TechLogoPainter(
+            type: _TechBadgeType.ios,
+            color: const Color(0xFF64748B),
+            isDark: isDark,
+          ),
+        ),
+        color: const Color(0xFF64748B),
+        glowColor: const Color(0xFF475569),
+        tooltip: 'iOS',
+      ),
+    ];
+
+    // 2. Outer Track Badges: Cloud, Ecosystem & App Stores (Counter-clockwise revolution)
+    final outerBadges = [
+      OrbitBadgeItem(
+        name: 'Firebase',
+        icon: CustomPaint(
+          painter: _TechLogoPainter(
+            type: _TechBadgeType.firebase,
+            color: const Color(0xFFFBBF24),
+            isDark: isDark,
+          ),
+        ),
+        color: const Color(0xFFFBBF24),
+        glowColor: const Color(0xFFD97706),
+        tooltip: 'Firebase • Cloud & Auth Architecture',
+      ),
+      OrbitBadgeItem(
+        name: 'Git',
+        icon: CustomPaint(
+          painter: _TechLogoPainter(
+            type: _TechBadgeType.git,
+            color: const Color(0xFFFB923C),
+            isDark: isDark,
+          ),
+        ),
+        color: const Color(0xFFFB923C),
+        glowColor: const Color(0xFFEA580C),
+        tooltip: 'Git & CI/CD Pipelines',
+      ),
+      OrbitBadgeItem(
+        name: 'Play Store',
+        icon: CustomPaint(
+          painter: _TechLogoPainter(
+            type: _TechBadgeType.playStore,
+            color: const Color(0xFF34D399),
+            isDark: isDark,
+          ),
+        ),
+        color: const Color(0xFF34D399),
+        glowColor: const Color(0xFF059669),
+        tooltip: 'Google Play • Published Enterprise Apps',
+      ),
+      OrbitBadgeItem(
+        name: 'App Store',
+        icon: CustomPaint(
+          painter: _TechLogoPainter(
+            type: _TechBadgeType.appStore,
+            color: const Color(0xFF38BDF8),
+            isDark: isDark,
+          ),
+        ),
+        color: const Color(0xFF38BDF8),
+        glowColor: const Color(0xFF2563EB),
+        tooltip: 'Apple App Store • Certified Releases',
+      ),
+    ];
+
+    // 3. Anchored live experience & availability status badge
+    final statusBadge = Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 12 : 16,
+        vertical: isMobile ? 5 : 7,
+      ),
+      decoration: BoxDecoration(
+        color: isDark
+            ? const Color(0xFF0F172A).withValues(alpha: 0.94)
+            : Colors.white.withValues(alpha: 0.96),
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+          color: isDark
+              ? const Color(0xFF38BDF8).withValues(alpha: 0.5)
+              : AppColors.primary.withValues(alpha: 0.35),
+          width: 1.2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.12),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFF10B981),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xFF10B981),
+                  blurRadius: 6,
+                  spreadRadius: 1.5,
+                ),
+              ],
             ),
-
-            // 2. Multi-layered Pulsing, Expanding & Bouncing Circles
-            AnimatedBuilder(
-              animation: Listenable.merge([_pulseController, _bounceController, _orbitController]),
-              builder: (context, child) {
-                final bounceY = _bounceAnimation.value;
-                final pulse = _pulseAnimation.value;
-                final ripple = _outerRippleAnimation.value;
-                final ringScale = _ringScaleAnimation.value;
-
-                return Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: [
-                    // Layer A: Outermost radar sonar ripple wave (expanding, bouncing & fading)
-                    Transform.translate(
-                      offset: Offset(0, bounceY * 0.3),
-                      child: Transform.scale(
-                        scale: ripple,
-                        child: Container(
-                          width: avatarSize + (isMobile ? 56 : 76),
-                          height: avatarSize + (isMobile ? 56 : 76),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: const Color(0xFF06B6D4).withValues(
-                                alpha: isDark
-                                    ? (0.28 * (1.35 - ripple).clamp(0.0, 1.0))
-                                    : (0.16 * (1.35 - ripple).clamp(0.0, 1.0)),
-                              ),
-                              width: 1.5,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // Layer B: Mid-level cosmic halo ring with gradient border (bounces gently)
-                    Transform.translate(
-                      offset: Offset(0, bounceY * 0.5),
-                      child: Transform.scale(
-                        scale: ringScale,
-                        child: Container(
-                          width: avatarSize + (isMobile ? 36 : 52),
-                          height: avatarSize + (isMobile ? 36 : 52),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: const Color(0xFFA855F7).withValues(
-                                alpha: isDark ? 0.35 : 0.22,
-                              ),
-                              width: 1.2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFFA855F7).withValues(
-                                  alpha: isDark ? 0.20 : 0.10,
-                                ),
-                                blurRadius: 20,
-                                spreadRadius: -2,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // Layer C: Core radiant aura glow (vibrant neon bounce & scale)
-                    Transform.translate(
-                      offset: Offset(0, bounceY * 0.75),
-                      child: Transform.scale(
-                        scale: pulse,
-                        child: Container(
-                          width: avatarSize + (isMobile ? 24 : 36),
-                          height: avatarSize + (isMobile ? 24 : 36),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: RadialGradient(
-                              colors: [
-                                const Color(0xFFA855F7).withValues(alpha: isDark ? 0.40 : 0.24),
-                                const Color(0xFF6366F1).withValues(alpha: isDark ? 0.30 : 0.16),
-                                const Color(0xFF06B6D4).withValues(alpha: isDark ? 0.18 : 0.08),
-                                Colors.transparent,
-                              ],
-                              stops: const [0.25, 0.55, 0.82, 1.0],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // Layer D: Small orbital satellite orbs that float & bounce around the perimeter
-                    Transform.translate(
-                      offset: Offset(
-                        math.cos(_orbitController.value * 2 * math.pi + 1.2) * (avatarSize * 0.56),
-                        math.sin(_orbitController.value * 2 * math.pi + 1.2) * (avatarSize * 0.56) + (bounceY * 0.6),
-                      ),
-                      child: Container(
-                        width: 7,
-                        height: 7,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFF38BDF8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF38BDF8).withValues(alpha: 0.8),
-                              blurRadius: 8,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Transform.translate(
-                      offset: Offset(
-                        math.cos(-_orbitController.value * 2 * math.pi * 1.3) * (avatarSize * 0.54),
-                        math.sin(-_orbitController.value * 2 * math.pi * 1.3) * (avatarSize * 0.54) + (bounceY * 0.5),
-                      ),
-                      child: Container(
-                        width: 5,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFFA855F7),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFFA855F7).withValues(alpha: 0.8),
-                              blurRadius: 6,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
+          ),
+          const SizedBox(width: 7),
+          Text(
+            '9+ YRS • Senior Mobile Dev',
+            style: GoogleFonts.jetBrainsMono(
+              fontSize: isMobile ? 10.0 : 11.5,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.8,
+              color: isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A),
             ),
+          ),
+        ],
+      ),
+    );
 
-            // 3. Circular Avatar with holographic multi-gradient border, anchored status badge, and rhythmic bounce
-            AnimatedBuilder(
-              animation: Listenable.merge([_bounceController, _orbitController, _pulseController]),
-              builder: (context, child) {
-                final bounceY = _bounceAnimation.value;
-                final rotAngle = _orbitController.value * 2 * math.pi;
-                final pulse = _pulseAnimation.value;
-
-                return Transform.translate(
-                  offset: Offset(0, bounceY),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    clipBehavior: Clip.none,
-                    children: [
-                      // Central Avatar Interactive Sphere
-                      GestureDetector(
-                        onTap: () {
-                          if (_orbitController.isAnimating) {
-                            _orbitController.stop();
-                          } else {
-                            _orbitController.repeat();
-                          }
-                        },
-                        child: Container(
-                          width: avatarSize,
-                          height: avatarSize,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: SweepGradient(
-                              transform: GradientRotation(rotAngle),
-                              colors: const [
-                                Color(0xFF6366F1),
-                                Color(0xFF38BDF8),
-                                Color(0xFF10B981),
-                                Color(0xFFA855F7),
-                                Color(0xFF6366F1),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF6366F1).withValues(alpha: (isDark ? 0.45 : 0.28) * pulse),
-                                blurRadius: (isMobile ? 24 : 36) * pulse,
-                                spreadRadius: 2,
-                                offset: const Offset(0, 6),
-                              ),
-                              BoxShadow(
-                                color: const Color(0xFF38BDF8).withValues(alpha: (isDark ? 0.32 : 0.18) * pulse),
-                                blurRadius: (isMobile ? 16 : 28) * pulse,
-                                spreadRadius: -2,
-                              ),
-                            ],
-                          ),
-                          padding: const EdgeInsets.all(3.5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isDark ? const Color(0xFF0A0D14) : Colors.white,
-                              border: Border.all(
-                                color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.8),
-                                width: 2.0,
-                              ),
-                            ),
-                            child: ClipOval(
-                              child: Image.asset(
-                                widget.profile.profilePicture,
-                                fit: BoxFit.cover,
-                                width: avatarSize,
-                                height: avatarSize,
-                                errorBuilder: (context, error, stackTrace) => Container(
-                                  color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.person_rounded,
-                                      size: isMobile ? 64 : 90,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Anchored Live Experience & Availability Pill Badge
-                      Positioned(
-                        bottom: -12,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 12 : 16,
-                            vertical: isMobile ? 5 : 7,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? const Color(0xFF0F172A).withValues(alpha: 0.94)
-                                : Colors.white.withValues(alpha: 0.96),
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(
-                              color: isDark
-                                  ? const Color(0xFF38BDF8).withValues(alpha: 0.5)
-                                  : AppColors.primary.withValues(alpha: 0.35),
-                              width: 1.2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.12),
-                                blurRadius: 14,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Pulsing emerald LED indicator
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: const Color(0xFF10B981),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(0xFF10B981).withValues(alpha: 0.7 * pulse),
-                                      blurRadius: 6,
-                                      spreadRadius: 1.5,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 7),
-                              Text(
-                                '9+ YRS • SENIOR MOBILE DEV',
-                                style: GoogleFonts.jetBrainsMono(
-                                  fontSize: isMobile ? 10.0 : 11.5,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 0.8,
-                                  color: isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+    // 4. Rotating conic border with mouse parallax 3D card tilt
+    final heroAvatarRing = HeroAvatarRing(
+      size: avatarDiameter,
+      borderWidth: 4.0,
+      onHoverChanged: (hovered) {
+        setState(() {
+          _isAvatarHovered = hovered;
+        });
+      },
+      child: Image.asset(
+        widget.profile.profilePicture,
+        fit: BoxFit.cover,
+        width: avatarDiameter,
+        height: avatarDiameter,
+        errorBuilder: (context, error, stackTrace) => Container(
+          color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
+          child: Center(
+            child: Icon(
+              Icons.person_rounded,
+              size: isMobile ? 64 : 88,
+              color: AppColors.primary,
             ),
-
-            // 4. The 8 Orbiting Tech Badges with Harmonic Radial Bounce
-            AnimatedBuilder(
-              animation: Listenable.merge([_orbitController, _bounceController]),
-              builder: (context, child) {
-                final baseAngle = _orbitController.value * 2 * math.pi;
-                final bounceY = _bounceAnimation.value;
-
-                return Stack(
-                  children: List.generate(_badges.length, (index) {
-                    final badge = _badges[index];
-                    final angle = baseAngle + index * (2 * math.pi / _badges.length);
-                    // Organic radial oscillation so the orbit breathes and bounces
-                    final radialOscillation = math.sin((angle * 2.5) + (_bounceController.value * math.pi)) * 4.5;
-                    final currentRadius = orbitRadius + radialOscillation;
-                    final x = centerCoord + currentRadius * math.cos(angle);
-                    final y = centerCoord + currentRadius * math.sin(angle) + (bounceY * 0.35);
-                    final isHovered = _hoveredBadgeIndex == index;
-
-                    return Positioned(
-                      left: x - badgeSize / 2,
-                      top: y - badgeSize / 2,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _hoveredBadgeIndex = (_hoveredBadgeIndex == index) ? null : index;
-                          });
-                        },
-                        child: MouseRegion(
-                          onEnter: (_) {
-                            setState(() {
-                              _hoveredBadgeIndex = index;
-                            });
-                          },
-                          onExit: (_) {
-                            setState(() {
-                              if (_hoveredBadgeIndex == index) {
-                                _hoveredBadgeIndex = null;
-                              }
-                            });
-                          },
-                          cursor: SystemMouseCursors.click,
-                          child: Tooltip(
-                            triggerMode: TooltipTriggerMode.tap,
-                            message: badge.name,
-                            textStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF0F172A).withValues(alpha: 0.95),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: badge.color.withValues(alpha: 0.6),
-                                width: 1,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: badge.glowColor.withValues(alpha: 0.4),
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
-                            child: AnimatedScale(
-                              duration: const Duration(milliseconds: 180),
-                              scale: isHovered ? 1.28 : 1.0,
-                              child: Container(
-                                width: badgeSize,
-                                height: badgeSize,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: isDark
-                                      ? const Color(0xFF0F172A).withValues(alpha: 0.95)
-                                      : const Color(0xFFFFFFFF).withValues(alpha: 0.96),
-                                  border: Border.all(
-                                    color: isHovered
-                                        ? badge.color
-                                        : badge.color.withValues(alpha: isDark ? 0.70 : 0.45),
-                                    width: isHovered ? 2.4 : 1.6,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: badge.glowColor.withValues(alpha: isHovered ? 0.75 : (isDark ? 0.35 : 0.18)),
-                                      blurRadius: isHovered ? 20 : 12,
-                                      spreadRadius: isHovered ? 2.5 : 0.5,
-                                    ),
-                                  ],
-                                ),
-                                child: Center(
-                                  child: SizedBox(
-                                    width: iconSize,
-                                    height: iconSize,
-                                    child: CustomPaint(
-                                      painter: _TechLogoPainter(
-                                        type: badge.type,
-                                        color: badge.color,
-                                        isDark: isDark,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
-                );
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );
+
+    // 5. Bioluminescent multi-ring ripples wrapping avatar & badge
+    final pulsingHero = PulsingAvatarHero(
+      avatarRadius: avatarRadius,
+      isHovered: _isAvatarHovered,
+      accentColor: const Color(0xFF06B6D4),
+      secondaryColor: const Color(0xFF6366F1),
+      badge: statusBadge,
+      child: heroAvatarRing,
+    );
+
+    // 6. Dual concentric circular orbital tracks with upright planetary badges
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: OrbitingTechBadges(
+        canvasSize: canvasSize,
+        innerRadius: innerRadius,
+        outerRadius: outerRadius,
+        badgeSize: badgeSize,
+        isDark: isDark,
+        innerBadges: innerBadges,
+        outerBadges: outerBadges,
+        centerWidget: pulsingHero,
+      ),
+    );
   }
-}
-
-class _OrbitTrackPainter extends CustomPainter {
-  final double orbitRadius;
-  final bool isDark;
-  final double rotationAngle;
-  final double pulseValue;
-
-  const _OrbitTrackPainter({
-    required this.orbitRadius,
-    required this.isDark,
-    this.rotationAngle = 0.0,
-    this.pulseValue = 1.0,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-
-    // 1. Soft glowing outer orbit baseline with smooth neon aura
-    final glowPaint = Paint()
-      ..color = (isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7))
-          .withValues(alpha: isDark ? (0.15 * pulseValue) : 0.08)
-      ..strokeWidth = 3.5
-      ..style = PaintingStyle.stroke;
-    canvas.drawCircle(center, orbitRadius, glowPaint);
-
-    // 2. Futuristic counter-rotating dashed gyro ring with gradient sweeps
-    final dashPaint = Paint()
-      ..color = (isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7))
-          .withValues(alpha: isDark ? (0.42 * pulseValue) : 0.30)
-      ..strokeWidth = 1.8
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-
-    const totalDashes = 48;
-    const dashAngle = (2 * math.pi) / totalDashes;
-    const dashDrawAngle = dashAngle * 0.50;
-    final startOffset = -rotationAngle * 0.6;
-
-    for (int i = 0; i < totalDashes; i++) {
-      final startAngle = startOffset + i * dashAngle;
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: orbitRadius),
-        startAngle,
-        dashDrawAngle,
-        false,
-        dashPaint,
-      );
-    }
-
-    // 3. Counter-rotating inner technical orbital track
-    final innerRadius = orbitRadius - 26;
-    final innerPaint = Paint()
-      ..color = (isDark ? const Color(0xFFA855F7) : const Color(0xFF7C3AED))
-          .withValues(alpha: isDark ? (0.22 * pulseValue) : 0.12)
-      ..strokeWidth = 1.2
-      ..style = PaintingStyle.stroke;
-    canvas.drawCircle(center, innerRadius, innerPaint);
-
-    // 4. Orbiting energy beacon nodes that travel smoothly along the rings
-    for (int n = 0; n < 3; n++) {
-      final nodeAngle = rotationAngle * 0.8 + (n * (2 * math.pi / 3));
-      final nodePos = Offset(
-        center.dx + orbitRadius * math.cos(nodeAngle),
-        center.dy + orbitRadius * math.sin(nodeAngle),
-      );
-      final nodePaint = Paint()
-        ..color = (n == 0
-            ? const Color(0xFF38BDF8)
-            : (n == 1 ? const Color(0xFFA855F7) : const Color(0xFF10B981)))
-        ..style = PaintingStyle.fill;
-      canvas.drawCircle(nodePos, 2.8, nodePaint);
-    }
-
-    // 5. Aerospace radar ticks every 30 degrees (12 technical clock coordinates)
-    final tickPaint = Paint()
-      ..color = (isDark ? Colors.white : Colors.black).withValues(alpha: isDark ? 0.25 : 0.15)
-      ..strokeWidth = 1.4
-      ..style = PaintingStyle.stroke;
-
-    for (int i = 0; i < 12; i++) {
-      final angle = (i * math.pi / 6) + (rotationAngle * 0.15);
-      final isMajor = i % 3 == 0;
-      final tickLength = isMajor ? 6.0 : 3.5;
-      final p1 = Offset(
-        center.dx + (orbitRadius - tickLength) * math.cos(angle),
-        center.dy + (orbitRadius - tickLength) * math.sin(angle),
-      );
-      final p2 = Offset(
-        center.dx + (orbitRadius + tickLength) * math.cos(angle),
-        center.dy + (orbitRadius + tickLength) * math.sin(angle),
-      );
-      canvas.drawLine(p1, p2, tickPaint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _OrbitTrackPainter oldDelegate) =>
-      oldDelegate.orbitRadius != orbitRadius ||
-      oldDelegate.isDark != isDark ||
-      oldDelegate.rotationAngle != rotationAngle ||
-      oldDelegate.pulseValue != pulseValue;
 }
 
 class _TechLogoPainter extends CustomPainter {
