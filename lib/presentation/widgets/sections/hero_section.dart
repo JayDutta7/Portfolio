@@ -318,6 +318,7 @@ class _HeroOrbitAvatarShowcase extends StatefulWidget {
 
 class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase> {
   bool _isAvatarHovered = false;
+  OrbitBadgeItem? _activeBadge;
 
   @override
   Widget build(BuildContext context) {
@@ -446,8 +447,11 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase> {
       ),
     ];
 
-    // 3. Anchored live experience & availability status badge
-    final statusBadge = Container(
+    // 3. Anchored live experience or active badge details pill
+    final activeBadge = _activeBadge;
+    final statusBadge = AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOutCubic,
       padding: EdgeInsets.symmetric(
         horizontal: isMobile ? 12 : 16,
         vertical: isMobile ? 5 : 7,
@@ -458,48 +462,78 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase> {
             : Colors.white.withValues(alpha: 0.96),
         borderRadius: BorderRadius.circular(100),
         border: Border.all(
-          color: isDark
-              ? const Color(0xFF38BDF8).withValues(alpha: 0.5)
-              : AppColors.primary.withValues(alpha: 0.35),
-          width: 1.2,
+          color: activeBadge != null
+              ? activeBadge.color
+              : (isDark
+                  ? const Color(0xFF38BDF8).withValues(alpha: 0.5)
+                  : AppColors.primary.withValues(alpha: 0.35)),
+          width: activeBadge != null ? 1.6 : 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.12),
-            blurRadius: 14,
+            color: activeBadge != null
+                ? activeBadge.glowColor.withValues(alpha: 0.45)
+                : Colors.black.withValues(alpha: isDark ? 0.45 : 0.12),
+            blurRadius: activeBadge != null ? 16 : 14,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color(0xFF10B981),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xFF10B981),
-                  blurRadius: 6,
-                  spreadRadius: 1.5,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 7),
-          Text(
-            '9+ YRS • Senior Mobile Dev',
-            style: GoogleFonts.jetBrainsMono(
-              fontSize: isMobile ? 10.0 : 11.5,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.8,
-              color: isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A),
-            ),
-          ),
-        ],
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        child: activeBadge == null
+            ? Row(
+                key: const ValueKey('default_badge'),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF10B981),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xFF10B981),
+                          blurRadius: 6,
+                          spreadRadius: 1.5,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 7),
+                  Text(
+                    '9+ YRS • Senior Mobile Dev',
+                    style: GoogleFonts.jetBrainsMono(
+                      fontSize: isMobile ? 10.0 : 11.5,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.8,
+                      color: isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A),
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                key: ValueKey(activeBadge.name),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: isMobile ? 14 : 16,
+                    height: isMobile ? 14 : 16,
+                    child: activeBadge.icon,
+                  ),
+                  const SizedBox(width: 7),
+                  Text(
+                    activeBadge.tooltip,
+                    style: GoogleFonts.jetBrainsMono(
+                      fontSize: isMobile ? 10.0 : 11.5,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.8,
+                      color: isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A),
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
 
@@ -551,6 +585,11 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase> {
         isDark: isDark,
         innerBadges: innerBadges,
         outerBadges: outerBadges,
+        onBadgeSelected: (badge) {
+          setState(() {
+            _activeBadge = badge;
+          });
+        },
         centerWidget: pulsingHero,
       ),
     );

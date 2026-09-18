@@ -37,6 +37,7 @@ class OrbitingTechBadges extends StatefulWidget {
   final double badgeSize;
   final Duration orbitDuration;
   final bool isDark;
+  final ValueChanged<OrbitBadgeItem?>? onBadgeSelected;
 
   const OrbitingTechBadges({
     required this.centerWidget,
@@ -48,6 +49,7 @@ class OrbitingTechBadges extends StatefulWidget {
     this.badgeSize = 44.0,
     this.orbitDuration = const Duration(seconds: 18),
     this.isDark = true,
+    this.onBadgeSelected,
     super.key,
   });
 
@@ -59,6 +61,8 @@ class _OrbitingTechBadgesState extends State<OrbitingTechBadges>
     with SingleTickerProviderStateMixin {
   late final AnimationController _orbitController;
   int? _hoveredBadgeKey;
+  int? _selectedBadgeKey;
+  final Map<int, GlobalKey<TooltipState>> _tooltipKeys = {};
 
   @override
   void initState() {
@@ -75,9 +79,35 @@ class _OrbitingTechBadgesState extends State<OrbitingTechBadges>
     super.dispose();
   }
 
-  void _onBadgeHover(bool isHovered, int badgeKey) {
+  void _onBadgeTap(int badgeKey, OrbitBadgeItem badge) {
+    setState(() {
+      if (_selectedBadgeKey == badgeKey) {
+        _selectedBadgeKey = null;
+        _hoveredBadgeKey = null;
+        widget.onBadgeSelected?.call(null);
+        if (!_orbitController.isAnimating) {
+          _orbitController.repeat();
+        }
+      } else {
+        _selectedBadgeKey = badgeKey;
+        _hoveredBadgeKey = badgeKey;
+        widget.onBadgeSelected?.call(badge);
+        _orbitController.stop();
+      }
+    });
+
+    if (_selectedBadgeKey == badgeKey) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _tooltipKeys[badgeKey]?.currentState?.ensureTooltipVisible();
+      });
+    }
+  }
+
+  void _onBadgeHover(bool isHovered, int badgeKey, OrbitBadgeItem badge) {
+    if (_selectedBadgeKey != null) return;
     setState(() {
       _hoveredBadgeKey = isHovered ? badgeKey : null;
+      widget.onBadgeSelected?.call(isHovered ? badge : null);
     });
     if (isHovered) {
       _orbitController.stop();
@@ -88,17 +118,33 @@ class _OrbitingTechBadgesState extends State<OrbitingTechBadges>
     }
   }
 
+  void _clearSelection() {
+    if (_selectedBadgeKey != null) {
+      setState(() {
+        _selectedBadgeKey = null;
+        _hoveredBadgeKey = null;
+        widget.onBadgeSelected?.call(null);
+        if (!_orbitController.isAnimating) {
+          _orbitController.repeat();
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final centerCoord = widget.canvasSize / 2;
 
     return RepaintBoundary(
-      child: SizedBox(
-        width: widget.canvasSize,
-        height: widget.canvasSize,
-        child: Stack(
-          alignment: Alignment.center,
-          clipBehavior: Clip.none,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: _clearSelection,
+        child: SizedBox(
+          width: widget.canvasSize,
+          height: widget.canvasSize,
+          child: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
           children: [
             // Concentric orbit guide tracks
             CustomPaint(
@@ -148,8 +194,9 @@ class _OrbitingTechBadgesState extends State<OrbitingTechBadges>
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   List<Widget> _buildOrbitTrackBadges({
     required List<OrbitBadgeItem> badges,
@@ -170,40 +217,49 @@ class _OrbitingTechBadgesState extends State<OrbitingTechBadges>
       final x = centerCoord + radius * math.cos(currentAngle);
       final y = centerCoord + radius * math.sin(currentAngle);
       final badgeKey = trackId + index;
-      final isHovered = _hoveredBadgeKey == badgeKey;
+      final tooltipKey = _tooltipKeys.putIfAbsent(badgeKey, () => GlobalKey<TooltipState>());
+      final isHovered = _hoveredBadgeKey == badgeKey || _selectedBadgeKey == badgeKey;
 
       return Positioned(
         left: x - widget.badgeSize / 2,
         top: y - widget.badgeSize / 2,
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          onEnter: (_) => _onBadgeHover(true, badgeKey),
-          onExit: (_) => _onBadgeHover(false, badgeKey),
-          child: Tooltip(
-            message: badge.tooltip,
-            textStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0F172A).withValues(alpha: 0.95),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: badge.color.withValues(alpha: 0.6),
-                width: 1,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => _onBadgeTap(badgeKey, badge),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            onEnter: (_) => _onBadgeHover(true, badgeKey, badge),
+            onExit: (_) => _onBadgeHover(false, badgeKey, badge),
+            child: Tooltip(
+              key: tooltipKey,
+              triggerMode: TooltipTriggerMode.tap,
+              waitDuration: Duration.zero,
+              showDuration: const Duration(seconds: 4),
+              message: badge.tooltip,
+              textStyle: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: badge.glowColor.withValues(alpha: 0.45),
-                  blurRadius: 12,
+              decoration: BoxDecoration(
+                color: const Color(0xFF0F172A).withValues(alpha: 0.96),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: badge.color.withValues(alpha: 0.75),
+                  width: 1.2,
                 ),
-              ],
-            ),
-            child: AnimatedScale(
-              scale: isHovered ? 1.28 : 1.0,
-              duration: const Duration(milliseconds: 180),
-              curve: Curves.easeOutCubic,
+                boxShadow: [
+                  BoxShadow(
+                    color: badge.glowColor.withValues(alpha: 0.5),
+                    blurRadius: 14,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: AnimatedScale(
+                scale: isHovered ? 1.28 : 1.0,
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOutCubic,
               // Upright Icons: Counter-rotate by -currentAngle so the icon never flips upside down!
               child: Transform.rotate(
                 angle: -currentAngle,
@@ -241,8 +297,9 @@ class _OrbitingTechBadgesState extends State<OrbitingTechBadges>
             ),
           ),
         ),
-      );
-    });
+      ),
+    );
+  });
   }
 }
 
