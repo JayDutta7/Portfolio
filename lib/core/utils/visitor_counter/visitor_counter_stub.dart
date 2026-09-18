@@ -1,11 +1,15 @@
+const int kRealisticVisitorBaseline = 120;
+
 int computeDynamicBaseline() {
-  return 1;
+  return kRealisticVisitorBaseline;
 }
 
 Future<int> getVisitorCountImpl() async {
-  return 1;
+  return kRealisticVisitorBaseline;
 }
 
 Future<int> incrementVisitorCountImpl() async {
-  return 2;
+  return kRealisticVisitorBaseline + 1;
 }
+
+void syncVisitorCountLocal(int newCount) {}

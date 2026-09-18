@@ -1,16 +1,18 @@
 // ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
 import 'dart:html' as html;
 
+const int kRealisticVisitorBaseline = 120;
+
 int computeDynamicBaseline() {
   const storageKey = 'portfolio_visitor_count';
   try {
     final stored = html.window.localStorage[storageKey];
     if (stored != null) {
       final parsed = int.tryParse(stored);
-      if (parsed != null && parsed > 0) return parsed;
+      if (parsed != null && parsed >= kRealisticVisitorBaseline) return parsed;
     }
   } catch (_) {}
-  return 1;
+  return kRealisticVisitorBaseline;
 }
 
 /// Web implementation of visitor counter using browser storage & background tracker
@@ -25,7 +27,8 @@ Future<int> getVisitorCountImpl() async {
     } catch (_) {}
 
     final stored = html.window.localStorage[storageKey];
-    int count = stored != null ? (int.tryParse(stored) ?? 1) : 1;
+    int count = stored != null ? (int.tryParse(stored) ?? kRealisticVisitorBaseline) : kRealisticVisitorBaseline;
+    if (count < kRealisticVisitorBaseline) count = kRealisticVisitorBaseline;
 
     final sessionLogged = html.window.sessionStorage[sessionKey];
     if (sessionLogged == null) {
@@ -36,7 +39,7 @@ Future<int> getVisitorCountImpl() async {
 
     return count;
   } catch (_) {
-    return 1;
+    return kRealisticVisitorBaseline;
   }
 }
 
@@ -44,11 +47,22 @@ Future<int> incrementVisitorCountImpl() async {
   const storageKey = 'portfolio_visitor_count';
   try {
     final stored = html.window.localStorage[storageKey];
-    int count = stored != null ? (int.tryParse(stored) ?? 1) : 1;
+    int count = stored != null ? (int.tryParse(stored) ?? kRealisticVisitorBaseline) : kRealisticVisitorBaseline;
+    if (count < kRealisticVisitorBaseline) count = kRealisticVisitorBaseline;
     count++;
     html.window.localStorage[storageKey] = count.toString();
     return count;
   } catch (_) {
-    return 1;
+    return kRealisticVisitorBaseline + 1;
   }
 }
+
+void syncVisitorCountLocal(int newCount) {
+  const storageKey = 'portfolio_visitor_count';
+  try {
+    if (newCount > 0) {
+      html.window.localStorage[storageKey] = newCount.toString();
+    }
+  } catch (_) {}
+}
+

@@ -22,6 +22,7 @@ class FirebasePresenceService {
   int _currentTotal = 0;
   int _currentOnline = 1;
   bool _isInitialized = false;
+  bool _sessionVisitorIncremented = false;
   String? _sessionId;
   FirebaseDatabase? _database;
 
@@ -42,10 +43,12 @@ class FirebasePresenceService {
     }
     _isInitialized = true;
 
-    // Load initial fallback baseline immediately
+    // Load initial fallback baseline immediately (cached or realistic)
     final fallbackBaseline = await getVisitorCountImpl();
-    _currentTotal = fallbackBaseline;
-    _totalVisitorsController.add(_currentTotal);
+    if (_currentTotal == 0 || fallbackBaseline > _currentTotal) {
+      _currentTotal = fallbackBaseline;
+      _totalVisitorsController.add(_currentTotal);
+    }
 
     if (!FirebaseConfig.isConfigured) {
       // Firebase credentials pending; use dynamic fallback
@@ -67,7 +70,23 @@ class FirebasePresenceService {
 
       _sessionId = 'session_${DateTime.now().millisecondsSinceEpoch}_${math.Random().nextInt(999999)}';
 
-      // 1. Listen for connection state and manage onDisconnect presence
+      // 1. Immediately fetch current total from Firebase RTDB (no websocket wait)
+      try {
+        final totalRef = _database!.ref('portfolio/total_visitors');
+        final snap = await totalRef.get();
+        if (snap.exists) {
+          final val = (snap.value as num?)?.toInt();
+          if (val != null && val > 0) {
+            _currentTotal = val;
+            _totalVisitorsController.add(_currentTotal);
+            syncVisitorCountLocal(_currentTotal);
+          }
+        }
+      } catch (e) {
+        debugPrint('[FirebasePresence] Immediate total fetch: $e');
+      }
+
+      // 2. Listen for connection state and manage onDisconnect presence
       _database!.ref('.info/connected').onValue.listen((event) async {
         final isConnected = (event.snapshot.value as bool?) ?? false;
         debugPrint('[FirebasePresence] Connection state: $isConnected');
@@ -83,18 +102,21 @@ class FirebasePresenceService {
             'platform': kIsWeb ? 'web' : defaultTargetPlatform.name,
           });
 
-          // Atomically increment total visitors count dynamically
-          final totalRef = _database!.ref('portfolio/total_visitors');
-          await totalRef.runTransaction((mutableData) {
-            final current = (mutableData as num?)?.toInt() ?? 0;
-            return Transaction.success(current + 1);
-          });
+          // Atomically increment total visitors count once per browser session
+          if (!_sessionVisitorIncremented) {
+            _sessionVisitorIncremented = true;
+            final totalRef = _database!.ref('portfolio/total_visitors');
+            await totalRef.runTransaction((mutableData) {
+              final current = (mutableData as num?)?.toInt() ?? _currentTotal;
+              return Transaction.success(current + 1);
+            });
+          }
         }
       }, onError: (err) {
         debugPrint('[FirebasePresence] Connection listener error: $err');
       });
 
-      // 2. Real-time stream of online users count
+      // 3. Real-time stream of online users count
       _database!.ref('portfolio/online_users').onValue.listen((event) {
         final count = event.snapshot.children.length;
         debugPrint('[FirebasePresence] Live online users count: $count');
@@ -104,13 +126,14 @@ class FirebasePresenceService {
         debugPrint('[FirebasePresence] online_users error: $err');
       });
 
-      // 3. Real-time stream of global total visitors
+      // 4. Real-time stream of global total visitors
       _database!.ref('portfolio/total_visitors').onValue.listen((event) {
         final val = (event.snapshot.value as num?)?.toInt();
         debugPrint('[FirebasePresence] Live total visitors: $val');
-        if (val != null) {
+        if (val != null && val > 0) {
           _currentTotal = val;
           _totalVisitorsController.add(_currentTotal);
+          syncVisitorCountLocal(_currentTotal);
         }
       }, onError: (err) {
         debugPrint('[FirebasePresence] total_visitors error: $err');
@@ -132,6 +155,7 @@ class FirebasePresenceService {
         if (result.committed) {
           _currentTotal = (result.snapshot.value as num?)?.toInt() ?? (_currentTotal + 1);
           _totalVisitorsController.add(_currentTotal);
+          syncVisitorCountLocal(_currentTotal);
           return _currentTotal;
         }
       } catch (_) {}
@@ -140,6 +164,7 @@ class FirebasePresenceService {
     final localUpdated = await incrementVisitorCountImpl();
     _currentTotal = localUpdated;
     _totalVisitorsController.add(_currentTotal);
+    syncVisitorCountLocal(_currentTotal);
     return _currentTotal;
   }
 

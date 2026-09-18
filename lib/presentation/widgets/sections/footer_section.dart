@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/services/firebase_presence_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
+import '../../../core/utils/visitor_counter/visitor_counter.dart';
 import '../../../domain/models/profile_models.dart';
 
 class SiteFooter extends StatelessWidget {
@@ -143,37 +144,32 @@ class _VisitorCountBadgeState extends State<_VisitorCountBadge>
     );
 
     final presenceService = FirebasePresenceService();
-    presenceService.init();
 
-    // Immediately seed with real cached/live values so the badge is never blank
-    if (presenceService.currentTotal > 0) {
-      _displayCount = presenceService.currentTotal;
-      _targetCount = presenceService.currentTotal;
-    }
+    // 1. Immediately seed from service or dynamic baseline so it is never 1, 0, or blank
+    final initialBaseline = presenceService.currentTotal > 0
+        ? presenceService.currentTotal
+        : computeDynamicBaseline();
+    _displayCount = initialBaseline;
+    _targetCount = initialBaseline;
     if (presenceService.currentOnline > 0) {
       _activeOnline = presenceService.currentOnline;
     }
 
+    // 2. Attach listeners FIRST so no broadcast events are dropped
     _totalSub = presenceService.totalVisitorsStream.listen((total) {
-      if (mounted) {
+      if (mounted && total > 0 && total != _targetCount) {
         _animateToCount(total);
       }
     });
 
     _onlineSub = presenceService.activeOnlineStream.listen((online) {
-      if (mounted) {
+      if (mounted && online > 0) {
         setState(() => _activeOnline = online);
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        final total = presenceService.currentTotal > 0
-            ? presenceService.currentTotal
-            : 1;
-        _animateToCount(total);
-      }
-    });
+    // 3. Trigger presence service initialization / re-broadcast
+    presenceService.init();
 
     // Periodic organic presence pulse when offline
     _liveTrafficTimer = Timer.periodic(const Duration(seconds: 24), (timer) {
@@ -186,6 +182,7 @@ class _VisitorCountBadgeState extends State<_VisitorCountBadge>
   }
 
   void _animateToCount(int newTarget) {
+    if (newTarget <= 0) return;
     final startVal =
         _targetCount == 0 ? (newTarget > 10 ? newTarget - 5 : 0) : _displayCount;
     _targetCount = newTarget;
@@ -263,7 +260,7 @@ class _VisitorCountBadgeState extends State<_VisitorCountBadge>
         ? _displayCount
         : (FirebasePresenceService().currentTotal > 0
             ? FirebasePresenceService().currentTotal
-            : 1);
+            : computeDynamicBaseline());
     final countString = _formatNumber(effectiveCount);
 
     return MouseRegion(

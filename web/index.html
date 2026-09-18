@@ -9,6 +9,9 @@
   <meta name="keywords" content="Jayajit Dutta, Android Developer, Flutter Developer, Senior Mobile Engineer, Kotlin, Jetpack Compose, Clean Architecture, MVVM, Mobile App Portfolio">
   <meta name="author" content="Jayajit Dutta">
   <meta name="theme-color" content="#0a0d14">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 
   <!-- Production Security Hardening -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: ws: wss:; worker-src 'self' blob:; object-src 'none'; base-uri 'self';">
@@ -186,6 +189,13 @@
 
   <script src="flutter_bootstrap.js" async></script>
   <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        for (var i = 0; i < regs.length; i++) {
+          regs[i].update();
+        }
+      });
+    }
     (function() {
       var loader = document.getElementById('loading-indicator');
       function hideLoader() {
