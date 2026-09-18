@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/services/firebase_presence_service.dart';
 import '../../core/utils/distribution_helper.dart';
 import '../../core/utils/resume_download/resume_download.dart';
 import '../viewmodels/locale_viewmodel.dart';
@@ -40,17 +41,48 @@ class _HomePageState extends ConsumerState<HomePage> {
   final _educationKey = GlobalKey();
   final _contactKey = GlobalKey();
   bool _isStartupLoadingDone = false;
+  bool _isAtBottom = false;
 
   @override
   void initState() {
     super.initState();
     DistributionHelper.init();
+    FirebasePresenceService().init();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    final atBottom = maxScroll > 0 && currentScroll >= (maxScroll - 160);
+    if (atBottom != _isAtBottom) {
+      setState(() => _isAtBottom = atBottom);
+    }
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _toggleScrollDirection() {
+    if (!_scrollController.hasClients) return;
+    if (_isAtBottom) {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 750),
+        curve: Curves.easeInOutCubic,
+      );
+    } else {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 950),
+        curve: Curves.easeInOutCubic,
+      );
+    }
   }
 
   Future<void> _handleRefresh() async {
@@ -132,13 +164,45 @@ class _HomePageState extends ConsumerState<HomePage> {
         onLogoTap: () => _scrollTo(_heroKey),
         onVoiceTap: _openVoiceAssistant,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openVoiceAssistant,
-        backgroundColor: AppColors.secondary,
-        elevation: 6,
-        shape: const CircleBorder(),
-        tooltip: 'Voice Navigation',
-        child: const Icon(Icons.mic_rounded, color: Colors.white, size: 24),
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            heroTag: 'fab_scroll_direction',
+            onPressed: _toggleScrollDirection,
+            backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
+            elevation: 6,
+            shape: CircleBorder(
+              side: BorderSide(
+                color: isDark
+                    ? const Color(0xFF38BDF8).withValues(alpha: 0.5)
+                    : AppColors.primary.withValues(alpha: 0.35),
+                width: 1.5,
+              ),
+            ),
+            tooltip: _isAtBottom ? 'Scroll to top' : 'Scroll down',
+            child: AnimatedRotation(
+              turns: _isAtBottom ? 0.5 : 0.0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOutBack,
+              child: Icon(
+                Icons.arrow_downward_rounded,
+                color: isDark ? const Color(0xFF38BDF8) : AppColors.primary,
+                size: 22,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          FloatingActionButton(
+            heroTag: 'fab_voice_assistant',
+            onPressed: _openVoiceAssistant,
+            backgroundColor: AppColors.secondary,
+            elevation: 6,
+            shape: const CircleBorder(),
+            tooltip: 'Voice Navigation',
+            child: const Icon(Icons.mic_rounded, color: Colors.white, size: 24),
+          ),
+        ],
       ),
       body: Stack(
         children: [

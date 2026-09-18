@@ -46,3 +46,8 @@ app.*.map.json
 
 # Agent Customizations
 .agents/
+
+# Environment files (never push credentials to GitHub)
+.env
+.env.*
+!.env.example
