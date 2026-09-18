@@ -353,6 +353,18 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
                       ),
                     ),
 
+                    // Prominent Mobile & Tablet Device Showcase
+                    if (!isDesktop && hasMockup) ...[
+                      const SizedBox(height: 24),
+                      _buildDeviceMockup(
+                        accentColor: accentColor,
+                        isFlutter: isFlutter,
+                        width: width,
+                        isMobile: isMobile,
+                        isDesktop: false,
+                      ),
+                    ],
+
                     const SizedBox(height: 24),
 
                     // Structured Case Study Breakdown
@@ -451,35 +463,55 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
                 ),
               ),
 
-              if (hasMockup) ...[
-                if (isDesktop) const SizedBox(width: 50),
-                if (!isDesktop) const SizedBox(height: 40),
-                _maybeExpanded(
-                  expand: isDesktop,
+              // Desktop Side Showcase
+              if (isDesktop && hasMockup) ...[
+                const SizedBox(width: 50),
+                Expanded(
                   flex: 4,
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 240),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: AnimatedScale(
-                          duration: const Duration(milliseconds: 300),
-                          scale: _isHovered ? 1.03 : 1.0,
-                          child: DeviceMockup(
-                            title: widget.project.title,
-                            assetPath: widget.project.screenshotUrl,
-                            fallbackIcon: isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
-                            glowColor: accentColor,
-                            width: 220,
-                            height: 460,
-                          ),
-                        ),
-                      ),
-                    ),
+                  child: _buildDeviceMockup(
+                    accentColor: accentColor,
+                    isFlutter: isFlutter,
+                    width: width,
+                    isMobile: false,
+                    isDesktop: true,
                   ),
                 ),
               ],
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDeviceMockup({
+    required Color accentColor,
+    required bool isFlutter,
+    required double width,
+    required bool isMobile,
+    required bool isDesktop,
+  }) {
+    final mockupWidth = isDesktop
+        ? 230.0
+        : (width - (isMobile ? 64 : 140)).clamp(220.0, 260.0);
+    final mockupHeight = isDesktop ? 470.0 : (mockupWidth * 2.05);
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: isDesktop ? 260 : 280),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: AnimatedScale(
+            duration: const Duration(milliseconds: 300),
+            scale: _isHovered ? 1.03 : 1.0,
+            child: DeviceMockup(
+              title: widget.project.title,
+              assetPath: widget.project.screenshotUrl,
+              fallbackIcon: isFlutter ? Icons.flutter_dash_rounded : Icons.android_rounded,
+              glowColor: accentColor,
+              width: mockupWidth,
+              height: mockupHeight,
+            ),
           ),
         ),
       ),

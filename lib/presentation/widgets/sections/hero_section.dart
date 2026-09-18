@@ -610,7 +610,7 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
               },
             ),
 
-            // 3. Circular Avatar with rotating neon multi-gradient border and rhythmic vertical bounce
+            // 3. Circular Avatar with holographic multi-gradient border, anchored status badge, and rhythmic bounce
             AnimatedBuilder(
               animation: Listenable.merge([_bounceController, _orbitController, _pulseController]),
               builder: (context, child) {
@@ -620,73 +620,141 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
 
                 return Transform.translate(
                   offset: Offset(0, bounceY),
-                  child: GestureDetector(
-                    onTap: () {
-                      if (_orbitController.isAnimating) {
-                        _orbitController.stop();
-                      } else {
-                        _orbitController.repeat();
-                      }
-                    },
-                    child: Container(
-                      width: avatarSize,
-                      height: avatarSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: SweepGradient(
-                          transform: GradientRotation(rotAngle),
-                          colors: const [
-                            Color(0xFF8B5CF6),
-                            Color(0xFF06B6D4),
-                            Color(0xFFEC4899),
-                            Color(0xFF3B82F6),
-                            Color(0xFF8B5CF6),
-                          ],
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.45 * pulse),
-                            blurRadius: (isMobile ? 24 : 36) * pulse,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 6),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    clipBehavior: Clip.none,
+                    children: [
+                      // Central Avatar Interactive Sphere
+                      GestureDetector(
+                        onTap: () {
+                          if (_orbitController.isAnimating) {
+                            _orbitController.stop();
+                          } else {
+                            _orbitController.repeat();
+                          }
+                        },
+                        child: Container(
+                          width: avatarSize,
+                          height: avatarSize,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: SweepGradient(
+                              transform: GradientRotation(rotAngle),
+                              colors: const [
+                                Color(0xFF6366F1),
+                                Color(0xFF38BDF8),
+                                Color(0xFF10B981),
+                                Color(0xFFA855F7),
+                                Color(0xFF6366F1),
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF6366F1).withValues(alpha: (isDark ? 0.45 : 0.28) * pulse),
+                                blurRadius: (isMobile ? 24 : 36) * pulse,
+                                spreadRadius: 2,
+                                offset: const Offset(0, 6),
+                              ),
+                              BoxShadow(
+                                color: const Color(0xFF38BDF8).withValues(alpha: (isDark ? 0.32 : 0.18) * pulse),
+                                blurRadius: (isMobile ? 16 : 28) * pulse,
+                                spreadRadius: -2,
+                              ),
+                            ],
                           ),
-                          BoxShadow(
-                            color: const Color(0xFF06B6D4).withValues(alpha: 0.28 * pulse),
-                            blurRadius: (isMobile ? 16 : 26) * pulse,
-                            spreadRadius: -3,
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(3.5),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isDark ? const Color(0xFF0A0D14) : Colors.white,
-                          border: Border.all(
-                            color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.8),
-                            width: 2.0,
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: Image.asset(
-                            widget.profile.profilePicture,
-                            fit: BoxFit.cover,
-                            width: avatarSize,
-                            height: avatarSize,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
-                              child: Center(
-                                child: Icon(
-                                  Icons.person_rounded,
-                                  size: isMobile ? 64 : 90,
-                                  color: AppColors.primary,
+                          padding: const EdgeInsets.all(3.5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isDark ? const Color(0xFF0A0D14) : Colors.white,
+                              border: Border.all(
+                                color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.8),
+                                width: 2.0,
+                              ),
+                            ),
+                            child: ClipOval(
+                              child: Image.asset(
+                                widget.profile.profilePicture,
+                                fit: BoxFit.cover,
+                                width: avatarSize,
+                                height: avatarSize,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.person_rounded,
+                                      size: isMobile ? 64 : 90,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+
+                      // Anchored Live Experience & Availability Pill Badge
+                      Positioned(
+                        bottom: -12,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isMobile ? 12 : 16,
+                            vertical: isMobile ? 5 : 7,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? const Color(0xFF0F172A).withValues(alpha: 0.94)
+                                : Colors.white.withValues(alpha: 0.96),
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                              color: isDark
+                                  ? const Color(0xFF38BDF8).withValues(alpha: 0.5)
+                                  : AppColors.primary.withValues(alpha: 0.35),
+                              width: 1.2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.12),
+                                blurRadius: 14,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Pulsing emerald LED indicator
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: const Color(0xFF10B981),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFF10B981).withValues(alpha: 0.7 * pulse),
+                                      blurRadius: 6,
+                                      spreadRadius: 1.5,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 7),
+                              Text(
+                                '9+ YRS • SENIOR MOBILE DEV',
+                                style: GoogleFonts.jetBrainsMono(
+                                  fontSize: isMobile ? 10.0 : 11.5,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 0.8,
+                                  color: isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -764,19 +832,19 @@ class _HeroOrbitAvatarShowcaseState extends State<_HeroOrbitAvatarShowcase>
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: isDark
-                                      ? const Color(0xFF0B0F19)
-                                      : const Color(0xFFFFFFFF),
+                                      ? const Color(0xFF0F172A).withValues(alpha: 0.95)
+                                      : const Color(0xFFFFFFFF).withValues(alpha: 0.96),
                                   border: Border.all(
                                     color: isHovered
                                         ? badge.color
-                                        : badge.color.withValues(alpha: 0.55),
-                                    width: isHovered ? 2.2 : 1.5,
+                                        : badge.color.withValues(alpha: isDark ? 0.70 : 0.45),
+                                    width: isHovered ? 2.4 : 1.6,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: badge.glowColor.withValues(alpha: isHovered ? 0.65 : 0.35),
-                                      blurRadius: isHovered ? 18 : 10,
-                                      spreadRadius: isHovered ? 2 : 0.5,
+                                      color: badge.glowColor.withValues(alpha: isHovered ? 0.75 : (isDark ? 0.35 : 0.18)),
+                                      blurRadius: isHovered ? 20 : 12,
+                                      spreadRadius: isHovered ? 2.5 : 0.5,
                                     ),
                                   ],
                                 ),
@@ -827,24 +895,26 @@ class _OrbitTrackPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
 
-    // 1. Soft glowing outer orbit baseline
+    // 1. Soft glowing outer orbit baseline with smooth neon aura
     final glowPaint = Paint()
-      ..color = const Color(0xFF38BDF8).withValues(alpha: isDark ? (0.12 * pulseValue) : 0.07)
-      ..strokeWidth = 3.0
+      ..color = (isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7))
+          .withValues(alpha: isDark ? (0.15 * pulseValue) : 0.08)
+      ..strokeWidth = 3.5
       ..style = PaintingStyle.stroke;
     canvas.drawCircle(center, orbitRadius, glowPaint);
 
-    // 2. Dynamic rotating dashed orbit ring (spins counter-clockwise for parallax)
+    // 2. Futuristic counter-rotating dashed gyro ring with gradient sweeps
     final dashPaint = Paint()
       ..color = (isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7))
-          .withValues(alpha: isDark ? (0.35 * pulseValue) : 0.25)
-      ..strokeWidth = 1.6
+          .withValues(alpha: isDark ? (0.42 * pulseValue) : 0.30)
+      ..strokeWidth = 1.8
+      ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
     const totalDashes = 48;
     const dashAngle = (2 * math.pi) / totalDashes;
-    const dashDrawAngle = dashAngle * 0.55;
-    final startOffset = -rotationAngle * 0.5;
+    const dashDrawAngle = dashAngle * 0.50;
+    final startOffset = -rotationAngle * 0.6;
 
     for (int i = 0; i < totalDashes; i++) {
       final startAngle = startOffset + i * dashAngle;
@@ -857,23 +927,40 @@ class _OrbitTrackPainter extends CustomPainter {
       );
     }
 
-    // 3. Inner pulsing violet orbit ring
+    // 3. Counter-rotating inner technical orbital track
+    final innerRadius = orbitRadius - 26;
     final innerPaint = Paint()
       ..color = (isDark ? const Color(0xFFA855F7) : const Color(0xFF7C3AED))
-          .withValues(alpha: isDark ? (0.16 * pulseValue) : 0.09)
-      ..strokeWidth = 1.0
+          .withValues(alpha: isDark ? (0.22 * pulseValue) : 0.12)
+      ..strokeWidth = 1.2
       ..style = PaintingStyle.stroke;
-    canvas.drawCircle(center, orbitRadius - 28, innerPaint);
+    canvas.drawCircle(center, innerRadius, innerPaint);
 
-    // 4. Subtle radar crosshair ticks (top, bottom, left, right)
+    // 4. Orbiting energy beacon nodes that travel smoothly along the rings
+    for (int n = 0; n < 3; n++) {
+      final nodeAngle = rotationAngle * 0.8 + (n * (2 * math.pi / 3));
+      final nodePos = Offset(
+        center.dx + orbitRadius * math.cos(nodeAngle),
+        center.dy + orbitRadius * math.sin(nodeAngle),
+      );
+      final nodePaint = Paint()
+        ..color = (n == 0
+            ? const Color(0xFF38BDF8)
+            : (n == 1 ? const Color(0xFFA855F7) : const Color(0xFF10B981)))
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(nodePos, 2.8, nodePaint);
+    }
+
+    // 5. Aerospace radar ticks every 30 degrees (12 technical clock coordinates)
     final tickPaint = Paint()
-      ..color = (isDark ? Colors.white : Colors.black).withValues(alpha: isDark ? 0.18 : 0.12)
-      ..strokeWidth = 1.5
+      ..color = (isDark ? Colors.white : Colors.black).withValues(alpha: isDark ? 0.25 : 0.15)
+      ..strokeWidth = 1.4
       ..style = PaintingStyle.stroke;
 
-    const tickLength = 5.0;
-    for (int i = 0; i < 4; i++) {
-      final angle = (i * math.pi / 2) + (rotationAngle * 0.2);
+    for (int i = 0; i < 12; i++) {
+      final angle = (i * math.pi / 6) + (rotationAngle * 0.15);
+      final isMajor = i % 3 == 0;
+      final tickLength = isMajor ? 6.0 : 3.5;
       final p1 = Offset(
         center.dx + (orbitRadius - tickLength) * math.cos(angle),
         center.dy + (orbitRadius - tickLength) * math.sin(angle),

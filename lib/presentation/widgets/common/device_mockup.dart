@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -262,43 +261,149 @@ class _ScreenshotViewer extends StatelessWidget {
     required this.showHeaderBar,
   });
 
+  void _openFullscreen(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black87,
+      builder: (ctx) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              InteractiveViewer(
+                maxScale: 4.0,
+                minScale: 0.8,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    assetPath,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.75),
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(color: Colors.white24, width: 0.8),
+                      ),
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(ctx).pop(),
+                      icon: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.75),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white24, width: 0.8),
+                        ),
+                        child: const Icon(Icons.close_rounded, color: Colors.white, size: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: showHeaderBar ? 28 : 0,
-        bottom: 14,
-      ),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Blurred background fill
-          Image.asset(
-            assetPath,
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
-            errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+    return GestureDetector(
+      onTap: () => _openFullscreen(context),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.zoomIn,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: showHeaderBar ? 26 : 0,
+            bottom: 8,
           ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: Container(
-              color: Colors.black.withValues(alpha: 0.4),
-            ),
-          ),
-          // Crisp center image
-          Center(
-            child: Image.asset(
-              assetPath,
-              fit: BoxFit.contain,
-              alignment: Alignment.topCenter,
-              errorBuilder: (context, error, stackTrace) => _ModernFallbackScreen(
-                title: title,
-                icon: fallbackIcon,
-                glowColor: glowColor,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Edge-to-edge top-aligned crisp app screenshot
+              Image.asset(
+                assetPath,
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                errorBuilder: (context, error, stackTrace) => _ModernFallbackScreen(
+                  title: title,
+                  icon: fallbackIcon,
+                  glowColor: glowColor,
+                ),
               ),
-            ),
+              // Subtle bottom gradient shadow for depth
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 48,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.45),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // Tap to inspect badge pill
+              Positioned(
+                bottom: 10,
+                right: 10,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.72),
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.22), width: 0.6),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.zoom_in_rounded, size: 12, color: Colors.white),
+                      SizedBox(width: 4),
+                      Text(
+                        'Tap to zoom',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
