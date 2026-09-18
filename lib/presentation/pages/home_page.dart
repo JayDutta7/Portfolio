@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/config/app_environment.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/services/firebase_presence_service.dart';
 import '../../core/utils/distribution_helper.dart';
@@ -8,6 +9,7 @@ import '../../core/utils/resume_download/resume_download.dart';
 import '../viewmodels/locale_viewmodel.dart';
 import '../viewmodels/profile_viewmodel.dart';
 import '../viewmodels/theme_viewmodel.dart';
+import '../widgets/common/environment_badge.dart';
 import '../widgets/common/mesh_background.dart';
 import '../widgets/common/nav_bar.dart';
 import '../widgets/common/voice_assistant_sheet.dart';
@@ -256,6 +258,10 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
             ),
           ),
+
+          // Floating environment badge for DEV / UAT builds
+          if (!AppEnvironment.isProd)
+            const EnvironmentBadge(),
 
           // Starting Loading Animation (Fade In -> Fade Out)
           if (!_isStartupLoadingDone)

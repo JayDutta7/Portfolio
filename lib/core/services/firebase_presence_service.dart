@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
+import '../config/app_environment.dart';
 import '../config/firebase_config.dart';
 import '../utils/visitor_counter/visitor_counter.dart';
 
@@ -25,6 +26,8 @@ class FirebasePresenceService {
   bool _sessionVisitorIncremented = false;
   String? _sessionId;
   FirebaseDatabase? _database;
+
+  String get _dbPrefix => AppEnvironment.current.dbPrefix;
 
   int get currentTotal => _currentTotal;
   int get currentOnline => _currentOnline;
@@ -72,7 +75,7 @@ class FirebasePresenceService {
 
       // 1. Immediately fetch current total from Firebase RTDB (no websocket wait)
       try {
-        final totalRef = _database!.ref('portfolio/total_visitors');
+        final totalRef = _database!.ref('$_dbPrefix/total_visitors');
         final snap = await totalRef.get();
         if (snap.exists) {
           final val = (snap.value as num?)?.toInt();
@@ -91,7 +94,7 @@ class FirebasePresenceService {
         final isConnected = (event.snapshot.value as bool?) ?? false;
         debugPrint('[FirebasePresence] Connection state: $isConnected');
         if (isConnected && _sessionId != null) {
-          final userRef = _database!.ref('portfolio/online_users/$_sessionId');
+          final userRef = _database!.ref('$_dbPrefix/online_users/$_sessionId');
 
           // When connection drops (tab closed or network disconnect), remove node
           await userRef.onDisconnect().remove();
@@ -105,7 +108,7 @@ class FirebasePresenceService {
           // Atomically increment total visitors count once per browser session
           if (!_sessionVisitorIncremented) {
             _sessionVisitorIncremented = true;
-            final totalRef = _database!.ref('portfolio/total_visitors');
+            final totalRef = _database!.ref('$_dbPrefix/total_visitors');
             await totalRef.runTransaction((mutableData) {
               final current = (mutableData as num?)?.toInt() ?? _currentTotal;
               return Transaction.success(current + 1);
@@ -117,7 +120,7 @@ class FirebasePresenceService {
       });
 
       // 3. Real-time stream of online users count
-      _database!.ref('portfolio/online_users').onValue.listen((event) {
+      _database!.ref('$_dbPrefix/online_users').onValue.listen((event) {
         final count = event.snapshot.children.length;
         debugPrint('[FirebasePresence] Live online users count: $count');
         _currentOnline = count > 0 ? count : 1;
@@ -127,7 +130,7 @@ class FirebasePresenceService {
       });
 
       // 4. Real-time stream of global total visitors
-      _database!.ref('portfolio/total_visitors').onValue.listen((event) {
+      _database!.ref('$_dbPrefix/total_visitors').onValue.listen((event) {
         final val = (event.snapshot.value as num?)?.toInt();
         debugPrint('[FirebasePresence] Live total visitors: $val');
         if (val != null && val > 0) {
@@ -147,7 +150,7 @@ class FirebasePresenceService {
   Future<int> incrementManually() async {
     if (isFirebaseLive) {
       try {
-        final totalRef = _database!.ref('portfolio/total_visitors');
+        final totalRef = _database!.ref('$_dbPrefix/total_visitors');
         final result = await totalRef.runTransaction((mutableData) {
           final current = (mutableData as num?)?.toInt() ?? _currentTotal;
           return Transaction.success(current + 1);
