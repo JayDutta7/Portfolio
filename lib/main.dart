@@ -7,6 +7,7 @@ import 'presentation/viewmodels/theme_viewmodel.dart';
 import 'presentation/viewmodels/profile_viewmodel.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const ProviderScope(
       child: PortfolioApp(),
@@ -32,7 +33,7 @@ class PortfolioApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeViewModel = ref.watch(themeProvider);
-    final profile = ref.watch(profileViewModelProvider);
+    final profile = ref.watch(profileSyncProvider);
 
     return MaterialApp(
       title: profile.seoTitle,

@@ -121,7 +121,7 @@ class _VisitorCountBadgeState extends State<_VisitorCountBadge>
     with TickerProviderStateMixin {
   int _displayCount = 0;
   int _targetCount = 0;
-  int _activeOnline = 14;
+  int _activeOnline = 1;
   bool _isHovered = false;
   late final AnimationController _pulseController;
   late final Animation<double> _pulseAnimation;
@@ -145,6 +145,15 @@ class _VisitorCountBadgeState extends State<_VisitorCountBadge>
     final presenceService = FirebasePresenceService();
     presenceService.init();
 
+    // Immediately seed with real cached/live values so the badge is never blank
+    if (presenceService.currentTotal > 0) {
+      _displayCount = presenceService.currentTotal;
+      _targetCount = presenceService.currentTotal;
+    }
+    if (presenceService.currentOnline > 0) {
+      _activeOnline = presenceService.currentOnline;
+    }
+
     _totalSub = presenceService.totalVisitorsStream.listen((total) {
       if (mounted) {
         _animateToCount(total);
@@ -157,23 +166,28 @@ class _VisitorCountBadgeState extends State<_VisitorCountBadge>
       }
     });
 
-    // Periodic dynamic real-time traffic updates when Firebase is not connected
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final total = presenceService.currentTotal > 0
+            ? presenceService.currentTotal
+            : 1;
+        _animateToCount(total);
+      }
+    });
+
+    // Periodic organic presence pulse when offline
     _liveTrafficTimer = Timer.periodic(const Duration(seconds: 24), (timer) {
       if (!mounted || presenceService.isFirebaseLive) return;
       final rnd = math.Random();
       setState(() {
-        _activeOnline = 11 + rnd.nextInt(7); // Realistic 11-17 online
+        _activeOnline = 1 + rnd.nextInt(2);
       });
-      // Occasional real-time organic hit
-      if (rnd.nextDouble() < 0.4 && _targetCount > 0) {
-        _animateToCount(_targetCount + 1);
-      }
     });
   }
 
   void _animateToCount(int newTarget) {
     final startVal =
-        _targetCount == 0 ? (newTarget - 38).clamp(0, newTarget) : _displayCount;
+        _targetCount == 0 ? (newTarget > 10 ? newTarget - 5 : 0) : _displayCount;
     _targetCount = newTarget;
 
     _countController?.dispose();
@@ -245,7 +259,12 @@ class _VisitorCountBadgeState extends State<_VisitorCountBadge>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final countString = _displayCount > 0 ? _formatNumber(_displayCount) : '...';
+    final effectiveCount = _displayCount > 0
+        ? _displayCount
+        : (FirebasePresenceService().currentTotal > 0
+            ? FirebasePresenceService().currentTotal
+            : 1);
+    final countString = _formatNumber(effectiveCount);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),

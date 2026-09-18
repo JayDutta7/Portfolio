@@ -49,6 +49,11 @@ class _HomePageState extends ConsumerState<HomePage> {
     DistributionHelper.init();
     FirebasePresenceService().init();
     _scrollController.addListener(_onScroll);
+    // Warm up Firestore fetch in background immediately on startup.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final lang = ref.read(localeProvider);
+      ref.read(profileViewModelProvider(lang).future).ignore();
+    });
   }
 
   void _onScroll() {
@@ -86,7 +91,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   Future<void> _handleRefresh() async {
-    ref.invalidate(profileViewModelProvider);
+    final lang = ref.read(localeProvider);
+    ref.invalidate(profileViewModelProvider(lang));
     DistributionHelper.init();
     await Future.delayed(const Duration(milliseconds: 600));
   }
@@ -142,7 +148,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       onScrollToAbout: () => _scrollTo(_aboutKey),
       onScrollToContact: () => _scrollTo(_contactKey),
       onDownloadResume: () {
-        final profile = ref.read(profileViewModelProvider);
+        final profile = ref.read(profileSyncProvider);
         downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
       },
       onToggleTheme: () => ref.read(themeProvider.notifier).toggle(),
@@ -151,7 +157,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final profile = ref.watch(profileViewModelProvider);
+    final profile = ref.watch(profileSyncProvider);
     final currentLanguage = ref.watch(localeProvider);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;

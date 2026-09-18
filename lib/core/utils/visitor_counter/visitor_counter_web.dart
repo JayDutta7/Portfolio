@@ -2,16 +2,19 @@
 import 'dart:html' as html;
 
 int computeDynamicBaseline() {
-  final startDate = DateTime(2024, 1, 1);
-  final now = DateTime.now();
-  final days = now.difference(startDate).inDays;
-  final hour = now.hour;
-  return 3820 + (days * 3) + (hour ~/ 2);
+  const storageKey = 'portfolio_visitor_count';
+  try {
+    final stored = html.window.localStorage[storageKey];
+    if (stored != null) {
+      final parsed = int.tryParse(stored);
+      if (parsed != null && parsed > 0) return parsed;
+    }
+  } catch (_) {}
+  return 1;
 }
 
 /// Web implementation of visitor counter using browser storage & background tracker
 Future<int> getVisitorCountImpl() async {
-  final baseline = computeDynamicBaseline();
   const storageKey = 'portfolio_visitor_count';
   const sessionKey = 'portfolio_session_counted';
 
@@ -22,8 +25,7 @@ Future<int> getVisitorCountImpl() async {
     } catch (_) {}
 
     final stored = html.window.localStorage[storageKey];
-    int count = stored != null ? (int.tryParse(stored) ?? baseline) : baseline;
-    if (count < baseline) count = baseline;
+    int count = stored != null ? (int.tryParse(stored) ?? 1) : 1;
 
     final sessionLogged = html.window.sessionStorage[sessionKey];
     if (sessionLogged == null) {
@@ -34,20 +36,19 @@ Future<int> getVisitorCountImpl() async {
 
     return count;
   } catch (_) {
-    return baseline + 1;
+    return 1;
   }
 }
 
 Future<int> incrementVisitorCountImpl() async {
-  final baseline = computeDynamicBaseline();
   const storageKey = 'portfolio_visitor_count';
   try {
     final stored = html.window.localStorage[storageKey];
-    int count = stored != null ? (int.tryParse(stored) ?? baseline) : baseline;
+    int count = stored != null ? (int.tryParse(stored) ?? 1) : 1;
     count++;
     html.window.localStorage[storageKey] = count.toString();
     return count;
   } catch (_) {
-    return baseline + 1;
+    return 1;
   }
 }

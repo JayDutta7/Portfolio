@@ -11,7 +11,8 @@ class FirebaseConfig {
 
   static const String projectId = String.fromEnvironment('FIREBASE_PROJECT_ID');
   static const String messagingSenderId = String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID');
-  static const String databaseURL = String.fromEnvironment('FIREBASE_DATABASE_URL');
+  static const String _rawDatabaseURL = String.fromEnvironment('FIREBASE_DATABASE_URL');
+  static String get databaseURL => _rawDatabaseURL.replaceAll(RegExp(r'/+$'), '');
   static const String apiKey = String.fromEnvironment('FIREBASE_API_KEY');
   static const String appId = String.fromEnvironment('FIREBASE_APP_ID');
 
@@ -20,7 +21,7 @@ class FirebaseConfig {
       apiKey.isNotEmpty && projectId.isNotEmpty && databaseURL.isNotEmpty;
 
   static FirebaseOptions get options {
-    return const FirebaseOptions(
+    return FirebaseOptions(
       apiKey: apiKey,
       appId: appId,
       messagingSenderId: messagingSenderId,

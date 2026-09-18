@@ -30,7 +30,16 @@ class FirebasePresenceService {
   bool get isFirebaseLive => _database != null && FirebaseConfig.isConfigured;
 
   Future<void> init() async {
-    if (_isInitialized) return;
+    if (_isInitialized) {
+      // Re-emit latest state to any newly subscribed widgets
+      if (_currentTotal > 0) {
+        _totalVisitorsController.add(_currentTotal);
+      }
+      if (_currentOnline > 0) {
+        _activeOnlineController.add(_currentOnline);
+      }
+      return;
+    }
     _isInitialized = true;
 
     // Load initial fallback baseline immediately
@@ -74,10 +83,10 @@ class FirebasePresenceService {
             'platform': kIsWeb ? 'web' : defaultTargetPlatform.name,
           });
 
-          // Atomically increment total visitors count
+          // Atomically increment total visitors count dynamically
           final totalRef = _database!.ref('portfolio/total_visitors');
           await totalRef.runTransaction((mutableData) {
-            final current = (mutableData as num?)?.toInt() ?? fallbackBaseline;
+            final current = (mutableData as num?)?.toInt() ?? 0;
             return Transaction.success(current + 1);
           });
         }

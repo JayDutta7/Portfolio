@@ -42,7 +42,7 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
     final isDesktop = Responsive.isDesktopNavBar(context);
     final hPad = Responsive.pagePadding(context);
     final themeController = ref.watch(themeProvider);
-    final profile = ref.watch(profileViewModelProvider);
+    final profile = ref.watch(profileSyncProvider);
     final currentLanguage = ref.watch(localeProvider);
 
     return SafeArea(
