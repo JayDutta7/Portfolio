@@ -153,11 +153,11 @@ class HeroSection extends ConsumerWidget {
         final isDesktop = width > 1024;
 
         final headlineFontSize = isDesktop
-            ? 62.0
+            ? 70.0
             : (isTablet
-                ? 44.0
-                : (width < 380 ? 28.0 : 34.0));
-        final headlineLetterSpacing = isDesktop ? -2.2 : (isTablet ? -1.4 : -0.8);
+                ? 48.0
+                : (width < 380 ? 30.0 : 36.0));
+        final headlineLetterSpacing = isDesktop ? -2.4 : (isTablet ? -1.5 : -0.9);
 
         final buttonWidth = isDesktop
             ? 240.0
@@ -188,7 +188,7 @@ class HeroSection extends ConsumerWidget {
               style: GoogleFonts.plusJakartaSans(
                 fontSize: headlineFontSize,
                 fontWeight: FontWeight.w900,
-                height: 1.08,
+                height: 1.22,
                 letterSpacing: headlineLetterSpacing,
               ),
             ),

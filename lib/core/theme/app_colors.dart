@@ -30,7 +30,7 @@ class AppColors {
 
   // High Impact Gradients
   static const List<Color> primaryGradient = [Color(0xFF6366F1), Color(0xFF06B6D4)];
-  static const List<Color> heroTitleGradient = [Color(0xFFF8FAFC), Color(0xFF818CF8), Color(0xFF38BDF8)];
+  static const List<Color> heroTitleGradient = [Color(0xFFFFFFFF), Color(0xFF818CF8), Color(0xFF38BDF8)];
   static const List<Color> heroTitleGradientLight = [Color(0xFF0F172A), Color(0xFF3730A3), Color(0xFF0284C7)];
   static const List<Color> accentGradient = [Color(0xFFA855F7), Color(0xFFEC4899)];
   static const List<Color> androidGradient = [Color(0xFF3DDC84), Color(0xFF10B981)];

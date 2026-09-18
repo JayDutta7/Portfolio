@@ -75,6 +75,7 @@ class SiteFooter extends StatelessWidget {
   }
 
   Widget _buildBrandRow(ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -100,9 +101,11 @@ class SiteFooter extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           'JAYAJIT DUTTA',
-          style: theme.textTheme.labelSmall?.copyWith(
+          style: GoogleFonts.plusJakartaSans(
             fontWeight: FontWeight.w900,
             letterSpacing: 2.0,
+            fontSize: 12,
+            color: isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A),
           ),
         ),
       ],

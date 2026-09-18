@@ -23,10 +23,13 @@ class GradientText extends StatelessWidget {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ).createShader(bounds),
-      child: Text(
-        text,
-        style: (style ?? const TextStyle()).copyWith(color: Colors.white),
-        textAlign: textAlign,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 6),
+        child: Text(
+          text,
+          style: (style ?? const TextStyle()).copyWith(color: Colors.white),
+          textAlign: textAlign,
+        ),
       ),
     );
   }

@@ -495,9 +495,14 @@ class _Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final width = MediaQuery.sizeOf(context).width;
     final isVeryCompact = width < 360;
     final isCompact = width < 500;
+
+    final logoSize = isVeryCompact ? 32.0 : (isCompact ? 35.0 : 38.0);
+    final logoFontSize = isVeryCompact ? 12.5 : (isCompact ? 13.5 : 15.0);
+    final textFontSize = isVeryCompact ? 14.0 : (isCompact ? 16.0 : 18.5);
 
     return MouseRegion(
       cursor: onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
@@ -507,42 +512,57 @@ class _Logo extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 32,
-              height: 32,
+              width: logoSize,
+              height: logoSize,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(colors: AppColors.primaryGradient),
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.4),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+                    color: AppColors.primary.withValues(alpha: isDark ? 0.45 : 0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
                   'JD',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w900,
-                    fontSize: 13,
+                    fontSize: logoFontSize,
                     letterSpacing: -0.5,
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 10),
             Flexible(
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
                   'JAYAJIT DUTTA',
                   maxLines: 1,
-                  style: theme.textTheme.labelLarge?.copyWith(
+                  style: GoogleFonts.plusJakartaSans(
                     fontWeight: FontWeight.w900,
-                    letterSpacing: isVeryCompact ? 0.8 : (isCompact ? 1.2 : 2.0),
-                    fontSize: isVeryCompact ? 11.5 : (isCompact ? 12.5 : 14),
+                    letterSpacing: isVeryCompact ? 1.0 : (isCompact ? 1.4 : 2.0),
+                    fontSize: textFontSize,
+                    color: isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A),
+                    shadows: [
+                      if (isDark)
+                        Shadow(
+                          color: AppColors.flutterBlue.withValues(alpha: 0.25),
+                          blurRadius: 10,
+                          offset: const Offset(0, 1),
+                        )
+                      else
+                        const Shadow(
+                          color: Color(0x15000000),
+                          blurRadius: 4,
+                          offset: Offset(0, 1),
+                        ),
+                    ],
                   ),
                 ),
               ),
