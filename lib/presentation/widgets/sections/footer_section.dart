@@ -32,8 +32,7 @@ class SiteFooter extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _buildBrandRow(theme),
-                if (const bool.fromEnvironment('SHOW_VISITOR_BADGE', defaultValue: false))
-                  const _VisitorCountBadge(),
+                const _VisitorCountBadge(),
                 Flexible(
                   child: Text(
                     '© $year • Build with flutter (Avialable for Android , Ios , Web ,Desktop )',
@@ -53,10 +52,8 @@ class SiteFooter extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _buildBrandRow(theme),
-                if (const bool.fromEnvironment('SHOW_VISITOR_BADGE', defaultValue: false)) ...[
-                  const SizedBox(height: 16),
-                  const _VisitorCountBadge(),
-                ],
+                const SizedBox(height: 16),
+                const _VisitorCountBadge(),
                 const SizedBox(height: 16),
                 Text(
                   '© $year • Build with flutter (Avialable for Android , Ios , Web ,Desktop )',
