@@ -9,6 +9,7 @@ class VoiceAssistantSheet extends StatefulWidget {
   final VoidCallback? onScrollToArchitecture;
   final VoidCallback? onScrollToSkills;
   final VoidCallback? onScrollToExperience;
+  final VoidCallback? onScrollToEducation;
   final VoidCallback? onScrollToAbout;
   final VoidCallback? onScrollToContact;
   final VoidCallback? onDownloadResume;
@@ -20,6 +21,7 @@ class VoiceAssistantSheet extends StatefulWidget {
     this.onScrollToArchitecture,
     this.onScrollToSkills,
     this.onScrollToExperience,
+    this.onScrollToEducation,
     this.onScrollToAbout,
     this.onScrollToContact,
     this.onDownloadResume,
@@ -32,6 +34,7 @@ class VoiceAssistantSheet extends StatefulWidget {
     VoidCallback? onScrollToArchitecture,
     VoidCallback? onScrollToSkills,
     VoidCallback? onScrollToExperience,
+    VoidCallback? onScrollToEducation,
     VoidCallback? onScrollToAbout,
     VoidCallback? onScrollToContact,
     VoidCallback? onDownloadResume,
@@ -46,6 +49,7 @@ class VoiceAssistantSheet extends StatefulWidget {
         onScrollToArchitecture: onScrollToArchitecture,
         onScrollToSkills: onScrollToSkills,
         onScrollToExperience: onScrollToExperience,
+        onScrollToEducation: onScrollToEducation,
         onScrollToAbout: onScrollToAbout,
         onScrollToContact: onScrollToContact,
         onDownloadResume: onDownloadResume,
@@ -65,6 +69,7 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
 
   bool _isAvailable = false;
   bool _isListening = false;
+  bool _hasExecuted = false;
   String _words = '';
   String _statusMessage = 'Initializing Voice Assistant...';
   String _badgeText = 'READY';
@@ -92,7 +97,7 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
     try {
       final available = await _speech.initialize(
         onStatus: (status) {
-          if (!mounted) return;
+          if (!mounted || _hasExecuted) return;
           if (status == 'listening') {
             setState(() {
               _isListening = true;
@@ -109,7 +114,7 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
           }
         },
         onError: (errorNotification) {
-          if (!mounted) return;
+          if (!mounted || _hasExecuted) return;
           setState(() {
             _isListening = false;
             _badgeText = 'NOTICE';
@@ -125,7 +130,7 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
       setState(() {
         _isAvailable = available;
         if (available) {
-          _statusMessage = 'Say "Projects", "Skills", or "Download Resume"...';
+          _statusMessage = 'Say "Projects", "Education", or "Skills"...';
         } else {
           _statusMessage = 'Voice not available. Tap any quick command below:';
           _badgeText = 'TOUCH MODE';
@@ -148,25 +153,35 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
   }
 
   void _startListening() {
-    if (!_isAvailable) return;
-    _speech.listen(
-      onResult: (result) {
-        if (!mounted) return;
-        setState(() {
-          _words = result.recognizedWords;
-        });
+    if (!_isAvailable || _hasExecuted) return;
+    try {
+      _speech.listen(
+        onResult: (result) {
+          if (!mounted || _hasExecuted) return;
+          setState(() {
+            _words = result.recognizedWords;
+          });
 
-        _processVoiceCommand(result.recognizedWords, isFinal: result.finalResult);
-      },
-      listenOptions: stt.SpeechListenOptions(
-        partialResults: true,
-        cancelOnError: false,
-      ),
-    );
+          _processVoiceCommand(result.recognizedWords, isFinal: result.finalResult);
+        },
+        listenOptions: stt.SpeechListenOptions(
+          partialResults: true,
+          cancelOnError: false,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isListening = false;
+        _statusMessage = 'Tap a command below to navigate:';
+      });
+    }
   }
 
   void _stopListening() {
-    _speech.stop();
+    try {
+      _speech.stop();
+    } catch (_) {}
     if (!mounted) return;
     setState(() {
       _isListening = false;
@@ -177,118 +192,220 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
     if (_isListening) {
       _stopListening();
     } else {
+      _hasExecuted = false;
       _startListening();
     }
   }
 
   void _processVoiceCommand(String text, {bool isFinal = false}) {
+    if (_hasExecuted) return;
     final cmd = text.toLowerCase().trim();
     if (cmd.isEmpty) return;
 
+    // Remove common speech filler prefixes to support natural voice queries
+    String normalized = cmd;
+    final prefixes = [
+      'please ',
+      'can you ',
+      'could you ',
+      'navigate to ',
+      'go to ',
+      'take me to ',
+      'search for ',
+      'search ',
+      'show me ',
+      'find ',
+      'open ',
+      'scroll to ',
+      'look for ',
+    ];
+
+    bool stripped = true;
+    while (stripped) {
+      stripped = false;
+      for (final p in prefixes) {
+        if (normalized.startsWith(p)) {
+          normalized = normalized.substring(p.length).trim();
+          stripped = true;
+        }
+      }
+    }
+
+    if (normalized.isEmpty || normalized == 'search' || normalized == 'find') {
+      if (isFinal) {
+        if (!mounted) return;
+        setState(() {
+          _statusMessage = 'What would you like to search? Say a section or skill:';
+        });
+      }
+      return;
+    }
+
+    // Close / Dismiss
+    if (normalized == 'close' ||
+        normalized == 'exit' ||
+        normalized == 'cancel' ||
+        normalized == 'dismiss' ||
+        normalized == 'stop' ||
+        normalized == 'quit' ||
+        cmd == 'close' ||
+        cmd == 'stop listening') {
+      if (_hasExecuted) return;
+      _hasExecuted = true;
+      try {
+        _speech.stop();
+      } catch (_) {}
+      if (mounted && Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
+      return;
+    }
+
     // 1. Projects & Specific Case Studies
-    if (cmd.contains('project') ||
-        cmd.contains('work') ||
-        cmd.contains('case study') ||
-        cmd.contains('app') ||
-        cmd.contains('portfolio') ||
-        cmd.contains('ghareka') ||
-        cmd.contains('buildistan') ||
-        cmd.contains('pariwar') ||
-        cmd.contains('crm') ||
-        cmd.contains('sales') ||
-        cmd.contains('captain') ||
-        cmd.contains('message club') ||
-        cmd.contains('massage club') ||
-        cmd.contains('staffer') ||
-        cmd.contains('drlife') ||
-        cmd.contains('telemedicine')) {
+    if (normalized.contains('project') ||
+        normalized.contains('work') ||
+        normalized.contains('case study') ||
+        normalized.contains('portfolio') ||
+        normalized.contains('ghareka') ||
+        normalized.contains('buildistan') ||
+        normalized.contains('pariwar') ||
+        normalized.contains('crm') ||
+        normalized.contains('sales') ||
+        normalized.contains('captain') ||
+        normalized.contains('message club') ||
+        normalized.contains('massage club') ||
+        normalized.contains('staffer') ||
+        normalized.contains('drlife') ||
+        normalized.contains('telemedicine') ||
+        cmd.contains('project') ||
+        cmd.contains('case study')) {
       _executeAction('Navigating to Projects', widget.onScrollToProjects);
       return;
     }
 
     // 2. Architecture
-    if (cmd.contains('architecture') ||
-        cmd.contains('system design') ||
-        cmd.contains('clean arch') ||
-        cmd.contains('pipeline') ||
-        cmd.contains('layer')) {
+    if (normalized.contains('architecture') ||
+        normalized.contains('system design') ||
+        normalized.contains('clean arch') ||
+        normalized.contains('pipeline') ||
+        normalized.contains('layer') ||
+        cmd.contains('architecture') ||
+        cmd.contains('system design')) {
       _executeAction('Navigating to Architecture', widget.onScrollToArchitecture);
       return;
     }
 
     // 3. Skills & Technologies
-    if (cmd.contains('skill') ||
-        cmd.contains('technolog') ||
-        cmd.contains('coroutine') ||
-        cmd.contains('dagger') ||
-        cmd.contains('hilt') ||
-        cmd.contains('stack') ||
+    if (normalized.contains('skill') ||
+        normalized.contains('technolog') ||
+        normalized.contains('tech stack') ||
+        normalized.contains('coroutine') ||
+        normalized.contains('dagger') ||
+        normalized.contains('hilt') ||
+        normalized.contains('flutter') ||
+        normalized.contains('kotlin') ||
+        normalized.contains('android') ||
+        normalized.contains('compose') ||
+        normalized.contains('riverpod') ||
+        normalized.contains('bloc') ||
+        cmd.contains('skill') ||
         cmd.contains('flutter') ||
         cmd.contains('kotlin') ||
-        cmd.contains('android') ||
-        cmd.contains('compose') ||
-        cmd.contains('riverpod') ||
-        cmd.contains('bloc')) {
+        cmd.contains('android')) {
       _executeAction('Navigating to Skills', widget.onScrollToSkills);
       return;
     }
 
     // 4. Experience
-    if (cmd.contains('experience') ||
+    if (normalized.contains('experience') ||
+        normalized.contains('career') ||
+        normalized.contains('timeline') ||
+        normalized.contains('job') ||
+        normalized.contains('shyam steel') ||
+        normalized.contains('compan') ||
+        cmd.contains('experience') ||
         cmd.contains('career') ||
-        cmd.contains('timeline') ||
-        cmd.contains('job') ||
-        cmd.contains('shyam steel') ||
-        cmd.contains('compan')) {
+        cmd.contains('timeline')) {
       _executeAction('Navigating to Experience', widget.onScrollToExperience);
       return;
     }
 
-    // 5. About
-    if (cmd.contains('about') ||
-        cmd.contains('bio') ||
-        cmd.contains('profile') ||
-        cmd.contains('who is') ||
-        cmd.contains('summary')) {
+    // 5. Education & Academics
+    if (normalized.contains('education') ||
+        normalized.contains('academic') ||
+        normalized.contains('degree') ||
+        normalized.contains('college') ||
+        normalized.contains('school') ||
+        normalized.contains('university') ||
+        normalized.contains('mca') ||
+        normalized.contains('bca') ||
+        normalized.contains('study') ||
+        normalized.contains('studies') ||
+        cmd.contains('education') ||
+        cmd.contains('academic') ||
+        cmd.contains('degree') ||
+        cmd.contains('school')) {
+      _executeAction('Navigating to Education', widget.onScrollToEducation);
+      return;
+    }
+
+    // 6. About
+    if (normalized.contains('about') ||
+        normalized.contains('bio') ||
+        normalized.contains('profile') ||
+        normalized.contains('who is') ||
+        normalized.contains('summary') ||
+        cmd.contains('about') ||
+        cmd.contains('who is')) {
       _executeAction('Navigating to About', widget.onScrollToAbout);
       return;
     }
 
-    // 6. Contact
-    if (cmd.contains('contact') ||
+    // 7. Contact
+    if (normalized.contains('contact') ||
+        normalized.contains('hire') ||
+        normalized.contains('email') ||
+        normalized.contains('call') ||
+        normalized.contains('touch') ||
+        normalized.contains('reach') ||
+        normalized.contains('phone') ||
+        normalized.contains('github') ||
+        normalized.contains('linkedin') ||
+        cmd.contains('contact') ||
         cmd.contains('hire') ||
-        cmd.contains('email') ||
-        cmd.contains('call') ||
-        cmd.contains('touch') ||
-        cmd.contains('reach')) {
+        cmd.contains('email')) {
       _executeAction('Navigating to Contact', widget.onScrollToContact);
       return;
     }
 
-    // 7. Resume / CV
-    if (cmd.contains('resume') || cmd.contains('cv') || cmd.contains('download')) {
+    // 8. Resume / CV
+    if (normalized.contains('resume') ||
+        normalized.contains('cv') ||
+        normalized.contains('curriculum vitae') ||
+        normalized.contains('download') ||
+        cmd.contains('resume') ||
+        cmd.contains('cv')) {
       _executeAction('Opening Resume', widget.onDownloadResume);
       return;
     }
 
-    // 8. Theme
-    if (cmd.contains('dark') ||
-        cmd.contains('light') ||
-        cmd.contains('night') ||
-        cmd.contains('theme')) {
+    // 9. Theme
+    if (normalized.contains('dark') ||
+        normalized.contains('light') ||
+        normalized.contains('night') ||
+        normalized.contains('theme') ||
+        normalized.contains('mode') ||
+        cmd.contains('theme') ||
+        cmd.contains('mode')) {
       _executeAction('Toggling Theme', widget.onToggleTheme);
-      return;
-    }
-
-    // 9. Close
-    if (cmd.contains('close') || cmd.contains('stop') || cmd.contains('dismiss') || cmd.contains('cancel')) {
-      Navigator.of(context).pop();
       return;
     }
 
     // 10. Fallback when voice search produces no match (avoid blank screens)
     if (isFinal) {
-      _speech.stop();
+      try {
+        _speech.stop();
+      } catch (_) {}
       if (!mounted) return;
       setState(() {
         _isListening = false;
@@ -301,16 +418,25 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
   }
 
   void _executeAction(String message, VoidCallback? action) {
-    _speech.stop();
-    setState(() {
-      _statusMessage = message;
-      _badgeText = 'EXECUTED';
-      _badgeColor = AppColors.emerald;
-    });
+    if (_hasExecuted) return;
+    _hasExecuted = true;
+    try {
+      _speech.stop();
+    } catch (_) {}
 
-    Future.delayed(const Duration(milliseconds: 500), () {
+    if (mounted) {
+      setState(() {
+        _statusMessage = message;
+        _badgeText = 'EXECUTED';
+        _badgeColor = AppColors.emerald;
+      });
+    }
+
+    Future.delayed(const Duration(milliseconds: 350), () {
       if (!mounted) return;
-      Navigator.of(context).pop();
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
       action?.call();
     });
   }
@@ -499,7 +625,16 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
                     IconButton(
                       icon: const Icon(Icons.close, size: 20),
                       color: isDark ? Colors.white60 : Colors.black54,
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () {
+                        if (_hasExecuted) return;
+                        _hasExecuted = true;
+                        try {
+                          _speech.stop();
+                        } catch (_) {}
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        }
+                      },
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
@@ -556,6 +691,9 @@ class _VoiceAssistantSheetState extends State<VoiceAssistantSheet>
                       }, isDark),
                       _buildQuickChip('Experience', () {
                         _executeAction('Opening Experience', widget.onScrollToExperience);
+                      }, isDark),
+                      _buildQuickChip('Education', () {
+                        _executeAction('Opening Education', widget.onScrollToEducation);
                       }, isDark),
                       _buildQuickChip('About', () {
                         _executeAction('Opening About', widget.onScrollToAbout);

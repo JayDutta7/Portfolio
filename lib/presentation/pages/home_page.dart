@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/config/app_environment.dart';
@@ -44,6 +46,13 @@ class _HomePageState extends ConsumerState<HomePage> {
   final _contactKey = GlobalKey();
   bool _isStartupLoadingDone = false;
   bool _isAtBottom = false;
+  bool _showScrollNav = false;
+  bool _canScrollUp = false;
+  bool _canScrollDown = false;
+  ScrollDirection _scrollDirection = ScrollDirection.idle;
+  double _lastScrollOffset = 0.0;
+  Timer? _hideScrollNavTimer;
+  bool _isHoveringScrollNav = false;
 
   @override
   void initState() {
@@ -63,34 +72,72 @@ class _HomePageState extends ConsumerState<HomePage> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.offset;
     final atBottom = maxScroll > 0 && currentScroll >= (maxScroll - 160);
-    if (atBottom != _isAtBottom) {
-      setState(() => _isAtBottom = atBottom);
+    final canUp = currentScroll > 100;
+    final canDown = maxScroll > 0 && currentScroll < (maxScroll - 100);
+
+    ScrollDirection currentDir = _scrollDirection;
+    if (currentScroll > _lastScrollOffset + 3) {
+      currentDir = ScrollDirection.reverse; // scrolling down
+    } else if (currentScroll < _lastScrollOffset - 3) {
+      currentDir = ScrollDirection.forward; // scrolling up
     }
+    _lastScrollOffset = currentScroll;
+
+    final shouldShow = canUp || canDown;
+    if (_showScrollNav != shouldShow ||
+        _canScrollUp != canUp ||
+        _canScrollDown != canDown ||
+        _isAtBottom != atBottom ||
+        _scrollDirection != currentDir) {
+      setState(() {
+        _showScrollNav = shouldShow;
+        _canScrollUp = canUp;
+        _canScrollDown = canDown;
+        _isAtBottom = atBottom;
+        _scrollDirection = currentDir;
+      });
+    }
+
+    _scheduleHideScrollNav();
+  }
+
+  void _scheduleHideScrollNav() {
+    _hideScrollNavTimer?.cancel();
+    _hideScrollNavTimer = Timer(const Duration(milliseconds: 2600), () {
+      if (mounted && !_isHoveringScrollNav) {
+        setState(() => _showScrollNav = false);
+      }
+    });
   }
 
   @override
   void dispose() {
+    _hideScrollNavTimer?.cancel();
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _toggleScrollDirection() {
+  void _scrollToTop() {
     if (!_scrollController.hasClients) return;
-    if (_isAtBottom) {
-      _scrollController.animateTo(
-        0,
-        duration: const Duration(milliseconds: 750),
-        curve: Curves.easeInOutCubic,
-      );
-    } else {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 950),
-        curve: Curves.easeInOutCubic,
-      );
-    }
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 750),
+      curve: Curves.easeInOutCubic,
+    );
+    _scheduleHideScrollNav();
   }
+
+  void _scrollToBottom() {
+    if (!_scrollController.hasClients) return;
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 950),
+      curve: Curves.easeInOutCubic,
+    );
+    _scheduleHideScrollNav();
+  }
+
 
   Future<void> _handleRefresh() async {
     final lang = ref.read(localeProvider);
@@ -147,6 +194,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       onScrollToArchitecture: () => _scrollTo(_architectureKey),
       onScrollToSkills: () => _scrollTo(_skillsKey),
       onScrollToExperience: () => _scrollTo(_experienceKey),
+      onScrollToEducation: () => _scrollTo(_educationKey),
       onScrollToAbout: () => _scrollTo(_aboutKey),
       onScrollToContact: () => _scrollTo(_contactKey),
       onDownloadResume: () {
@@ -154,6 +202,126 @@ class _HomePageState extends ConsumerState<HomePage> {
         downloadResume(profile.resumeAssetPath, profile.resumeDownloadFileName);
       },
       onToggleTheme: () => ref.read(themeProvider.notifier).toggle(),
+    );
+  }
+
+  Widget _buildScrollNav(bool isDark) {
+    if (!_canScrollUp && !_canScrollDown) return const SizedBox.shrink();
+
+    final isScrollingDown = _scrollDirection == ScrollDirection.reverse;
+    final isScrollingUp = _scrollDirection == ScrollDirection.forward;
+
+    final activeColor = isDark ? const Color(0xFF38BDF8) : AppColors.primary;
+    final inactiveColor = isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B);
+    final bgColor = isDark
+        ? const Color(0xFF1E293B).withValues(alpha: 0.92)
+        : Colors.white.withValues(alpha: 0.95);
+    final borderColor = isDark
+        ? const Color(0xFF38BDF8).withValues(alpha: 0.35)
+        : AppColors.primary.withValues(alpha: 0.25);
+
+    return MouseRegion(
+      onEnter: (_) {
+        _isHoveringScrollNav = true;
+        _hideScrollNavTimer?.cancel();
+      },
+      onExit: (_) {
+        _isHoveringScrollNav = false;
+        _scheduleHideScrollNav();
+      },
+      child: AnimatedSlide(
+        offset: _showScrollNav ? Offset.zero : const Offset(0.35, 0),
+        duration: const Duration(milliseconds: 280),
+        curve: Curves.easeOutCubic,
+        child: AnimatedOpacity(
+          opacity: _showScrollNav ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 240),
+          curve: Curves.easeInOut,
+          child: IgnorePointer(
+            ignoring: !_showScrollNav,
+            child: Container(
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: borderColor, width: 1.4),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.12),
+                    blurRadius: 14,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_canScrollUp) ...[
+                    _buildScrollNavButton(
+                      icon: Icons.keyboard_arrow_up_rounded,
+                      tooltip: 'Scroll to top',
+                      isActive: isScrollingUp || _isAtBottom,
+                      activeColor: activeColor,
+                      inactiveColor: inactiveColor,
+                      onTap: _scrollToTop,
+                    ),
+                  ],
+                  if (_canScrollUp && _canScrollDown)
+                    Container(
+                      width: 1,
+                      height: 20,
+                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                      color: isDark ? Colors.white12 : Colors.black12,
+                    ),
+                  if (_canScrollDown) ...[
+                    _buildScrollNavButton(
+                      icon: Icons.keyboard_arrow_down_rounded,
+                      tooltip: 'Scroll to bottom',
+                      isActive: isScrollingDown && !_isAtBottom,
+                      activeColor: activeColor,
+                      inactiveColor: inactiveColor,
+                      onTap: _scrollToBottom,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScrollNavButton({
+    required IconData icon,
+    required String tooltip,
+    required bool isActive,
+    required Color activeColor,
+    required Color inactiveColor,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: Tooltip(
+        message: tooltip,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isActive ? activeColor.withValues(alpha: 0.14) : Colors.transparent,
+            ),
+            child: Icon(
+              icon,
+              color: isActive ? activeColor : inactiveColor,
+              size: 24,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -175,32 +343,8 @@ class _HomePageState extends ConsumerState<HomePage> {
       floatingActionButton: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          FloatingActionButton(
-            heroTag: 'fab_scroll_direction',
-            onPressed: _toggleScrollDirection,
-            backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
-            elevation: 6,
-            shape: CircleBorder(
-              side: BorderSide(
-                color: isDark
-                    ? const Color(0xFF38BDF8).withValues(alpha: 0.5)
-                    : AppColors.primary.withValues(alpha: 0.35),
-                width: 1.5,
-              ),
-            ),
-            tooltip: _isAtBottom ? 'Scroll to top' : 'Scroll down',
-            child: AnimatedRotation(
-              turns: _isAtBottom ? 0.5 : 0.0,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOutBack,
-              child: Icon(
-                Icons.arrow_downward_rounded,
-                color: isDark ? const Color(0xFF38BDF8) : AppColors.primary,
-                size: 22,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
+          _buildScrollNav(isDark),
+          const SizedBox(width: 10),
           FloatingActionButton(
             heroTag: 'fab_voice_assistant',
             onPressed: _openVoiceAssistant,

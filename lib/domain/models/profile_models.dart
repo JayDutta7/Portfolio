@@ -197,6 +197,9 @@ class EducationItem {
   final String period;
   final String? detail; // e.g. CGPA
   final bool isCertification;
+  final String? degreeType; // e.g. Post-Graduation, Undergraduate, Higher Secondary, Secondary
+  final String? location; // e.g. Kolkata, West Bengal
+  final List<String> coursework; // e.g. key subjects or focus areas
 
   const EducationItem({
     required this.title,
@@ -204,6 +207,9 @@ class EducationItem {
     required this.period,
     this.detail,
     this.isCertification = false,
+    this.degreeType,
+    this.location,
+    this.coursework = const [],
   });
 
   factory EducationItem.fromJson(Map<String, dynamic> json) => EducationItem(
@@ -212,6 +218,12 @@ class EducationItem {
         period: json['period'] as String? ?? '',
         detail: json['detail'] as String?,
         isCertification: json['isCertification'] as bool? ?? false,
+        degreeType: json['degreeType'] as String?,
+        location: json['location'] as String?,
+        coursework: (json['coursework'] as List<dynamic>?)
+                ?.map((e) => e as String)
+                .toList() ??
+            const [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -220,6 +232,9 @@ class EducationItem {
         'period': period,
         if (detail != null) 'detail': detail,
         'isCertification': isCertification,
+        if (degreeType != null) 'degreeType': degreeType,
+        if (location != null) 'location': location,
+        if (coursework.isNotEmpty) 'coursework': coursework,
       };
 }
 

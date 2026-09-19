@@ -22,4 +22,16 @@ class LaunchHelper {
     );
     await launchUrl(uri);
   }
+
+  static Future<void> makeCall(String phone) async {
+    final clean = phone.replaceAll(RegExp(r'[^0-9+]'), '');
+    final uri = Uri(scheme: 'tel', path: clean);
+    await launchUrl(uri);
+  }
+
+  static Future<void> openWhatsApp(String phone, {String? text}) async {
+    final clean = phone.replaceAll(RegExp(r'[^0-9]'), '');
+    final url = 'https://wa.me/$clean${text != null ? '?text=${Uri.encodeComponent(text)}' : ''}';
+    await openUrl(url);
+  }
 }
