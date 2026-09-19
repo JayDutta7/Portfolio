@@ -205,10 +205,24 @@ class _EyeCatchingMeshPainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), vignettePaint);
   }
 
-  /// Eye-Catching Light Mode: Mirrors dark theme structure — 4-Orb Aurora Nebula,
-  /// Cyber Matrix Grid, Crosshairs & Depth Vignette — with vibrant light-adapted palette.
+  /// Eye-Catching Light Mode: Warm Sky Gradient Canvas, Vibrant 4-Orb Aurora Nebula,
+  /// Premium Indigo Cyber Matrix Grid, Crosshairs & Warm Lavender Vignette.
   void _paintLightMode(Canvas canvas, Size size) {
-    // 1. Multi-Orb Aurora Nebula Glows (same positions as dark, vibrant light palette)
+    // 0. Sky Gradient Base Layer — Warm vertical gradient that gives depth & directionality
+    final skyGradientPaint = Paint()
+      ..shader = ui.Gradient.linear(
+        Offset.zero,
+        Offset(0, size.height),
+        [
+          const Color(0xFFE0F2FE), // Sky-blue top
+          const Color(0xFFF0F4FF), // Warm white mid
+          const Color(0xFFEDE9FE), // Gentle lavender bottom
+        ],
+        const [0.0, 0.45, 1.0],
+      );
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), skyGradientPaint);
+
+    // 1. Multi-Orb Aurora Nebula Glows (boosted alpha for vibrant pastel washes)
     // Orb 1: Cyan & Electric Blue glow behind Hero Orbit Avatar
     final orb1Center = Offset(size.width * 0.76, 220);
     final orb1Radius = (size.width * 0.42).clamp(360.0, 560.0);
@@ -217,8 +231,8 @@ class _EyeCatchingMeshPainter extends CustomPainter {
         orb1Center,
         orb1Radius,
         [
-          const Color(0xFF0EA5E9).withValues(alpha: 0.22),
-          const Color(0xFF38BDF8).withValues(alpha: 0.12),
+          const Color(0xFF0EA5E9).withValues(alpha: 0.32),
+          const Color(0xFF38BDF8).withValues(alpha: 0.18),
           Colors.transparent,
         ],
         const [0.0, 0.45, 1.0],
@@ -233,8 +247,8 @@ class _EyeCatchingMeshPainter extends CustomPainter {
         orb2Center,
         orb2Radius,
         [
-          const Color(0xFF818CF8).withValues(alpha: 0.22),
-          const Color(0xFFA78BFA).withValues(alpha: 0.12),
+          const Color(0xFF818CF8).withValues(alpha: 0.30),
+          const Color(0xFFA78BFA).withValues(alpha: 0.18),
           Colors.transparent,
         ],
         const [0.0, 0.50, 1.0],
@@ -249,8 +263,8 @@ class _EyeCatchingMeshPainter extends CustomPainter {
         orb3Center,
         orb3Radius,
         [
-          const Color(0xFFF472B6).withValues(alpha: 0.16),
-          const Color(0xFFFB7185).withValues(alpha: 0.08),
+          const Color(0xFFF472B6).withValues(alpha: 0.26),
+          const Color(0xFFFB7185).withValues(alpha: 0.14),
           Colors.transparent,
         ],
         const [0.0, 0.48, 1.0],
@@ -265,15 +279,15 @@ class _EyeCatchingMeshPainter extends CustomPainter {
         orb4Center,
         orb4Radius,
         [
-          const Color(0xFF34D399).withValues(alpha: 0.18),
-          const Color(0xFF06B6D4).withValues(alpha: 0.10),
+          const Color(0xFF34D399).withValues(alpha: 0.28),
+          const Color(0xFF06B6D4).withValues(alpha: 0.16),
           Colors.transparent,
         ],
         const [0.0, 0.45, 1.0],
       );
     canvas.drawCircle(orb4Center, orb4Radius, orb4Paint);
 
-    // 2. Batched Cyber Matrix Grid (same structure as dark, light-adapted slate/indigo palette)
+    // 2. Batched Cyber Matrix Grid (richer indigo tones for light mode visibility)
     const double spacing = 48.0;
     final int numCols = (size.width / spacing).ceil();
     final int numRows = (size.height / spacing).ceil();
@@ -324,34 +338,34 @@ class _EyeCatchingMeshPainter extends CustomPainter {
       }
     }
 
-    // Batched Line Draws (same 3-call pattern as dark mode)
+    // Batched Line Draws (same 3-call pattern as dark mode, richer indigo palette)
     final regularPaint = Paint()
-      ..color = const Color(0xFF94A3B8).withValues(alpha: 0.10)
+      ..color = const Color(0xFF818CF8).withValues(alpha: 0.13)
       ..strokeWidth = 0.6
       ..style = PaintingStyle.stroke;
     canvas.drawPath(regularLinesPath, regularPaint);
 
     final majorPaint = Paint()
-      ..color = const Color(0xFF6366F1).withValues(alpha: 0.14)
+      ..color = const Color(0xFF6366F1).withValues(alpha: 0.20)
       ..strokeWidth = 0.8
       ..style = PaintingStyle.stroke;
     canvas.drawPath(majorLinesPath, majorPaint);
 
     final crosshairPaint = Paint()
-      ..color = const Color(0xFF4F46E5).withValues(alpha: 0.32)
+      ..color = const Color(0xFF4F46E5).withValues(alpha: 0.40)
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
     canvas.drawPath(crosshairsPath, crosshairPaint);
 
     if (starPoints.isNotEmpty) {
       final dotPaint = Paint()
-        ..color = const Color(0xFF6366F1).withValues(alpha: 0.20)
+        ..color = const Color(0xFF6366F1).withValues(alpha: 0.28)
         ..strokeWidth = 2.0
         ..strokeCap = StrokeCap.round;
       canvas.drawPoints(ui.PointMode.points, starPoints, dotPaint);
     }
 
-    // 3. Cinematic Vignette Depth Falloff (soft perimeter fade — light counterpart)
+    // 3. Cinematic Vignette Depth Falloff (warm lavender-blue perimeter fade)
     final vignetteCenter = Offset(size.width * 0.5, size.height * 0.4);
     final vignetteRadius = (size.width * 0.75).clamp(500.0, 1400.0);
     final vignettePaint = Paint()
@@ -360,7 +374,7 @@ class _EyeCatchingMeshPainter extends CustomPainter {
         vignetteRadius,
         [
           Colors.transparent,
-          const Color(0xFFCBD5E1).withValues(alpha: 0.30),
+          const Color(0xFFC7D2FE).withValues(alpha: 0.30),
         ],
         const [0.55, 1.0],
       );

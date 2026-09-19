@@ -242,7 +242,7 @@ class ProfileData {
     // 6. Nat IT Solved - Captain Logistics
     Project(
       title: 'Captain Logistics',
-      period: '2022 – 2024',
+      period: '2017 – 2018',
       company: 'Nat IT Solved Pvt. Ltd.',
       category: ProjectCategory.clientSolutions,
       stackSummary: 'Native Android · Kotlin · MVVM · LiveData · WebSockets · Google Maps SDK · Foreground Telemetry',

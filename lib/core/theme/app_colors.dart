@@ -12,11 +12,11 @@ class AppColors {
   static const Color emerald = Color(0xFF10B981); // Emerald Success
   static const Color amber = Color(0xFFF59E0B); // Warm Gold
 
-  // Light Theme Surfaces (Clean Apple-Style Porcelain)
-  static const Color lightBackground = Color(0xFFF6F8FB);
-  static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightSurfaceAlt = Color(0xFFEEF2F6);
-  static const Color lightBorder = Color(0xFFE2E8F0);
+  // Light Theme Surfaces (Warm Sky-Tinted Premium)
+  static const Color lightBackground = Color(0xFFF0F4FF);
+  static const Color lightSurface = Color(0xFFFAFBFF);
+  static const Color lightSurfaceAlt = Color(0xFFE8EDFF);
+  static const Color lightBorder = Color(0xFFD4DEFF);
   static const Color lightTextPrimary = Color(0xFF0F172A);
   static const Color lightTextSecondary = Color(0xFF475569);
 

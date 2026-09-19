@@ -136,7 +136,7 @@
     'captain_logistics': {
       id: 'captain_logistics',
       title: 'Captain Logistics',
-      period: '2022 – 2024',
+      period: '2017 – 2018',
       company: 'Nat IT Solved Pvt. Ltd.',
       category: 'clientSolutions',
       categoryLabel: 'Fleet Telemetry · WebSockets',
