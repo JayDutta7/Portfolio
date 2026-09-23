@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
@@ -272,11 +273,30 @@ class _ScreenshotViewer extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
+              // Ambient soft glow behind dialog
+              Positioned.fill(
+                child: Center(
+                  child: Container(
+                    width: 480,
+                    height: 480,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: glowColor.withValues(alpha: 0.25),
+                          blurRadius: 90,
+                          spreadRadius: 30,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               InteractiveViewer(
                 maxScale: 4.0,
                 minScale: 0.8,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(16),
                   child: Image.asset(
                     assetPath,
                     fit: BoxFit.contain,
@@ -334,75 +354,126 @@ class _ScreenshotViewer extends StatelessWidget {
       onTap: () => _openFullscreen(context),
       child: MouseRegion(
         cursor: SystemMouseCursors.zoomIn,
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: showHeaderBar ? 26 : 0,
-            bottom: 8,
-          ),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // Edge-to-edge top-aligned crisp app screenshot
-              Image.asset(
-                assetPath,
-                fit: BoxFit.cover,
-                alignment: Alignment.topCenter,
-                errorBuilder: (context, error, stackTrace) => _ModernFallbackScreen(
-                  title: title,
-                  icon: fallbackIcon,
-                  glowColor: glowColor,
-                ),
-              ),
-              // Subtle bottom gradient shadow for depth
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: 48,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.45),
-                      ],
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // 1. Ambient Picture Color Shade Backdrop:
+            // Magnifies and blurs the picture so any space outside the fitted screenshot
+            // radiates the natural color shade and tone of the picture itself.
+            Positioned.fill(
+              child: ClipRect(
+                child: Transform.scale(
+                  scale: 1.25,
+                  child: ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
+                    child: Image.asset(
+                      assetPath,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: glowColor.withValues(alpha: 0.12),
+                      ),
                     ),
                   ),
                 ),
               ),
-              // Tap to inspect badge pill
-              Positioned(
-                bottom: 10,
-                right: 10,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.72),
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.22), width: 0.6),
-                  ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.zoom_in_rounded, size: 12, color: Colors.white),
-                      SizedBox(width: 4),
-                      Text(
-                        'Tap to zoom',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
+            ),
+
+            // 2. Picture Color Shade & Tone Overlay:
+            // Softens the blurred backdrop with project glow tint and contrast gradients
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.50),
+                      glowColor.withValues(alpha: 0.18),
+                      Colors.black.withValues(alpha: 0.65),
                     ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+
+            // 3. Resized Foreground Screenshot:
+            // Fits cleanly (BoxFit.contain) without any cropping, framed with subtle
+            // rounded corners and elevation depth.
+            Positioned.fill(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: showHeaderBar ? 34 : 12,
+                  bottom: 22,
+                  left: 6,
+                  right: 6,
+                ),
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.16),
+                        width: 0.8,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.55),
+                          blurRadius: 18,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(9.2),
+                      child: Image.asset(
+                        assetPath,
+                        fit: BoxFit.contain,
+                        alignment: Alignment.center,
+                        errorBuilder: (context, error, stackTrace) => _ModernFallbackScreen(
+                          title: title,
+                          icon: fallbackIcon,
+                          glowColor: glowColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // 4. Tap to zoom pill badge
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.76),
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.22),
+                    width: 0.6,
+                  ),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.zoom_in_rounded, size: 12, color: Colors.white),
+                    SizedBox(width: 4),
+                    Text(
+                      'Tap to zoom',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
