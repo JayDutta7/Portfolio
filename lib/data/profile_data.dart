@@ -26,7 +26,7 @@ class ProfileData {
     }
   }
 
-  // 9 Verified Enterprise & Client Projects with Case Study Architecture
+  // 13 Verified Enterprise & Client Projects with Case Study Architecture
   static const List<Project> _verifiedProjects = [
     // 1. Shyam Steel - Ghareka Consumer App
     Project(
@@ -419,7 +419,7 @@ class ProfileData {
     heroIntro:
         'Senior Android & Flutter Engineer — 9+ years building, deploying, and scaling mission-critical mobile systems, with deep expertise across Native Android and Flutter.',
     aboutMe:
-        'I am a Senior Android & Flutter Engineer with over 9 years of production experience building native Android and cross-platform Flutter applications end-to-end — from system architecture to store releases.\n\nMy core technical stack includes Native Android (Kotlin, Java), Jetpack Compose, MVVM, LiveData, Flutter (Dart), Clean Architecture, BLoC, Riverpod, Room, SQLite, Retrofit, Dio, and Coroutines/Flow.\n\nMy native specializations include Method Channels, Foreground Services, Background Geolocation, BLE/Bluetooth, WebRTC low-latency streaming, SQLCipher database encryption, and resilient offline-first synchronization.\n\nOver the course of my career across Shyam Steel Industries, Nat IT Solved, Matrix Media Solution, and DCC Services, I have engineered 9 verified production apps across Google Play Store and Apple App Store, modernizing architectures, slashing crash rates by 20%, and improving runtime speeds by 20%.',
+        'I am a Senior Android & Flutter Engineer with over 9 years of production experience building native Android and cross-platform Flutter applications end-to-end — from system architecture to store releases.\n\nMy core technical stack includes Native Android (Kotlin, Java), Jetpack Compose, MVVM, LiveData, Flutter (Dart), Clean Architecture, BLoC, Riverpod, Room, SQLite, Retrofit, Dio, and Coroutines/Flow.\n\nMy native specializations include Method Channels, Foreground Services, Background Geolocation, BLE/Bluetooth, WebRTC low-latency streaming, SQLCipher database encryption, and resilient offline-first synchronization.\n\nOver the course of my career across Shyam Steel Industries, Nat IT Solved, Matrix Media Solution, and DCC Services, I have engineered 13 verified production apps across Google Play Store and Apple App Store, modernizing architectures, slashing crash rates by 20%, and improving runtime speeds by 20%.',
     profilePicture: profilePicture,
     resumeAssetPath: resumeAssetPath,
     resumeDownloadFileName: resumeDownloadFileName,
@@ -621,7 +621,7 @@ class ProfileData {
     heroIntro:
         '৯+ বছরের উৎপাদন অভিজ্ঞতা সম্পন্ন সিনিয়র অ্যান্ড্রয়েড ও ফ্ল্যাটার ইঞ্জিনিয়ার। নেটিভ অ্যান্ড্রয়েড (Kotlin, Jetpack Compose), ফ্ল্যাটার (Dart, BLoC, Riverpod), এবং ক্লিন আর্কিটেকচার সিস্টেমে পারদর্শী।',
     aboutMe:
-        'আমি ৯ বছরেরও বেশি অভিজ্ঞতাসম্পন্ন সিনিয়র অ্যান্ড্রয়েড ও ফ্ল্যাটার ইঞ্জিনিয়ার। আর্কিটেকচার থেকে প্রোডাকশন রিলিজ পর্যন্ত ৯টি যাচাইকৃত প্রোডাকশন অ্যাপ তৈরি করেছি। আমার কাজের মূল শক্তি হল ক্লিন আর্কিটেকচার, অফলাইন-ফার্স্ট সিঙ্ক, এবং উচ্চ পারফরম্যান্স নিশ্চিত করা।',
+        'আমি ৯ বছরেরও বেশি অভিজ্ঞতাসম্পন্ন সিনিয়র অ্যান্ড্রয়েড ও ফ্ল্যাটার ইঞ্জিনিয়ার। আর্কিটেকচার থেকে প্রোডাকশন রিলিজ পর্যন্ত ১৩টি যাচাইকৃত প্রোডাকশন অ্যাপ তৈরি করেছি। আমার কাজের মূল শক্তি হল ক্লিন আর্কিটেকচার, অফলাইন-ফার্স্ট সিঙ্ক, এবং উচ্চ পারফরম্যান্স নিশ্চিত করা।',
     profilePicture: profilePicture,
     resumeAssetPath: resumeAssetPath,
     resumeDownloadFileName: resumeDownloadFileName,
@@ -800,7 +800,7 @@ class ProfileData {
     heroIntro:
         '9+ वर्षों के उत्पादन अनुभव वाले सीनियर एंड्रॉइड और फ़्लटर इंजीनियर। नेटिव एंड्रॉइड (Kotlin, Jetpack Compose), फ़्लटर (Dart, BLoC, Riverpod) और क्लीन आर्किटेक्चर सिस्टम में विशेषज्ञता।',
     aboutMe:
-        'मैं 9+ वर्षों के उत्पादन अनुभव के साथ सीनियर एंड्रॉइड और फ़्लटर इंजीनियर हूं। आर्किटेक्चर से लेकर स्टोर रिलीज तक 9 सत्यापित प्रोडक्शन ऐप्स डिलीवर किए हैं। मेरी मुख्य ताकत क्लीन आर्किटेक्चर, ऑफलाइन-फर्स्ट सिंक, और उच्च प्रदर्शन सुनिश्चित करना है।',
+        'मैं 9+ वर्षों के उत्पादन अनुभव के साथ सीनियर एंड्रॉइड और फ़्लटर इंजीनियर हूं। आर्किटेक्चर से लेकर स्टोर रिलीज तक 13 सत्यापित प्रोडक्शन ऐप्स डिलीवर किए हैं। मेरी मुख्य ताकत क्लीन आर्किटेक्चर, ऑफलाइन-फर्स्ट सिंक, और उच्च प्रदर्शन सुनिश्चित करना है।',
     profilePicture: profilePicture,
     resumeAssetPath: resumeAssetPath,
     resumeDownloadFileName: resumeDownloadFileName,

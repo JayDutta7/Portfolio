@@ -63,7 +63,7 @@ class ContactSection extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      '07 / CONTACT',
+                      'CONTACT',
                       style: GoogleFonts.jetBrainsMono(
                         fontSize: 11,
                         fontWeight: FontWeight.w800,

@@ -958,7 +958,7 @@ code, pre, .font-mono, .badge-mono, .metric-val {
 .project-title {
   font-size: 24px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-main, #ffffff);
   margin-bottom: 8px;
 }
 

@@ -81,13 +81,13 @@ class ProjectDetailsPage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
                               color: isShyamSteel
-                                  ? const Color(0xFFF59E0B).withValues(alpha: 0.25)
-                                  : accentColor.withValues(alpha: 0.25),
+                                  ? const Color(0xFFF59E0B).withValues(alpha: isDark ? 0.25 : 0.15)
+                                  : accentColor.withValues(alpha: isDark ? 0.25 : 0.15),
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(
                                 color: isShyamSteel
-                                    ? const Color(0xFFF59E0B)
-                                    : accentColor,
+                                    ? (isDark ? const Color(0xFFF59E0B) : const Color(0xFFD97706))
+                                    : (isDark ? accentColor : (isFlutter ? const Color(0xFF0284C7) : const Color(0xFF15803D))),
                               ),
                             ),
                             child: Text(
@@ -95,7 +95,9 @@ class ProjectDetailsPage extends StatelessWidget {
                               style: GoogleFonts.jetBrainsMono(
                                 fontSize: 9,
                                 fontWeight: FontWeight.w800,
-                                color: isShyamSteel ? const Color(0xFFF59E0B) : accentColor,
+                                color: isShyamSteel
+                                    ? (isDark ? const Color(0xFFF59E0B) : const Color(0xFFB45309))
+                                    : (isDark ? accentColor : (isFlutter ? const Color(0xFF0284C7) : const Color(0xFF15803D))),
                                 letterSpacing: 0.8,
                               ),
                             ),
@@ -104,7 +106,7 @@ class ProjectDetailsPage extends StatelessWidget {
                           Text(
                             project.company,
                             style: theme.textTheme.labelMedium?.copyWith(
-                              color: Colors.white70,
+                              color: isDark ? Colors.white70 : AppColors.lightTextSecondary,
                               fontWeight: FontWeight.w600,
                               fontSize: 10,
                             ),
@@ -118,7 +120,7 @@ class ProjectDetailsPage extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                          color: isDark ? Colors.white : AppColors.lightTextPrimary,
                           fontSize: isMobile ? (isCompact ? 16 : 18) : 24,
                         ),
                       ),

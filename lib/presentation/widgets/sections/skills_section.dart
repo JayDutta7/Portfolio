@@ -30,7 +30,7 @@ class SkillsSection extends StatelessWidget {
                   border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
                 ),
                 child: Text(
-                  '05 / TOOLKIT',
+                  'TOOLKIT',
                   style: theme.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w900,
                     color: AppColors.primary,

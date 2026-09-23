@@ -34,7 +34,7 @@ class ArchitectureSection extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    '03 / ENGINEERING ARCHITECTURE',
+                    'ENGINEERING ARCHITECTURE',
                     style: theme.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w900,
                       color: AppColors.primary,
@@ -73,19 +73,19 @@ class _ArchitectureStackVisualizer extends StatelessWidget {
     return Column(
       children: [
         const _StackNode(
-          title: '01. UI LAYER',
+          title: 'UI LAYER',
           sub: 'Jetpack Compose / Flutter UI',
           color: AppColors.primary,
         ),
         _StackArrow(),
         const _StackNode(
-          title: '02. PRESENTATION / STATE LAYER',
+          title: 'PRESENTATION / STATE LAYER',
           sub: 'ViewModel / LiveData / StateFlow / BLoC',
           color: AppColors.secondary,
         ),
         _StackArrow(),
         const _StackNode(
-          title: '03. DOMAIN / BUSINESS LOGIC',
+          title: 'DOMAIN / BUSINESS LOGIC',
           sub: 'Clean Architecture UseCases & Entities',
           color: AppColors.accent,
         ),

@@ -58,7 +58,6 @@ class _ProjectsSectionState extends State<ProjectsSection> {
           children: [
             const _RichSectionHeader(
               title: 'VERIFIED ENTERPRISE & CLIENT CASE STUDIES',
-              index: '01',
             ),
             const SizedBox(height: 28),
 
@@ -200,8 +199,7 @@ class _FilterTabButton extends StatelessWidget {
 
 class _RichSectionHeader extends StatelessWidget {
   final String title;
-  final String index;
-  const _RichSectionHeader({required this.title, required this.index});
+  const _RichSectionHeader({required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -210,31 +208,25 @@ class _RichSectionHeader extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
-          ),
-          child: Text(
-            index,
-            style: theme.textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.w900,
-              color: AppColors.primary,
-            ),
-          ),
-        ),
-        const SizedBox(width: 16),
         Flexible(
-          child: Text(
-            title,
-            style: theme.textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w900,
-              letterSpacing: isDesktop ? 2.5 : 1.2,
-              fontSize: isDesktop ? 16 : 13,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
             ),
-            overflow: TextOverflow.ellipsis,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                title,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: isDesktop ? 1.5 : 0.8,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
           ),
         ),
         if (isDesktop) ...[
@@ -272,6 +264,7 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final isDesktop = Responsive.isDesktopOrWider(context);
 
     final isFlutter = widget.project.stackSummary.contains('Flutter');
@@ -331,9 +324,13 @@ class _ProductShowcaseCardState extends State<_ProductShowcaseCard> {
                     // Title
                     GradientText(
                       widget.project.title,
-                      colors: isFlutter
-                          ? [Colors.white, AppColors.flutterBlue]
-                          : [Colors.white, AppColors.androidGreen],
+                      colors: isDark
+                          ? (isFlutter
+                              ? [Colors.white, AppColors.flutterBlue]
+                              : [Colors.white, AppColors.androidGreen])
+                          : (isFlutter
+                              ? [AppColors.lightTextPrimary, const Color(0xFF0284C7)]
+                              : [AppColors.lightTextPrimary, const Color(0xFF15803D)]),
                       style: theme.textTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.w900,
                         fontSize: isDesktop ? 34 : 26,
@@ -536,14 +533,17 @@ class _CaseStudySectionBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final displayAccent = !isDark && accentColor == AppColors.androidGreen
+        ? const Color(0xFF15803D)
+        : (!isDark && accentColor == AppColors.flutterBlue ? const Color(0xFF0284C7) : accentColor);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: accentColor.withValues(alpha: isDark ? 0.06 : 0.04),
+        color: displayAccent.withValues(alpha: isDark ? 0.06 : 0.04),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: accentColor.withValues(alpha: isDark ? 0.2 : 0.15),
+          color: displayAccent.withValues(alpha: isDark ? 0.2 : 0.2),
           width: 1,
         ),
       ),
@@ -557,7 +557,7 @@ class _CaseStudySectionBox extends StatelessWidget {
                 style: GoogleFonts.jetBrainsMono(
                   fontSize: 11,
                   fontWeight: FontWeight.w900,
-                  color: accentColor,
+                  color: displayAccent,
                 ),
               ),
               const SizedBox(width: 8),
@@ -568,7 +568,7 @@ class _CaseStudySectionBox extends StatelessWidget {
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 1.0,
-                    color: accentColor,
+                    color: displayAccent,
                   ),
                 ),
               ),
@@ -687,6 +687,11 @@ class _ProjectTechTags extends StatelessWidget {
           Builder(
             builder: (context) {
               final color = _getTagColor(tech);
+              final displayTextColor = !isDark
+                  ? (color == AppColors.androidGreen
+                      ? const Color(0xFF15803D)
+                      : (color == AppColors.flutterBlue ? const Color(0xFF0284C7) : color))
+                  : Colors.white.withValues(alpha: 0.9);
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
@@ -700,7 +705,7 @@ class _ProjectTechTags extends StatelessWidget {
                 child: Text(
                   tech,
                   style: GoogleFonts.jetBrainsMono(
-                    color: isDark ? Colors.white.withValues(alpha: 0.9) : color,
+                    color: displayTextColor,
                     fontWeight: FontWeight.w700,
                     fontSize: 11,
                     letterSpacing: 0.2,
@@ -721,18 +726,23 @@ class _TechTagRich extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final displayColor = !isDark && color == AppColors.androidGreen
+        ? const Color(0xFF15803D)
+        : (!isDark && color == AppColors.flutterBlue ? const Color(0xFF0284C7) : color);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: displayColor.withValues(alpha: isDark ? 0.1 : 0.08),
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
+        border: Border.all(color: displayColor.withValues(alpha: isDark ? 0.3 : 0.25)),
       ),
       child: Text(
         label,
         style: GoogleFonts.jetBrainsMono(
           fontWeight: FontWeight.w800,
-          color: color,
+          color: displayColor,
           letterSpacing: 0.8,
           fontSize: 10.5,
         ),
@@ -797,6 +807,10 @@ class _PrimaryActionState extends State<_PrimaryAction> {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final isCompact = width < 360;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final effectiveColor = !isDark && widget.color == AppColors.androidGreen
+        ? const Color(0xFF15803D)
+        : (!isDark && widget.color == AppColors.flutterBlue ? const Color(0xFF0284C7) : widget.color);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
@@ -814,14 +828,14 @@ class _PrimaryActionState extends State<_PrimaryAction> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                widget.color,
-                widget.color.withValues(alpha: 0.8),
+                effectiveColor,
+                effectiveColor.withValues(alpha: 0.8),
               ],
             ),
             borderRadius: BorderRadius.circular(100),
             boxShadow: [
               BoxShadow(
-                color: widget.color.withValues(alpha: _hovered ? 0.45 : 0.25),
+                color: effectiveColor.withValues(alpha: _hovered ? 0.45 : 0.25),
                 blurRadius: _hovered ? 16 : 10,
                 offset: const Offset(0, 4),
               ),

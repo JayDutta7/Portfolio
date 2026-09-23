@@ -34,7 +34,7 @@ class ExperienceSection extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    '04 / CAREER',
+                    'CAREER',
                     style: theme.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w900,
                       color: AppColors.primary,

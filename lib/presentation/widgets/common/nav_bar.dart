@@ -9,7 +9,6 @@ import '../../viewmodels/locale_viewmodel.dart';
 import '../../viewmodels/theme_viewmodel.dart';
 import '../../viewmodels/profile_viewmodel.dart';
 import '../../../domain/models/profile_models.dart';
-import 'pulse_badge.dart';
 
 class NavItem {
   final String label;
@@ -43,7 +42,6 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
     final hPad = Responsive.pagePadding(context);
     final themeController = ref.watch(themeProvider);
     final profile = ref.watch(profileSyncProvider);
-    final currentLanguage = ref.watch(localeProvider);
 
     return SafeArea(
       bottom: false,
@@ -95,15 +93,6 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                   child: Row(
                     children: [
                       Flexible(child: _Logo(onTap: onLogoTap)),
-                      if (isDesktop && width >= 1150) ...[
-                        const SizedBox(width: 14),
-                        Flexible(
-                          child: PulseBadge(
-                            label: currentLanguage.navBadge,
-                            dotColor: AppColors.emerald,
-                          ),
-                        ),
-                      ],
                       const Spacer(),
                       if (isDesktop) ...[
                         for (final item in items)
@@ -251,18 +240,11 @@ class NavBar extends ConsumerWidget implements PreferredSizeWidget {
                         ),
                       ),
 
-                      // Status Badge & Language Selector Row (Zero overflow)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // Language Selector Row (Zero overflow)
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Flexible(
-                            child: PulseBadge(
-                              label: currentLanguage.navBadge,
-                              dotColor: AppColors.emerald,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          const _LanguageSelector(),
+                          _LanguageSelector(),
                         ],
                       ),
                       const SizedBox(height: 12),

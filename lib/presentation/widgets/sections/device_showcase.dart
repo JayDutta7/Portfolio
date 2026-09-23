@@ -25,7 +25,7 @@ class _DeviceShowcaseState extends State<DeviceShowcase> {
       child: Column(
         children: [
           const SectionHeading(
-            eyebrow: '02 / ADAPTABILITY',
+            eyebrow: 'ADAPTABILITY',
             title: 'Built for the devices\npeople actually use.',
             alignment: CrossAxisAlignment.center,
           ),
@@ -71,7 +71,7 @@ class _ProjectSwitcher extends StatelessWidget {
                 onSelected: (selected) => selected ? onChanged(i) : null,
                 labelStyle: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w900,
-                  color: selectedIndex == i ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                  color: selectedIndex == i ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.75),
                 ),
                 backgroundColor: Colors.transparent,
                 selectedColor: theme.colorScheme.primary,

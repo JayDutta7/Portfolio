@@ -15,8 +15,8 @@ class SetupSection extends StatelessWidget {
 
     final specs = [
       {'label': 'MACHINE', 'value': 'MacBook M2 Air · 16GB RAM · 256GB SSD', 'icon': Icons.laptop_mac_rounded},
-      {'label': 'DISPLAY', 'value': '32" 4K LG UltraFine + 27" Dell Vertical', 'icon': Icons.desktop_windows_rounded},
-      {'label': 'PERIPHERALS', 'value': 'Keychron Q1 Pro · Logitech MX Master 3S', 'icon': Icons.keyboard_rounded},
+      {'label': 'DISPLAY', 'value': '32" 4K LG UltraFine', 'icon': Icons.desktop_windows_rounded},
+      {'label': 'PERIPHERALS', 'value': 'Logitech MX Master 3S', 'icon': Icons.mouse_rounded},
       {'label': 'NETWORK', 'value': '300 Mbps Fiber · Wi-Fi 6 Mesh', 'icon': Icons.wifi_rounded},
       {'label': 'ENVIRONMENT', 'value': 'Serampore, India · Optimized for Deep Work', 'icon': Icons.place_rounded},
     ];
