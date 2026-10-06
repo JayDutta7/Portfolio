@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'core/services/firebase_presence_service.dart';
 import 'core/theme/app_theme.dart';
 import 'presentation/pages/home_page.dart';
@@ -9,6 +10,7 @@ import 'presentation/viewmodels/profile_viewmodel.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  usePathUrlStrategy();
   FirebasePresenceService().init();
   runApp(
     const ProviderScope(

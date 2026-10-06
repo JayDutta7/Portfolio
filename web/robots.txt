@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://REPLACE_ME.github.io/REPLACE_REPO/sitemap.xml
+Sitemap: https://jaydutta7.github.io/Portfolio/sitemap.xml

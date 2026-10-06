@@ -2,12 +2,23 @@
 <html lang="en">
 <head>
   <base href="$FLUTTER_BASE_HREF">
+  <script>
+    // GitHub Pages SPA redirect handler
+    (function() {
+      var redirect = sessionStorage.redirect;
+      delete sessionStorage.redirect;
+      if (redirect && redirect !== location.href) {
+        history.replaceState(null, null, redirect);
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 
   <meta name="description" content="Senior Android & Flutter Developer with 9+ years of experience building scalable mobile and cross-platform applications using Kotlin, Jetpack Compose, Flutter and Clean Architecture.">
   <meta name="keywords" content="Jayajit Dutta, Android Developer, Flutter Developer, Senior Mobile Engineer, Kotlin, Jetpack Compose, Clean Architecture, MVVM, Mobile App Portfolio">
   <meta name="author" content="Jayajit Dutta">
+  <link rel="canonical" href="https://jaydutta7.github.io/Portfolio/" />
   <meta name="theme-color" content="#0a0d14">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -34,16 +45,84 @@
   <!-- Preload hero image -->
   <link rel="preload" href="assets/images/picture.jpg" as="image">
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
+  <!-- Open Graph / Facebook / LinkedIn -->
+  <meta property="og:type" content="profile">
   <meta property="og:title" content="Jayajit Dutta | Senior Android & Flutter Developer">
-  <meta property="og:description" content="Senior Android & Flutter Developer with 9+ years of experience building scalable mobile and cross-platform applications.">
-  <meta property="og:image" content="icons/Icon-512.png">
+  <meta property="og:description" content="Senior Android & Flutter Developer with 9+ years of experience building scalable mobile and cross-platform applications using Kotlin, Jetpack Compose, Flutter and Clean Architecture.">
+  <meta property="og:url" content="https://jaydutta7.github.io/Portfolio/">
+  <meta property="og:image" content="https://jaydutta7.github.io/Portfolio/assets/images/preview.png">
+  <meta property="og:image:secure_url" content="https://jaydutta7.github.io/Portfolio/assets/images/preview.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Jayajit Dutta - Senior Android & Flutter Developer Portfolio">
+  <meta property="og:site_name" content="Jayajit Dutta Portfolio">
+  <meta property="profile:first_name" content="Jayajit">
+  <meta property="profile:last_name" content="Dutta">
 
-  <!-- Twitter Card -->
+  <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Jayajit Dutta | Senior Android & Flutter Developer">
   <meta name="twitter:description" content="Senior Android & Flutter Developer with 9+ years of experience building scalable mobile and cross-platform applications.">
+  <meta name="twitter:image" content="https://jaydutta7.github.io/Portfolio/assets/images/preview.png">
+  <meta name="twitter:image:alt" content="Jayajit Dutta - Senior Android & Flutter Developer Portfolio">
+  <meta name="twitter:url" content="https://jaydutta7.github.io/Portfolio/">
+
+  <!-- Structured Data (Schema.org JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["Person", "SoftwareEngineer"],
+        "@id": "https://jaydutta7.github.io/Portfolio/#person",
+        "name": "Jayajit Dutta",
+        "alternateName": "Jay Dutta",
+        "jobTitle": "Senior Android & Flutter Developer",
+        "hasOccupation": {
+          "@type": "Occupation",
+          "name": "Software Engineer",
+          "skills": "Android, Kotlin, Flutter, Jetpack Compose, Dart, Clean Architecture, MVVM, MVI, Riverpod"
+        },
+        "description": "Senior Android & Flutter Developer with 9+ years of experience building scalable mobile and cross-platform applications using Kotlin, Jetpack Compose, Flutter and Clean Architecture.",
+        "url": "https://jaydutta7.github.io/Portfolio/",
+        "image": "https://jaydutta7.github.io/Portfolio/assets/images/picture.jpg",
+        "email": "jayajitdutta7@gmail.com",
+        "telephone": "+91 7980726164",
+        "sameAs": [
+          "https://github.com/JayDutta7",
+          "https://www.linkedin.com/in/jayajit-dutta-7124b9125/"
+        ],
+        "knowsAbout": [
+          "Android",
+          "Kotlin",
+          "Flutter",
+          "Jetpack Compose",
+          "Dart",
+          "Clean Architecture",
+          "MVVM",
+          "MVI",
+          "Room Database",
+          "Coroutines & Flow",
+          "WorkManager",
+          "Riverpod",
+          "Mobile App Security",
+          "Cross-Platform Development"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://jaydutta7.github.io/Portfolio/#website",
+        "url": "https://jaydutta7.github.io/Portfolio/",
+        "name": "Jayajit Dutta Portfolio",
+        "description": "Official developer portfolio of Jayajit Dutta — Senior Android & Flutter Developer.",
+        "publisher": {
+          "@id": "https://jaydutta7.github.io/Portfolio/#person"
+        }
+      }
+    ]
+  }
+  </script>
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -60,6 +139,19 @@
   <link rel="manifest" href="manifest.json">
 
   <style>
+    /* SEO Fallback Class - visually hidden but completely readable by search crawlers */
+    .seo-fallback {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: normal;
+      border: 0;
+    }
+    
     /* Zero-delay immediate initial paint */
     *, *::before, *::after {
       box-sizing: border-box;
@@ -76,21 +168,26 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    #loading-indicator {
+    /* Fast Static HTML/CSS Splash Screen (Sub-200ms FCP) */
+    #splash-screen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle at 50% 40%, #131929 0%, #0a0d14 70%);
+      background-color: #0a0d14;
+      background: radial-gradient(circle at 50% 40%, #131929 0%, #0a0d14 75%);
       z-index: 999999;
-      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
+      opacity: 1;
+      transition: opacity 0.4s ease-out;
+      pointer-events: all;
+      user-select: none;
+      -webkit-user-select: none;
     }
-    .logo-container {
+    .splash-logo-container {
       position: relative;
       width: 84px;
       height: 84px;
@@ -99,94 +196,207 @@
       align-items: center;
       margin-bottom: 24px;
     }
-    .pulse-ring {
+    .splash-pulse-ring {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 24px;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(56, 189, 248, 0.25) 100%);
-      animation: pulseRing 2.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+      inset: -6px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(56, 189, 248, 0.3) 100%);
+      animation: splashPulseRing 2.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
     }
-    .logo-box {
+    .splash-logo-box {
       position: relative;
-      width: 68px;
-      height: 68px;
+      width: 72px;
+      height: 72px;
       border-radius: 20px;
       background: linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);
-      box-shadow: 0 0 28px rgba(56, 189, 248, 0.45), 0 8px 16px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 32px rgba(56, 189, 248, 0.45), 0 8px 20px rgba(0, 0, 0, 0.5);
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 2;
     }
-    .logo-text {
+    .splash-logo-text {
       color: #ffffff;
       font-weight: 900;
-      font-size: 26px;
+      font-size: 28px;
       letter-spacing: -1px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    .brand-name {
+    .splash-name {
       color: #ffffff;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 800;
       letter-spacing: 3px;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin: 0 0 8px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      text-align: center;
     }
-    .brand-role {
+    .splash-role {
       color: #94a3b8;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 28px;
+      margin: 0 0 32px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      text-align: center;
     }
-    .progress-bar-wrap {
-      width: 180px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
+    .splash-spinner-ring {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid #38bdf8;
+      border-right: 3px solid #6366f1;
+      border-radius: 50%;
+      animation: splashSpinner 0.85s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
     }
-    .progress-bar-inner {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 45%;
-      background: linear-gradient(90deg, #6366f1, #38bdf8, #10b981);
-      border-radius: 4px;
-      animation: progressShimmer 1.5s ease-in-out infinite;
-    }
-    @keyframes pulseRing {
+    @keyframes splashPulseRing {
       0% { transform: scale(0.92); opacity: 0.8; }
       50% { transform: scale(1.18); opacity: 0.15; }
       100% { transform: scale(0.92); opacity: 0.8; }
     }
-    @keyframes progressShimmer {
-      0% { left: -45%; width: 30%; }
-      50% { left: 35%; width: 50%; }
-      100% { left: 100%; width: 30%; }
+    @keyframes splashSpinner {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <!-- Instant-render Fast Branded Splash -->
-  <div id="loading-indicator">
-    <div class="logo-container">
-      <div class="pulse-ring"></div>
-      <div class="logo-box">
-        <span class="logo-text">JD</span>
+  <!-- SEO Semantic Fallback (Crawlable HTML for Googlebot / Bingbot before Flutter CanvasKit boots) -->
+  <main class="seo-fallback" id="seo-crawler-content">
+    <header>
+      <h1>Jayajit Dutta</h1>
+      <p>Senior Android &amp; Flutter Developer | Lead Mobile Solutions Architect</p>
+      <p>Senior Android &amp; Flutter Developer with 9+ years of experience building scalable mobile and cross-platform applications using Kotlin, Jetpack Compose, Flutter and Clean Architecture.</p>
+    </header>
+
+    <section>
+      <h2>Core Engineering Specializations</h2>
+      <ul>
+        <li>Native Android Development: Kotlin, Jetpack Compose, Coroutines, Flow, Room DB, WorkManager, MVI / MVVM Architecture</li>
+        <li>Cross-Platform Mobile: Flutter, Dart, Riverpod, BLoC, Clean Architecture, Offline-First Synchronization</li>
+        <li>System Design &amp; DevOps: CI/CD Pipelines, Multi-Module Gradle, ProGuard / R8 Hardening, RESTful APIs, Firebase</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Featured Enterprise Projects</h2>
+      <article>
+        <h3>Ghareka Consumer App (Shyam Steel Industries Ltd.)</h3>
+        <p>Direct-to-consumer construction procurement application written in Flutter using Riverpod, featuring dynamic structural material estimators, milestone tracking, and direct order fulfillment.</p>
+        <p>Tech Stack: Flutter, Dart, Riverpod, Clean Architecture, Estimation Engine, REST APIs, Firebase FCM.</p>
+        <a href="https://play.google.com/store/apps/details?id=com.ghreka.consumerapp">Google Play Store</a>
+        <a href="https://apps.apple.com/app/id6467111338">Apple App Store</a>
+      </article>
+      <article>
+        <h3>Ghareka PMT - Project Management Tool (Shyam Steel Industries Ltd.)</h3>
+        <p>Enterprise field project management tool for civil site engineers, featuring offline inspection logs, automated GPS site check-ins, and photographic milestone validations.</p>
+        <p>Tech Stack: Native Android, Kotlin, Jetpack Compose, Clean Architecture, Room SQLite, Coroutines/Flow, WorkManager.</p>
+      </article>
+      <article>
+        <h3>Buildistan</h3>
+        <p>B2B building construction marketplace and logistics management application built with Flutter and Riverpod.</p>
+      </article>
+      <article>
+        <h3>Massage Club</h3>
+        <p>Cross-platform on-demand wellness platform with real-time appointment booking, geolocation, and payment gateways.</p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Connect &amp; Verification Links</h2>
+      <nav>
+        <ul>
+          <li><a href="https://github.com/JayDutta7">GitHub Profile - JayDutta7</a></li>
+          <li><a href="https://www.linkedin.com/in/jayajit-dutta-7124b9125/">LinkedIn Profile - Jayajit Dutta</a></li>
+          <li><a href="assets/resume/Jayajit_Dutta_CV.pdf">Download Resume / Curriculum Vitae</a></li>
+        </ul>
+      </nav>
+    </section>
+  </main>
+
+  <!-- Fast Static HTML/CSS Splash Screen (Sub-200ms FCP) -->
+  <div id="splash-screen">
+    <div class="splash-logo-container">
+      <div class="splash-pulse-ring"></div>
+      <div class="splash-logo-box">
+        <span class="splash-logo-text">JD</span>
       </div>
     </div>
-    <div class="brand-name">JAYAJIT DUTTA</div>
-    <div class="brand-role">Senior Android &amp; Flutter Developer</div>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-inner"></div>
-    </div>
+    <h1 class="splash-name">Jayajit Dutta</h1>
+    <p class="splash-role">Senior Android &amp; Flutter Developer</p>
+    <div class="splash-spinner-ring"></div>
   </div>
 
+  <script>
+    // Smooth splash screen dismissal hook
+    function dismissSplashScreen() {
+      const splash = document.getElementById('splash-screen');
+      if (splash && splash.getAttribute('data-dismissed') !== 'true') {
+        splash.setAttribute('data-dismissed', 'true');
+        splash.style.opacity = '0';
+        setTimeout(function() {
+          if (splash && splash.parentNode) {
+            splash.remove();
+          }
+        }, 400);
+      }
+    }
+
+    // Intercept Flutter initialization promise chain
+    window._flutter = window._flutter || {};
+    let _flutterLoaderInstance = null;
+    Object.defineProperty(window._flutter, 'loader', {
+      configurable: true,
+      enumerable: true,
+      get: function() {
+        return _flutterLoaderInstance;
+      },
+      set: function(loaderInstance) {
+        _flutterLoaderInstance = loaderInstance;
+        if (loaderInstance && typeof loaderInstance.load === 'function') {
+          const originalLoad = loaderInstance.load.bind(loaderInstance);
+          loaderInstance.load = function(options) {
+            options = options || {};
+            const origOnEntrypointLoaded = options.onEntrypointLoaded;
+            options.onEntrypointLoaded = async function(engineInitializer) {
+              let appRunner;
+              if (typeof origOnEntrypointLoaded === 'function') {
+                appRunner = await origOnEntrypointLoaded(engineInitializer);
+              } else {
+                const engine = await engineInitializer.initializeEngine();
+                appRunner = await engine.runApp();
+              }
+              // Promise hook: dismiss splash screen after Flutter engine & app runner mount
+              dismissSplashScreen();
+              return appRunner;
+            };
+            return originalLoad(options);
+          };
+        }
+      }
+    });
+
+    // Fallback: MutationObserver to detect engine canvas mounting
+    const observer = new MutationObserver(function(mutations, obs) {
+      const flutterElement = document.querySelector('flutter-view, flt-glass-pane, canvas, flt-scene-host');
+      if (flutterElement) {
+        obs.disconnect();
+        dismissSplashScreen();
+      }
+    });
+    if (document.body) {
+      observer.observe(document.body, { childList: true, subtree: true });
+    } else {
+      document.addEventListener('DOMContentLoaded', function() {
+        observer.observe(document.body, { childList: true, subtree: true });
+      });
+    }
+
+    // Safety timeout fallback
+    setTimeout(dismissSplashScreen, 8000);
+  </script>
   <script src="flutter_bootstrap.js" async></script>
   <script>
     if ('serviceWorker' in navigator) {
@@ -196,39 +406,6 @@
         }
       });
     }
-    (function() {
-      var loader = document.getElementById('loading-indicator');
-      function hideLoader() {
-        if (!loader || loader.getAttribute('data-hidden') === 'true') return;
-        loader.setAttribute('data-hidden', 'true');
-        loader.style.opacity = '0';
-        setTimeout(function() {
-          if (loader && loader.parentNode) {
-            loader.parentNode.removeChild(loader);
-          }
-        }, 360);
-      }
-
-      // Detect when Flutter renders view, canvas, or pane
-      var observer = new MutationObserver(function(mutations, obs) {
-        var flutterElement = document.querySelector('flutter-view, flt-glass-pane, canvas, flt-scene-host');
-        if (flutterElement) {
-          obs.disconnect();
-          hideLoader();
-        }
-      });
-
-      if (document.body) {
-        observer.observe(document.body, { childList: true, subtree: true });
-      } else {
-        document.addEventListener('DOMContentLoaded', function() {
-          observer.observe(document.body, { childList: true, subtree: true });
-        });
-      }
-
-      // Fallback timer to prevent loader sticking under any condition
-      setTimeout(hideLoader, 12000);
-    })();
 
     // PWA BeforeInstallPrompt & Native APK Download Interop
     window.deferredPwaPrompt = null;
