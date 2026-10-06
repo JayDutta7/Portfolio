@@ -2,7 +2,7 @@ name: Deploy Portfolio
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "uat" ]
   workflow_dispatch:
     inputs:
       environment:
@@ -144,24 +144,34 @@ jobs:
             rm -rf build/web
             mkdir -p build/web
             cp -r "$TEMP_DEPLOY_DIR/uat/"* build/web/
+            mkdir -p build/web/uat
+            cp -r "$TEMP_DEPLOY_DIR/uat/"* build/web/uat/
 
           elif [ "$TARGET_ENV" = "dev" ]; then
             build_env "dev" "$BASE_HREF" "$TEMP_DEPLOY_DIR/dev"
             rm -rf build/web
             mkdir -p build/web
             cp -r "$TEMP_DEPLOY_DIR/dev/"* build/web/
+            mkdir -p build/web/dev
+            cp -r "$TEMP_DEPLOY_DIR/dev/"* build/web/dev/
           fi
 
           # GitHub Pages SPA 404 fallback routing
-          cp build/web/index.html build/web/404.html
+          if [ ! -f "build/web/404.html" ]; then
+            cp build/web/index.html build/web/404.html
+          fi
           touch build/web/.nojekyll
           if [ -d "build/web/uat" ]; then
             touch build/web/uat/.nojekyll
-            cp build/web/uat/index.html build/web/uat/404.html || true
+            if [ ! -f "build/web/uat/404.html" ]; then
+              cp build/web/uat/index.html build/web/uat/404.html || true
+            fi
           fi
           if [ -d "build/web/dev" ]; then
             touch build/web/dev/.nojekyll
-            cp build/web/dev/index.html build/web/dev/404.html || true
+            if [ ! -f "build/web/dev/404.html" ]; then
+              cp build/web/dev/index.html build/web/dev/404.html || true
+            fi
           fi
 
       - name: Upload artifact for Actions deployment
