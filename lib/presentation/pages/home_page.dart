@@ -403,8 +403,8 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ),
 
-          // Floating environment badge for DEV / UAT builds
-          if (!AppEnvironment.isProd)
+          // Floating environment badge for DEV builds only
+          if (AppEnvironment.isDev)
             const EnvironmentBadge(),
 
           // Starting Loading Animation (Fade In -> Fade Out)

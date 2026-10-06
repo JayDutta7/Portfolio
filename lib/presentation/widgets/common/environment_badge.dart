@@ -17,7 +17,7 @@ class _EnvironmentBadgeState extends State<EnvironmentBadge> {
 
   @override
   Widget build(BuildContext context) {
-    if (AppEnvironment.isProd) {
+    if (AppEnvironment.isProd || AppEnvironment.isUat) {
       return const SizedBox.shrink();
     }
 
