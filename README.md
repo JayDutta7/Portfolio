@@ -66,45 +66,6 @@ This repository contains the full production source code for the **official deve
 | **Testing & Quality** | Flutter Test, JUnit 5, Mockito, MockK, Robolectric, Integration Testing, LeakTracker |
 | **DevOps & Tooling** | GitHub Actions CI/CD, Gradle (Kotlin DSL), CocoaPods, CMake, Fastlane, Google Play Console |
 
----
-
-## 💼 Verified Enterprise Case Studies
-
-### 1. Ghareka Consumer App (Shyam Steel Industries Ltd.)
-- **Role**: Lead Flutter Developer · **Period**: 2025 – Present
-- **Stack**: `Flutter` · `Dart` · `Riverpod` · `Clean Architecture` · `FCM` · `REST APIs`
-- **Scope**: Direct-to-consumer structural steel and construction procurement app featuring a proprietary structural material estimator engine. Computes complex bar-bending schedules and load-bearing requirements via background Dart Isolates without UI frame drops.
-- **Impact**: Reduced pre-sales inquiries by **40%** and increased direct material bookings by **35%**.
-- **Links**: [Google Play Store](https://play.google.com/store/apps/details?id=com.ghreka.consumerapp) • [Apple App Store](https://apps.apple.com/app/id6467111338)
-
-### 2. Ghareka PMT — Project Management Tool (Shyam Steel)
-- **Role**: Lead Flutter Developer · **Period**: 2025 – Present
-- **Stack**: `Flutter` · `Dart` · `Riverpod` · `Offline Sync` · `Camera API` · `Dio Interceptors`
-- **Scope**: Field engineering application for inspecting on-site construction milestones, photographic audit validation, and geo-tagged material release sign-offs.
-
-### 3. Retail CRM (Shyam Steel Industries Ltd.)
-- **Role**: Senior Android Developer · **Period**: 2024 – Present
-- **Stack**: `Native Android` · `Kotlin` · `MVVM` · `Room DB` · `Coroutines` · `WorkManager` · `Google Maps SDK`
-- **Scope**: Enterprise salesforce automation system with automated geo-fenced dealer visit check-ins, order dispatch tracking, and background offline database synchronization.
-- **Impact**: Automated check-ins for 200+ daily sales executives, boosting lead turnaround by **28%**.
-
-### 4. Buildistan (Astraea Softwares Pvt. Ltd.)
-- **Role**: Senior Android Developer · **Period**: 2022 – 2024
-- **Stack**: `Native Android` · `Kotlin` · `Coroutines` · `Jetpack Compose` · `Retrofit` · `Room`
-- **Scope**: B2B/B2C heavy construction equipment marketplace featuring real-time vendor quotes, itemized procurement carts, and catalog indexing.
-- **Links**: [Google Play Store](https://play.google.com/store/apps/details?id=com.buildistan.customer)
-
-### 5. Pariwar Community Platform (Astraea Softwares)
-- **Role**: Mobile Application Engineer · **Period**: 2022 – 2024
-- **Stack**: `Flutter` · `Dart` · `BLoC` · `Firebase Realtime DB` · `Dynamic Theming`
-- **Scope**: High-density community engagement app connecting 50,000+ members with verified directories, committee broadcasts, and event RSVP workflows.
-
-### 6. Captain Logistics (Nat IT Solved Pvt. Ltd.)
-- **Role**: Android Engineer · **Period**: 2017 – 2018
-- **Stack**: `Native Android` · `Kotlin` · `Foreground Service` · `WebSockets` · `Google Maps SDK`
-- **Scope**: Industrial fleet telemetry system transmitting real-time GPS coordinates, vehicle ignition state, and driver trip logs over continuous WebSocket channels with battery-optimized foreground services.
-
----
 
 ## 📂 Project Architecture & Directory Layout
 
